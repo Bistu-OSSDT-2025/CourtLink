@@ -1,7 +1,7 @@
-# BadmintonCourtBooking 羽毛球场地预约系统
+# CourtLink 运动场地预约系统
 
 ## 项目简介
-BadmintonCourtBooking是一个基于Spring Boot的运动场地预约管理系统，提供场地预约、用户管理、支付等功能。
+CourtLink是一个基于Spring Boot的运动场地预约管理系统，提供场地预约、用户管理、支付等功能。
 
 ## 技术栈
 - Java 17
@@ -29,7 +29,7 @@ BadmintonCourtBooking是一个基于Spring Boot的运动场地预约管理系统
    - 预约取消
    - 预约查询
 
-4. 支付模块（可选）
+4. 支付模块
    - 在线支付
    - 订单管理
    - 退款处理
