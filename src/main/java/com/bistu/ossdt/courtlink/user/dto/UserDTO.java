@@ -1,7 +1,6 @@
 package com.bistu.ossdt.courtlink.user.dto;
 
 import com.bistu.ossdt.courtlink.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 // import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
