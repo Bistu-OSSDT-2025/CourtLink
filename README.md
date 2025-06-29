@@ -1,7 +1,7 @@
 # BadmintonCourtBooking 羽毛球场地预约系统
 
 ## 项目简介
-BadmintonCourtBooking是一个基于Spring Boot的羽毛球场地预约管理系统，提供场地预约、用户管理、支付等功能。
+BadmintonCourtBooking是一个基于Spring Boot的运动场地预约管理系统，提供场地预约、用户管理、支付等功能。
 
 ## 技术栈
 - Java 17
