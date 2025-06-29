@@ -1,4 +1,4 @@
-# 运动场地预约系统 (CourtLink)
+# CourtLink 运动场地预约系统
 
 ## 项目简介
 
@@ -19,64 +19,102 @@
 - JUnit 5
 - Maven
 
-## 模块划分与团队分工
+## 项目结构与分支管理
 
-### 1. 用户管理模块 (A)
-- 核心功能：用户注册、登录、个人信息管理
-- 技术要点：
-  - Spring Security 用户认证
-  - JWT token管理
-  - 密码加密
-  - 用户信息CRUD
+### 1. 项目分支结构
+- `main`: 主分支，用于发布
+- `develop`: 开发主分支
+- `feat/user-management`: 用户管理功能分支
+- `feat/court-management`: 场地管理功能分支
+- `feat/booking-management`: 预约管理功能分支
+- `feat/payment-integration`: 支付集成功能分支
+- `feat/admin-management`: 后台管理功能分支
 
-### 2. 场地管理模块 (B)
-- 核心功能：场地列表、详情、搜索
-- 技术要点：
-  - 场地信息管理
-  - 场地状态维护
-  - 搜索功能实现
-  - 场地图片上传
+### 2. 前端项目结构
+```
+frontend/
+├── src/
+│   ├── assets/          # 静态资源
+│   ├── components/      # 可复用组件
+│   ├── views/           # 页面视图
+│   ├── router/          # 路由配置
+│   ├── store/          # 状态管理
+│   ├── services/       # API服务
+│   ├── utils/          # 工具函数
+│   ├── styles/         # 全局样式
+│   └── locales/        # 国际化
+├── vite.config.js      # Vite配置
+└── package.json        # 项目依赖
+```
 
-### 3. 预约管理模块 (C)
-- 核心功能：创建预约、取消预约、查看预约
-- 技术要点：
-  - 预约时间冲突检查
-  - 预约状态管理
-  - 预约通知
-  - 定时任务处理
-
-### 4. 支付集成模块 (D)
-- 核心功能：模拟支付、订单状态更新
-- 技术要点：
-  - 支付流程设计
-  - 订单状态管理
-  - 支付回调处理
-  - 退款处理
-
-### 5. 后台管理模块 (E)
-- 核心功能：场地审核、用户管理、数据统计
-- 技术要点：
-  - 权限管理
-  - 审核流程
-  - 数据统计报表
-  - 系统配置管理
+### 3. 后端项目结构
+```
+src/
+├── main/
+│   ├── java/
+│   │   └── com/example/badminton/
+│   │       ├── user/           # 用户模块
+│   │       ├── court/          # 场地模块
+│   │       ├── booking/        # 预约模块
+│   │       ├── payment/        # 支付模块
+│   │       ├── admin/          # 管理模块
+│   │       └── common/         # 公共模块
+│   └── resources/
+│       └── application.properties
+└── test/
+    └── java/
+```
 
 ## 开发流程
 
-1. 分支管理
-   - main：主分支，用于发布
-   - develop：开发主分支
-   - feat/*：特性分支，如feat/user-management
-   - fix/*：修复分支
-   - release/*：发布分支
+1. 分支管理流程
+   - 从`main`分支创建`develop`分支作为开发主分支
+   - 从`develop`分支创建功能分支进行开发
+   - 功能开发完成后，合并回`develop`分支
+   - 在`develop`分支进行集成测试
+   - 测试通过后，合并到`main`分支进行发布
 
-2. 开发规范
+2. 功能分支职责
+
+   ### feat/user-management
+   - 用户注册、登录功能
+   - 个人信息管理
+   - 权限控制
+
+   ### feat/court-management
+   - 场地信息管理
+   - 场地状态维护
+   - 场地搜索功能
+
+   ### feat/booking-management
+   - 预约创建和取消
+   - 预约时间冲突检查
+   - 预约状态管理
+
+   ### feat/payment-integration
+   - 支付流程集成
+   - 订单状态管理
+   - 退款处理
+
+   ### feat/admin-management
+   - 系统配置管理
+   - 用户管理
+   - 数据统计
+
+3. 开发优先级
+   1. 用户管理模块（基础功能）
+   2. 场地管理模块（核心功能）
+   3. 预约管理模块（核心业务）
+   4. 支付集成模块（流程完善）
+   5. 后台管理模块（运营管理）
+
+4. 开发规范
    - 代码提交前必须通过单元测试
    - 遵循Google Java代码规范
    - 使用Swagger注解维护API文档
    - 重要功能需要添加日志记录
 
-3. 提交规范
+5. 提交规范
    - feat: 新功能
    - fix: 修复bug
    - docs: 文档更新
