@@ -204,24 +204,6 @@ BadmintonCourtBooking/
 ├── mvnw.cmd              # Maven包装器脚本（Windows）
 └── pom.xml               # Maven项目配置文件
 ```
-
-## 项目说明
-
-### 主要项目 (Projects)
-- **BadmintonCourtBooking**: 羽毛球场地预约系统（新项目）
-- **CourtLink**: 场地链接系统
-- **frontend**: 前端项目
-
-### 学习项目 (Learning)
-- **Class_project**: 课程相关项目
-- **Exam_project**: 考试相关项目
-- **Practice**: 日常练习项目
-- **Luogu_project**: 洛谷算法练习
-
-### 其他项目 (Others)
-- **Essentia**: Essentia相关项目
-- **Help_project**: 帮助文档项目
-
 ## 开发规范
 1. 新项目统一放在 `Projects` 目录下
 2. 学习和练习代码放在 `Learning` 目录下
