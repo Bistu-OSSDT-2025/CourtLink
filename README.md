@@ -138,19 +138,71 @@ mvn spring-boot:run
 
 ## 项目结构
 ```
-workspace/
-├── Projects/                    # 主要项目目录
-│   ├── BadmintonCourtBooking/  # 羽毛球场地预约系统
-│   ├── CourtLink/              # 场地链接系统
-│   └── frontend/               # 前端项目
-├── Learning/                   # 学习项目目录
-│   ├── Class_project/         # 课程项目
-│   ├── Exam_project/          # 考试项目
-│   ├── Practice/              # 练习项目
-│   └── Luogu_project/         # 洛谷练习项目
-└── Others/                    # 其他项目
-    ├── Essentia/             # Essentia项目
-    └── Help_project/         # 帮助项目
+BadmintonCourtBooking/
+├── .mvn/                    # Maven包装器配置
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── example/
+│   │   │           └── badminton/
+│   │   │               ├── admin/           # 管理员模块
+│   │   │               │   ├── controller/  # 控制器
+│   │   │               │   ├── service/     # 服务层
+│   │   │               │   ├── repository/  # 数据访问层
+│   │   │               │   └── model/       # 数据模型
+│   │   │               │
+│   │   │               ├── booking/         # 预约模块
+│   │   │               │   ├── controller/
+│   │   │               │   ├── service/
+│   │   │               │   ├── repository/
+│   │   │               │   └── model/
+│   │   │               │
+│   │   │               ├── court/           # 场地模块
+│   │   │               │   ├── controller/
+│   │   │               │   ├── service/
+│   │   │               │   ├── repository/
+│   │   │               │   └── model/
+│   │   │               │
+│   │   │               ├── payment/         # 支付模块
+│   │   │               │   ├── controller/
+│   │   │               │   ├── service/
+│   │   │               │   ├── repository/
+│   │   │               │   └── model/
+│   │   │               │
+│   │   │               ├── user/            # 用户模块
+│   │   │               │   ├── controller/
+│   │   │               │   ├── service/
+│   │   │               │   ├── repository/
+│   │   │               │   └── model/
+│   │   │               │
+│   │   │               └── common/          # 公共模块
+│   │   │                   ├── config/      # 配置类
+│   │   │                   ├── exception/   # 异常处理
+│   │   │                   └── util/        # 工具类
+│   │   │
+│   │   └── resources/
+│   │       ├── application.properties    # 主配置文件
+│   │       ├── application-dev.properties # 开发环境配置
+│   │       └── application-prod.properties # 生产环境配置
+│   │
+│   └── test/                  # 测试目录
+│       └── java/
+│           └── com/
+│               └── example/
+│                   └── badminton/
+│                       ├── admin/
+│                       ├── booking/
+│                       ├── court/
+│                       ├── payment/
+│                       └── user/
+│
+├── .gitignore              # Git忽略文件
+├── .gitattributes         # Git属性文件
+├── CONTRIBUTING.md        # 贡献指南
+├── mvnw                   # Maven包装器脚本（Unix）
+├── mvnw.cmd              # Maven包装器脚本（Windows）
+└── pom.xml               # Maven项目配置文件
 ```
 
 ## 项目说明
