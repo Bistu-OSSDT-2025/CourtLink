@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.bistu.ossdt.courtlink.user.util.SimplePasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final SimplePasswordEncoder passwordEncoder;
 
     @Override
     public UserDTO register(UserDTO userDTO) {
@@ -125,12 +125,22 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("邮箱已被使用");
         }
 
-        // 更新用户信息（排除密码、ID、时间戳）
-        BeanUtils.copyProperties(userDTO, user, "id", "password", "createdAt", "updatedAt");
+        // 更新用户信息（排除密码、ID、时间戳、角色、状态）
+        BeanUtils.copyProperties(userDTO, user, "id", "password", "createdAt", "updatedAt", "role", "status");
         
         // 如果提供了新密码，则更新密码
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+        
+        // 如果提供了角色，则更新角色
+        if (userDTO.getRole() != null) {
+            user.setRole(userDTO.getRole());
+        }
+        
+        // 如果提供了状态，则更新状态
+        if (userDTO.getStatus() != null) {
+            user.setStatus(userDTO.getStatus());
         }
 
         user = userRepository.save(user);

@@ -3,11 +3,11 @@ package com.bistu.ossdt.courtlink.user.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+// import org.springframework.security.authentication.BadCredentialsException;
+// import org.springframework.security.authentication.DisabledException;
+// import org.springframework.security.authentication.LockedException;
+// import org.springframework.security.core.AuthenticationException;
+// import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -61,22 +61,11 @@ public class GlobalExceptionHandler {
     /**
      * 处理认证异常
      */
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException ex) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, Object> response = new HashMap<>();
         response.put("code", 401);
-        
-        if (ex instanceof BadCredentialsException) {
-            response.put("message", "用户名或密码错误");
-        } else if (ex instanceof UsernameNotFoundException) {
-            response.put("message", "用户不存在");
-        } else if (ex instanceof DisabledException) {
-            response.put("message", "账户已被禁用");
-        } else if (ex instanceof LockedException) {
-            response.put("message", "账户已被锁定");
-        } else {
-            response.put("message", "认证失败");
-        }
+        response.put("message", ex.getMessage());
         
         log.warn("认证异常: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
