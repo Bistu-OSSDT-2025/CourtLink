@@ -1,0 +1,275 @@
+﻿{
+    "DetailedResults":  [
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  1,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  2,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  3,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  4,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  5,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  6,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  7,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  8,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  9,
+                                "Attempts":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  10,
+                                "Attempts":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                                "Round":  10,
+                                "Attempts":  9,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  10,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  10,
+                                "Attempts":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            }
+                        ],
+    "OverallStats":  {
+                         "StabilityGrade":  "C (Poor)",
+                         "PassRate":  75,
+                         "TotalTests":  40,
+                         "PassedTests":  30,
+                         "FailedTests":  10
+                     },
+    "TestInfo":  {
+                     "Duration":  54.9065525,
+                     "EndTime":  "\/Date(1751256437328)\/",
+                     "TestType":  "Enhanced",
+                     "StartTime":  "\/Date(1751256382421)\/",
+                     "Rounds":  10
+                 },
+    "Enhancements":  {
+                         "TimeoutValues":  "Extended to 15 seconds",
+                         "PreRound10Cooldown":  "2 second cooldown before round 10",
+                         "RetryMechanism":  "3 retries for registration, 5 for API calls",
+                         "DelayBetweenTests":  "100-150ms progressive delays",
+                         "DatabaseConnectionPool":  "Optimized to max 20 connections"
+                     }
+}

@@ -1,0 +1,15 @@
+﻿{
+    "TestDate":  "2025-06-30 12:21:17",
+    "TotalRounds":  15,
+    "DetailedStats":  {
+                          "ExceptionTest":  15,
+                          "HealthCheck":  15,
+                          "UserRegistration":  0,
+                          "Cleanup":  0,
+                          "UserQuery":  0
+                      },
+    "FailedRounds":  15,
+    "Duration":  7.8051024999999994,
+    "SuccessfulRounds":  0,
+    "SuccessRate":  0
+}
