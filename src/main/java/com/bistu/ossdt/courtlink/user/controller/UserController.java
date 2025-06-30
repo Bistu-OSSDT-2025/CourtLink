@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -243,5 +244,18 @@ public class UserController {
         log.info("停用用户请求: {}", id);
         userService.deactivateUser(id);
         return ResponseEntity.ok(Map.of("success", true, "message", "用户停用成功"));
+    }
+
+    /**
+     * 简单健康检查
+     */
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, Object>> healthCheck() {
+        Map<String, Object> health = new HashMap<>();
+        health.put("status", "UP");
+        health.put("timestamp", java.time.LocalDateTime.now());
+        health.put("application", "CourtLink");
+        health.put("message", "用户管理模块正常运行");
+        return ResponseEntity.ok(health);
     }
 } 

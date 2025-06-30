@@ -1,0 +1,36 @@
+﻿{
+    "DetailedStats":  {
+                          "ExceptionTest":  {
+                                                "Total":  15,
+                                                "Pass":  15
+                                            },
+                          "HealthCheck":  {
+                                              "Total":  15,
+                                              "Pass":  15
+                                          },
+                          "UserRegistration":  {
+                                                   "Total":  15,
+                                                   "Pass":  0
+                                               },
+                          "Cleanup":  {
+                                          "Total":  15,
+                                          "Pass":  0
+                                      },
+                          "UserQuery":  {
+                                            "Total":  15,
+                                            "Pass":  0
+                                        }
+                      },
+    "TestInfo":  {
+                     "Duration":  8.9114501999999991,
+                     "TestSessionId":  "83a706f7",
+                     "TotalRounds":  15,
+                     "TestDate":  "2025-06-30 12:24:56"
+                 },
+    "Results":  {
+                    "FailedRounds":  15,
+                    "Grade":  "C (Needs Improvement)",
+                    "SuccessRate":  0,
+                    "SuccessfulRounds":  0
+                }
+}

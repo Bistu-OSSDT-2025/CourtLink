@@ -1,0 +1,487 @@
+﻿{
+    "DetailedResults":  [
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  1,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  2,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  3,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  4,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  5,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  6,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  7,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  8,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "UserLogin"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "GetUserInfo"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "PasswordValidation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "UserActivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "UserDeactivation"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "DeleteUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  9,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  10,
+                                "Test":  "HealthCheck"
+                            },
+                            {
+                                "Status":  "FAIL",
+                                "Round":  10,
+                                "Test":  "UserRegistration"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  10,
+                                "Test":  "ExceptionTest-InvalidUser"
+                            },
+                            {
+                                "Status":  "PASS",
+                                "Round":  10,
+                                "Test":  "ExceptionTest-InvalidReg"
+                            }
+                        ],
+    "OverallStats":  {
+                         "StabilityGrade":  "A (Very Good)",
+                         "PassRate":  98.936170212765958,
+                         "TotalTests":  94,
+                         "PassedTests":  93,
+                         "FailedTests":  1
+                     },
+    "TestInfo":  {
+                     "Duration":  10.8455367,
+                     "EndTime":  "\/Date(1751255776302)\/",
+                     "StartTime":  "\/Date(1751255765457)\/",
+                     "Rounds":  10
+                 }
+}
