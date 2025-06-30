@@ -1,9 +1,9 @@
 package com.bistu.ossdt.courtlink.admin.model;
 
 public enum AuditStatus {
-    PENDING("待审核"),
-    APPROVED("已通过"),
-    REJECTED("已驳回");
+    PENDING("Pending"),
+    APPROVED("Approved"),
+    REJECTED("Rejected");
 
     private final String description;
 

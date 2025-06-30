@@ -15,62 +15,60 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
-@Tag(name = "用户管理", description = "用户管理相关接口")
+@Tag(name = "User Management", description = "User management API")
 @PreAuthorize("hasRole('ADMIN')")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping
-    @Operation(summary = "创建用户")
+    @Operation(summary = "Create user")
     public UserDTO createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "更新用户")
-    public UserDTO updateUser(
-            @Parameter(description = "用户ID") @PathVariable Long id,
-            @Valid @RequestBody CreateUserRequest request) {
+    @Operation(summary = "Update user")
+    public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody CreateUserRequest request) {
         return userService.updateUser(id, request);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "删除用户")
-    public void deleteUser(@Parameter(description = "用户ID") @PathVariable Long id) {
+    @Operation(summary = "Delete user")
+    public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "获取用户详情")
-    public UserDTO getUser(@Parameter(description = "用户ID") @PathVariable Long id) {
+    @Operation(summary = "Get user details")
+    public UserDTO getUser(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @GetMapping
-    @Operation(summary = "获取用户列表")
+    @Operation(summary = "Get user list")
     public IPage<UserDTO> getUsers(
-            @Parameter(description = "页码") @RequestParam(defaultValue = "1") int page,
-            @Parameter(description = "每页大小") @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = "搜索关键字") @RequestParam(required = false) String search) {
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "1") int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Search keyword") @RequestParam(required = false) String search) {
         return userService.getUsers(page, size, search);
     }
 
-    @PutMapping("/{id}/toggle-status")
-    @Operation(summary = "切换用户状态")
-    public boolean toggleUserStatus(@Parameter(description = "用户ID") @PathVariable Long id) {
+    @PutMapping("/{id}/status")
+    @Operation(summary = "Toggle user status")
+    public boolean toggleUserStatus(@PathVariable Long id) {
         return userService.toggleUserStatus(id);
     }
 
-    @GetMapping("/check-username")
-    @Operation(summary = "检查用户名是否存在")
-    public boolean checkUsername(@Parameter(description = "用户名") @RequestParam String username) {
+    @GetMapping("/check/username")
+    @Operation(summary = "Check if username exists")
+    public boolean checkUsername(@RequestParam String username) {
         return userService.isUsernameExists(username);
     }
 
-    @GetMapping("/check-email")
-    @Operation(summary = "检查邮箱是否存在")
-    public boolean checkEmail(@Parameter(description = "邮箱") @RequestParam String email) {
+    @GetMapping("/check/email")
+    @Operation(summary = "Check if email exists")
+    public boolean checkEmail(@RequestParam String email) {
         return userService.isEmailExists(email);
     }
 } 

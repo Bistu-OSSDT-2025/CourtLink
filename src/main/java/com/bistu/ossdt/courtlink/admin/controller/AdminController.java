@@ -13,27 +13,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-@Tag(name = "后台管理", description = "系统管理接口")
+@Tag(name = "Admin Management", description = "System management API")
 public class AdminController {
 
     private final SystemConfigService systemConfigService;
 
     @GetMapping("/config")
-    @Operation(summary = "获取系统配置列表")
+    @Operation(summary = "Get system configuration list")
     @PreAuthorize("hasRole('ADMIN')")
     public List<SystemConfig> getConfigs() {
         return systemConfigService.list();
     }
 
     @PostMapping("/config")
-    @Operation(summary = "新增系统配置")
+    @Operation(summary = "Add system configuration")
     @PreAuthorize("hasRole('ADMIN')")
     public boolean addConfig(@RequestBody SystemConfig config) {
         return systemConfigService.save(config);
     }
 
     @PutMapping("/config/{id}")
-    @Operation(summary = "更新系统配置")
+    @Operation(summary = "Update system configuration")
     @PreAuthorize("hasRole('ADMIN')")
     public boolean updateConfig(@PathVariable Long id, @RequestBody SystemConfig config) {
         config.setId(id);
@@ -41,7 +41,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/config/{id}")
-    @Operation(summary = "删除系统配置")
+    @Operation(summary = "Delete system configuration")
     @PreAuthorize("hasRole('ADMIN')")
     public boolean deleteConfig(@PathVariable Long id) {
         return systemConfigService.removeById(id);

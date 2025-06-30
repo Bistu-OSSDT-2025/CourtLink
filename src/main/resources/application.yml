@@ -1,0 +1,70 @@
+﻿server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: CourtLink
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/courtlink?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    locale: zh_CN
+  
+  messages:
+    encoding: UTF-8
+    basename: messages
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    banner: false
+  type-aliases-package: com.bistu.ossdt.courtlink.admin.model
+
+logging:
+  level:
+    com.bistu.ossdt.courtlink: DEBUG
+    org.springframework.security: DEBUG
+  charset:
+    console: UTF-8
+    file: UTF-8
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+app:
+  name: CourtLink
+  version: 1.0.0
+  description: 法院管理系统
+  encoding: UTF-8
