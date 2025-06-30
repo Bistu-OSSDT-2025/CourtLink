@@ -24,20 +24,20 @@ public class AuditLogAspect {
     public Object logAuditOperation(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         
-        // 记录操作前的时间
+        // Record operation time
         LocalDateTime operationTime = LocalDateTime.now();
         
-        // 执行实际的方法
+        // Execute the actual method
         Object result = joinPoint.proceed();
         
-        // 创建审计日志
+        // Create audit log
         AuditLog auditLog = new AuditLog();
         auditLog.setOperationType(joinPoint.getSignature().getName());
         auditLog.setOperationTarget(joinPoint.getTarget().getClass().getSimpleName());
         auditLog.setIpAddress(request.getRemoteAddr());
         auditLog.setOperationTime(operationTime);
         
-        // 保存审计日志
+        // Save audit log
         auditLogService.save(auditLog);
         
         return result;
