@@ -2,7 +2,6 @@ package com.courtlink.service;
 
 import com.courtlink.dto.CourtRequest;
 import com.courtlink.dto.CourtResponse;
-import com.courtlink.entity.Court;
 import com.courtlink.enums.CourtStatus;
 
 import java.util.List;

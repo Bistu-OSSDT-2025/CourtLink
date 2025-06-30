@@ -8,34 +8,34 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 简单的限流工具类
- * 用于防止系统过载和恶意请求
+ * Simple Rate Limiter
+ * Prevents system overload and malicious attacks
  */
 @Component
 public class RateLimiter {
 
-    // 存储每个用户的请求记录
+    // Store request records for each user
     private final ConcurrentHashMap<String, UserRequestRecord> userRequests = new ConcurrentHashMap<>();
     
-    // 默认配置
-    private static final int DEFAULT_MAX_REQUESTS = 100; // 每分钟最大请求数
-    private static final int DEFAULT_TIME_WINDOW_MINUTES = 1; // 时间窗口（分钟）
+    // Default settings
+    private static final int DEFAULT_MAX_REQUESTS = 100; // Max requests per time window
+    private static final int DEFAULT_TIME_WINDOW_MINUTES = 1; // Time window in minutes
     
     /**
-     * 检查是否允许请求
-     * @param userId 用户ID或IP地址
-     * @return true表示允许请求，false表示应该被限制
+     * Check if request is allowed
+     * @param userId User ID or IP address
+     * @return true if allowed, false if should be blocked
      */
     public boolean isAllowed(String userId) {
         return isAllowed(userId, DEFAULT_MAX_REQUESTS, DEFAULT_TIME_WINDOW_MINUTES);
     }
     
     /**
-     * 检查是否允许请求（自定义参数）
-     * @param userId 用户ID或IP地址
-     * @param maxRequests 最大请求数
-     * @param timeWindowMinutes 时间窗口（分钟）
-     * @return true表示允许请求，false表示应该被限制
+     * Check if request is allowed with custom parameters
+     * @param userId User ID or IP address
+     * @param maxRequests Maximum requests allowed
+     * @param timeWindowMinutes Time window in minutes
+     * @return true if allowed, false if should be blocked
      */
     public boolean isAllowed(String userId, int maxRequests, int timeWindowMinutes) {
         LocalDateTime now = LocalDateTime.now();
@@ -43,27 +43,27 @@ public class RateLimiter {
         UserRequestRecord record = userRequests.computeIfAbsent(userId, 
             k -> new UserRequestRecord(now, new AtomicInteger(0)));
         
-        // 检查时间窗口是否已过期
+        // Check if time window has expired
         if (ChronoUnit.MINUTES.between(record.getWindowStart(), now) >= timeWindowMinutes) {
-            // 重置计数器和时间窗口
+            // Reset counter and time window
             record.setWindowStart(now);
             record.getRequestCount().set(0);
         }
         
-        // 检查是否超过限制
+        // Check if limit exceeded
         int currentCount = record.getRequestCount().incrementAndGet();
         
         if (currentCount > maxRequests) {
-            return false; // 超过限制
+            return false; // Rate limit exceeded
         }
         
-        return true; // 允许请求
+        return true; // Request allowed
     }
     
     /**
-     * 获取用户当前请求统计
-     * @param userId 用户ID
-     * @return 请求统计信息
+     * Get current request statistics for user
+     * @param userId User ID
+     * @return Request statistics
      */
     public RequestStats getRequestStats(String userId) {
         UserRequestRecord record = userRequests.get(userId);
@@ -82,7 +82,7 @@ public class RateLimiter {
     }
     
     /**
-     * 清理过期的记录（定期清理任务可以调用）
+     * Clean up expired records (can be called periodically)
      */
     public void cleanupExpiredRecords() {
         LocalDateTime cutoff = LocalDateTime.now().minus(DEFAULT_TIME_WINDOW_MINUTES * 2, ChronoUnit.MINUTES);
@@ -93,7 +93,7 @@ public class RateLimiter {
     }
     
     /**
-     * 获取当前限流器状态
+     * Get current rate limiter statistics
      */
     public RateLimiterStats getStats() {
         return new RateLimiterStats(
@@ -104,7 +104,7 @@ public class RateLimiter {
     }
     
     /**
-     * 用户请求记录内部类
+     * User request record internal class
      */
     private static class UserRequestRecord {
         private LocalDateTime windowStart;
@@ -129,7 +129,7 @@ public class RateLimiter {
     }
     
     /**
-     * 请求统计信息
+     * Request statistics
      */
     public static class RequestStats {
         private final int requestCount;
@@ -156,7 +156,7 @@ public class RateLimiter {
     }
     
     /**
-     * 限流器统计信息
+     * Rate limiter statistics
      */
     public static class RateLimiterStats {
         private final int activeUsers;

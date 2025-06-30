@@ -1,7 +1,5 @@
 server:
   port: 8080
-  servlet:
-    context-path: /api
   tomcat:
     threads:
       max: 200
@@ -35,18 +33,14 @@ spring:
       hibernate:
         format_sql: true
         cache:
-          use_second_level_cache: true
-          use_query_cache: true
-          region:
-            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+          use_second_level_cache: false
+          use_query_cache: false
         jdbc:
           batch_size: 25
           order_inserts: true
           order_updates: true
   cache:
     type: caffeine
-    caffeine:
-      spec: maximumSize=1000,expireAfterWrite=300s
   h2:
     console:
       enabled: true

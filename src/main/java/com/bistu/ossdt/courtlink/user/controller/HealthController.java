@@ -1,7 +1,10 @@
 package com.bistu.ossdt.courtlink.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,89 +21,112 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/health")
+@RequestMapping("/api")
+@Tag(name = "Health Check", description = "系统健康检查接口")
 public class HealthController {
 
     @Autowired
     private DataSource dataSource;
 
-    /**
-     * 基础健康检查
-     */
-    @GetMapping("/status")
-    public ResponseEntity<Map<String, Object>> getHealthStatus() {
+    @Autowired(required = false)
+    private BuildProperties buildProperties;
+
+    @GetMapping("/health")
+    @Operation(summary = "系统健康检查", description = "检查系统各组件的运行状态")
+    public ResponseEntity<Map<String, Object>> health() {
         Map<String, Object> health = new HashMap<>();
+        Map<String, Object> components = new HashMap<>();
         
         try {
-            // 检查应用状态
-            health.put("status", "UP");
-            health.put("timestamp", LocalDateTime.now());
-            health.put("application", "CourtLink");
-            health.put("version", "1.0.0");
-            
             // 检查数据库连接
             try (Connection connection = dataSource.getConnection()) {
-                if (connection.isValid(5)) {
-                    health.put("database", "UP");
-                } else {
-                    health.put("database", "DOWN");
-                    health.put("status", "DOWN");
-                }
+                boolean isValid = connection.isValid(5);
+                components.put("database", Map.of(
+                    "status", isValid ? "UP" : "DOWN",
+                    "details", Map.of(
+                        "driver", connection.getMetaData().getDriverName(),
+                        "url", connection.getMetaData().getURL()
+                    )
+                ));
             } catch (Exception e) {
-                log.error("数据库连接检查失败", e);
-                health.put("database", "DOWN");
-                health.put("status", "DOWN");
-                health.put("error", e.getMessage());
+                components.put("database", Map.of(
+                    "status", "DOWN",
+                    "error", e.getMessage()
+                ));
             }
-            
+
             // 系统信息
             Runtime runtime = Runtime.getRuntime();
-            Map<String, Object> system = new HashMap<>();
-            system.put("totalMemory", runtime.totalMemory() / 1024 / 1024 + "MB");
-            system.put("freeMemory", runtime.freeMemory() / 1024 / 1024 + "MB");
-            system.put("maxMemory", runtime.maxMemory() / 1024 / 1024 + "MB");
-            system.put("processors", runtime.availableProcessors());
-            health.put("system", system);
+            Map<String, Object> systemInfo = new HashMap<>();
+            systemInfo.put("processors", runtime.availableProcessors());
+            systemInfo.put("totalMemory", runtime.totalMemory());
+            systemInfo.put("freeMemory", runtime.freeMemory());
+            systemInfo.put("maxMemory", runtime.maxMemory());
+            systemInfo.put("usedMemory", runtime.totalMemory() - runtime.freeMemory());
             
-            if ("UP".equals(health.get("status"))) {
-                return ResponseEntity.ok(health);
-            } else {
-                return ResponseEntity.status(503).body(health);
+            components.put("system", Map.of(
+                "status", "UP",
+                "details", systemInfo
+            ));
+
+            // 应用信息
+            Map<String, Object> appInfo = new HashMap<>();
+            appInfo.put("name", "CourtLink API");
+            appInfo.put("environment", "development");
+            appInfo.put("timestamp", LocalDateTime.now());
+            
+            if (buildProperties != null) {
+                appInfo.put("version", buildProperties.getVersion());
+                appInfo.put("buildTime", buildProperties.getTime());
             }
             
-        } catch (Exception e) {
-            log.error("健康检查失败", e);
-            health.put("status", "DOWN");
-            health.put("error", e.getMessage());
+            components.put("application", Map.of(
+                "status", "UP",
+                "details", appInfo
+            ));
+
+            // 整体状态
+            boolean allUp = components.values().stream()
+                    .allMatch(component -> "UP".equals(((Map<?, ?>) component).get("status")));
+            
+            health.put("status", allUp ? "UP" : "DOWN");
             health.put("timestamp", LocalDateTime.now());
+            health.put("components", components);
+            
+            log.debug("Health check completed - Status: {}", allUp ? "UP" : "DOWN");
+            
+            return ResponseEntity.ok(health);
+            
+        } catch (Exception e) {
+            log.error("Health check failed", e);
+            health.put("status", "DOWN");
+            health.put("timestamp", LocalDateTime.now());
+            health.put("error", e.getMessage());
             return ResponseEntity.status(503).body(health);
         }
     }
 
-    /**
-     * 快速检查
-     */
-    @GetMapping("/ping")
-    public ResponseEntity<Map<String, Object>> ping() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "OK");
-        response.put("timestamp", LocalDateTime.now());
-        response.put("message", "CourtLink is running");
-        return ResponseEntity.ok(response);
+    @GetMapping("/health/simple")
+    @Operation(summary = "简单健康检查", description = "简单的服务可用性检查")
+    public ResponseEntity<String> simpleHealth() {
+        return ResponseEntity.ok("OK");
     }
 
-    /**
-     * 版本信息
-     */
-    @GetMapping("/info")
-    public ResponseEntity<Map<String, Object>> getInfo() {
-        Map<String, Object> info = new HashMap<>();
-        info.put("application", "CourtLink");
-        info.put("description", "Badminton Court Booking System");
-        info.put("version", "1.0.0");
-        info.put("build", LocalDateTime.now().toString());
-        info.put("java_version", System.getProperty("java.version"));
-        info.put("spring_version", org.springframework.core.SpringVersion.getVersion());
-        return ResponseEntity.ok(info);
+    @GetMapping("/health/ready")
+    @Operation(summary = "就绪检查", description = "检查服务是否准备好接收请求")
+    public ResponseEntity<Map<String, Object>> ready() {
+        Map<String, Object> status = new HashMap<>();
+        status.put("status", "READY");
+        status.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/health/live")
+    @Operation(summary = "存活检查", description = "检查服务是否存活")
+    public ResponseEntity<Map<String, Object>> live() {
+        Map<String, Object> status = new HashMap<>();
+        status.put("status", "LIVE");
+        status.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.ok(status);
     }
 } 

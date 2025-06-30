@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+@RestControllerAdvice("com.bistu.ossdt.courtlink.user")
+public class UserGlobalExceptionHandler {
 
     /**
      * 处理参数验证异常
@@ -152,13 +152,13 @@ public class GlobalExceptionHandler {
     /**
      * 处理资源不存在异常
      */
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNoResourceFoundException(NoResourceFoundException ex) {
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNoHandlerFoundException(NoHandlerFoundException ex) {
         Map<String, Object> response = new HashMap<>();
         response.put("code", 404);
-        response.put("message", "API端点不存在: " + ex.getResourcePath());
+        response.put("message", "API端点不存在: " + ex.getRequestURL());
         
-        log.warn("API端点不存在: {}", ex.getResourcePath());
+        log.warn("API端点不存在: {}", ex.getRequestURL());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 

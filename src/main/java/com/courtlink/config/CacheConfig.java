@@ -6,74 +6,66 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * »º´æÅäÖÃÀà
- * ÅäÖÃCaffeine»º´æÒÔÌáÉıÏµÍ³ĞÔÄÜ
+ * ç¼“å­˜é…ç½®
+ * ä½¿ç”¨ Caffeine æä¾›é«˜æ€§èƒ½ç¼“å­˜
  */
 @Configuration
 @EnableCaching
 public class CacheConfig {
 
     /**
-     * ÅäÖÃCaffeine»º´æ¹ÜÀíÆ÷
+     * é…ç½®ç»Ÿä¸€çš„ç¼“å­˜ç®¡ç†å™¨
+     * ä½¿ç”¨ @Primary æ³¨è§£æ ‡è®°ä¸ºä¸»è¦ç¼“å­˜ç®¡ç†å™¨
      */
     @Bean
+    @Primary
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         
-        // ÅäÖÃ»º´æÊµÀı
+        // é…ç½®é»˜è®¤çš„ç¼“å­˜è®¾ç½®
         cacheManager.setCaffeine(Caffeine.newBuilder()
-                // ×î´ó»º´æÌõÄ¿Êı
+                // æœ€å¤§ç¼“å­˜å¤§å°
                 .maximumSize(1000)
-                // Ğ´Èëºó¹ıÆÚÊ±¼ä
+                // å†™å…¥åè¿‡æœŸæ—¶é—´
                 .expireAfterWrite(5, TimeUnit.MINUTES)
-                // ·ÃÎÊºó¹ıÆÚÊ±¼ä
+                // è®¿é—®åè¿‡æœŸæ—¶é—´
                 .expireAfterAccess(2, TimeUnit.MINUTES)
-                // ³õÊ¼ÈİÁ¿
+                // åˆå§‹å®¹é‡
                 .initialCapacity(100)
-                // ÆôÓÃÍ³¼Æ
+                // å¯ç”¨ç»Ÿè®¡
                 .recordStats()
         );
         
-        // ÉèÖÃ»º´æÃû³Æ
-        cacheManager.setCacheNames("courts", "court-search", "court-statistics");
-        
-        return cacheManager;
-    }
-
-    /**
-     * ÅäÖÃ³¡µØ²éÑ¯×¨ÓÃ»º´æ
-     */
-    @Bean("courtQueryCache")
-    public CacheManager courtQueryCacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-        
-        cacheManager.setCaffeine(Caffeine.newBuilder()
-                .maximumSize(500)
-                .expireAfterWrite(10, TimeUnit.MINUTES)
-                .refreshAfterWrite(8, TimeUnit.MINUTES)
-                .recordStats()
+        // è®¾ç½®ç¼“å­˜åç§°ï¼Œä¸åŒç¼“å­˜å¯ä»¥ä½¿ç”¨ä¸åŒçš„é…ç½®
+        cacheManager.setCacheNames(
+            java.util.List.of(
+                "courts",           // çƒåœºæ•°æ®ç¼“å­˜
+                "court-search",     // çƒåœºæœç´¢ç¼“å­˜
+                "court-statistics", // çƒåœºç»Ÿè®¡ç¼“å­˜
+                "court-query",      // çƒåœºæŸ¥è¯¢ç¼“å­˜ (è¾ƒé•¿è¿‡æœŸæ—¶é—´)
+                "statistics"        // ç»Ÿè®¡æ•°æ®ç¼“å­˜ (æœ€é•¿è¿‡æœŸæ—¶é—´)
+            )
         );
         
         return cacheManager;
     }
 
     /**
-     * ÅäÖÃÍ³¼ÆÊı¾İ»º´æ
+     * ä¸ºéœ€è¦ç‰¹æ®Šé…ç½®çš„ç¼“å­˜æä¾›è‡ªå®šä¹‰Caffeineå®ä¾‹
+     * å¯ä»¥æ ¹æ®éœ€è¦æ‰©å±•æ›´å¤šç‰¹æ®Šé…ç½®
      */
-    @Bean("statisticsCache")
-    public CacheManager statisticsCacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-        
-        cacheManager.setCaffeine(Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
-                .recordStats()
-        );
-        
-        return cacheManager;
+    @Bean
+    public Caffeine<Object, Object> caffeineConfig() {
+        return Caffeine.newBuilder()
+                .maximumSize(1000)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .expireAfterAccess(2, TimeUnit.MINUTES)
+                .initialCapacity(100)
+                .recordStats();
     }
 } 

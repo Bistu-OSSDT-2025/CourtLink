@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +36,7 @@ public class CourtServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        // 准备测试数据
+        // 鍑嗗娴嬭瘯鏁版嵁
         testCourt = new Court();
         testCourt.setId(1L);
         testCourt.setName("Test Court");
