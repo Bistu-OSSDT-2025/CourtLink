@@ -84,4 +84,14 @@ public interface UserService {
      * 启用/禁用用户
      */
     void toggleUserStatus(Long id);
+    
+    /**
+     * 激活用户
+     */
+    void activateUser(Long id);
+    
+    /**
+     * 停用用户
+     */
+    void deactivateUser(Long id);
 } 

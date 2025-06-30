@@ -102,12 +102,30 @@ public class UserController {
     }
 
     /**
+     * 检查用户名是否存在（路径参数方式）
+     */
+    @GetMapping("/exists/username/{username}")
+    public ResponseEntity<Boolean> checkUsernameExists(@PathVariable String username) {
+        boolean exists = userService.existsByUsername(username);
+        return ResponseEntity.ok(exists);
+    }
+
+    /**
      * 检查邮箱是否已被使用
      */
     @GetMapping("/check-email")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
         boolean exists = userService.existsByEmail(email);
         return ResponseEntity.ok(Map.of("exists", exists));
+    }
+
+    /**
+     * 检查邮箱是否存在（路径参数方式）
+     */
+    @GetMapping("/exists/email/{email}")
+    public ResponseEntity<Boolean> checkEmailExists(@PathVariable String email) {
+        boolean exists = userService.existsByEmail(email);
+        return ResponseEntity.ok(exists);
     }
 
     /**
@@ -141,6 +159,17 @@ public class UserController {
     }
 
     /**
+     * 验证密码（另一种格式）
+     */
+    @PostMapping("/verify-password")
+    public ResponseEntity<Boolean> verifyPassword(@RequestBody Map<String, Object> request) {
+        Long userId = Long.valueOf(request.get("userId").toString());
+        String password = request.get("password").toString();
+        boolean valid = userService.validatePassword(userId, password);
+        return ResponseEntity.ok(valid);
+    }
+
+    /**
      * 更改密码
      */
     @PostMapping("/{id}/change-password")
@@ -154,6 +183,21 @@ public class UserController {
         userService.changePassword(id, oldPassword, newPassword);
         
         return ResponseEntity.ok(Map.of("message", "密码更改成功"));
+    }
+
+    /**
+     * 更改密码（另一种格式）
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, Object>> changeUserPassword(@RequestBody Map<String, Object> request) {
+        Long userId = Long.valueOf(request.get("userId").toString());
+        String oldPassword = request.get("oldPassword").toString();
+        String newPassword = request.get("newPassword").toString();
+        
+        log.info("更改密码请求: {}", userId);
+        userService.changePassword(userId, oldPassword, newPassword);
+        
+        return ResponseEntity.ok(Map.of("success", true, "message", "密码更改成功"));
     }
 
     /**
@@ -179,5 +223,25 @@ public class UserController {
         log.info("切换用户状态请求: {}", id);
         userService.toggleUserStatus(id);
         return ResponseEntity.ok(Map.of("message", "用户状态切换成功"));
+    }
+
+    /**
+     * 激活用户
+     */
+    @PostMapping("/{id}/activate")
+    public ResponseEntity<Map<String, Object>> activateUser(@PathVariable Long id) {
+        log.info("激活用户请求: {}", id);
+        userService.activateUser(id);
+        return ResponseEntity.ok(Map.of("success", true, "message", "用户激活成功"));
+    }
+
+    /**
+     * 停用用户
+     */
+    @PostMapping("/{id}/deactivate")
+    public ResponseEntity<Map<String, Object>> deactivateUser(@PathVariable Long id) {
+        log.info("停用用户请求: {}", id);
+        userService.deactivateUser(id);
+        return ResponseEntity.ok(Map.of("success", true, "message", "用户停用成功"));
     }
 } 

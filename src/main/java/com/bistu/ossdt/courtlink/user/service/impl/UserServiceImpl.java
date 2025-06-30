@@ -246,6 +246,32 @@ public class UserServiceImpl implements UserService {
         log.info("用户状态切换成功: {}, 新状态: {}", id, user.getStatus());
     }
 
+    @Override
+    public void activateUser(Long id) {
+        log.info("激活用户: {}", id);
+        
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        
+        user.setStatus(User.UserStatus.ACTIVE);
+        userRepository.save(user);
+        
+        log.info("用户激活成功: {}", id);
+    }
+
+    @Override
+    public void deactivateUser(Long id) {
+        log.info("停用用户: {}", id);
+        
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        
+        user.setStatus(User.UserStatus.DISABLED);
+        userRepository.save(user);
+        
+        log.info("用户停用成功: {}", id);
+    }
+
     /**
      * 将User实体转换为UserDTO
      */
