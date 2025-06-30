@@ -1,0 +1,16 @@
+target/
+build/
+out/
+bin/
+*.class
+.idea/
+*.iml
+.vscode/
+.mvn/
+mvnw
+mvnw.cmd
+*.log
+logs/
+*.h2.db
+*.mv.db
+*.trace.db
