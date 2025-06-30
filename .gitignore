@@ -67,6 +67,23 @@ application-prod.yml
 # Redis dump
 dump.rdb
 
+# Frontend
+frontend/node_modules
+frontend/dist
+frontend/.env
+frontend/.env.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# Backend
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/*.log
+backend/src/main/resources/application-local.properties
+
 # Node modules (if any frontend)
 node_modules/
 npm-debug.log*
@@ -89,4 +106,4 @@ yarn-error.log*
 
 # Backup files
 *.bak
-*.backup 
+*.backup
