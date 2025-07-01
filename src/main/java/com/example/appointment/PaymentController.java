@@ -24,14 +24,14 @@ public class PaymentController {
 
     @Operation(summary = "模拟支付")
     @PostMapping("/pay")
-    public ResponseEntity<?> pay(@RequestParam Long appointmentId, @RequestParam BigDecimal amount) {
+    public ResponseEntity<ApiResponse<String>> pay(@RequestParam Long appointmentId, @RequestParam BigDecimal amount) {
         Optional<Appointment> opt = appointmentRepository.findById(appointmentId);
         if (opt.isEmpty()) {
-            return ResponseEntity.badRequest().body("预约不存在");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "预约不存在", null));
         }
         Appointment appointment = opt.get();
         if (appointment.getStatus() != Appointment.AppointmentStatus.CONFIRMED) {
-            return ResponseEntity.badRequest().body("预约未确认，无法支付");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "预约未确认，无法支付", null));
         }
         // 模拟支付成功
         Payment payment = new Payment();
@@ -44,43 +44,43 @@ public class PaymentController {
         appointment.setStatus(Appointment.AppointmentStatus.COMPLETED);
         appointment.setPaymentId(payment.getId().toString());
         appointmentRepository.save(appointment);
-        return ResponseEntity.ok("支付成功，预约已完成");
+        return ResponseEntity.ok(new ApiResponse<>(true, "支付成功，预约已完成", null));
     }
 
     @Operation(summary = "模拟退款")
     @PostMapping("/refund")
-    public ResponseEntity<?> refund(@RequestParam Long appointmentId) {
+    public ResponseEntity<ApiResponse<String>> refund(@RequestParam Long appointmentId) {
         Optional<Appointment> opt = appointmentRepository.findById(appointmentId);
         if (opt.isEmpty()) {
-            return ResponseEntity.badRequest().body("预约不存在");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "预约不存在", null));
         }
         Appointment appointment = opt.get();
         if (appointment.getStatus() != Appointment.AppointmentStatus.COMPLETED) {
-            return ResponseEntity.badRequest().body("只有已完成预约才能退款");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "只有已完成预约才能退款", null));
         }
         // 模拟退款
         Payment payment = paymentRepository.findByAppointmentId(appointmentId).orElse(null);
         if (payment == null) {
-            return ResponseEntity.badRequest().body("未找到支付记录");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "未找到支付记录", null));
         }
         payment.setStatus(Payment.PaymentStatus.REFUNDED);
         paymentRepository.save(payment);
         appointment.setStatus(Appointment.AppointmentStatus.CANCELLED);
         appointmentRepository.save(appointment);
-        return ResponseEntity.ok("退款成功，预约已取消");
+        return ResponseEntity.ok(new ApiResponse<>(true, "退款成功，预约已取消", null));
     }
 
     @Operation(summary = "模拟支付回调")
     @PostMapping("/callback")
-    public ResponseEntity<?> paymentCallback(@RequestParam Long appointmentId) {
+    public ResponseEntity<ApiResponse<String>> paymentCallback(@RequestParam Long appointmentId) {
         Optional<Appointment> opt = appointmentRepository.findById(appointmentId);
         if (opt.isEmpty()) {
-            return ResponseEntity.badRequest().body("预约不存在");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "预约不存在", null));
         }
         Appointment appointment = opt.get();
         // 假设回调即支付成功
         appointment.setStatus(Appointment.AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
-        return ResponseEntity.ok("支付回调处理成功，预约状态已更新");
+        return ResponseEntity.ok(new ApiResponse<>(true, "支付回调处理成功，预约状态已更新", null));
     }
 } 

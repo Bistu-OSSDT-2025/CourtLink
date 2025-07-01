@@ -10,68 +10,68 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Ô¤Ô¼Êı¾İ´«Êä¶ÔÏó
+ * æ£°å‹­å®³éç‰ˆåµæµ¼çŠºç·­ç€µç¡…è–„
  * 
  * @author Your Name
  * @version 1.0.0
  */
 @Data
-@Schema(description = "Ô¤Ô¼Êı¾İ´«Êä¶ÔÏó")
+@Schema(description = "æ£°å‹­å®³éç‰ˆåµæµ¼çŠºç·­ç€µç¡…è–„")
 public class AppointmentDTO {
 
-    @Schema(description = "Ô¤Ô¼ID")
+    @Schema(description = "æ£°å‹­å®³ID")
     private Long id;
 
-    @NotBlank(message = "ÓÃ»§ID²»ÄÜÎª¿Õ")
-    @Schema(description = "ÓÃ»§ID", required = true)
+    @NotBlank(message = "é¢ã„¦åŸ›IDæ¶“å¶ˆå…˜æ¶“è™¹â”–")
+    @Schema(description = "é¢ã„¦åŸ›ID", required = true)
     private String userId;
 
-    @NotBlank(message = "·şÎñÌá¹©ÕßID²»ÄÜÎª¿Õ")
-    @Schema(description = "·şÎñÌá¹©ÕßID", required = true)
+    @NotBlank(message = "éˆå¶…å§Ÿé»æ„ªç·µé‘°åŒ¢Dæ¶“å¶ˆå…˜æ¶“è™¹â”–")
+    @Schema(description = "éˆå¶…å§Ÿé»æ„ªç·µé‘°åŒ¢D", required = true)
     private String providerId;
 
-    @NotBlank(message = "·şÎñÀàĞÍ²»ÄÜÎª¿Õ")
-    @Schema(description = "·şÎñÀàĞÍ", required = true)
+    @NotBlank(message = "éˆå¶…å§Ÿç»«è¯²ç€·æ¶“å¶ˆå…˜æ¶“è™¹â”–")
+    @Schema(description = "éˆå¶…å§Ÿç»«è¯²ç€·", required = true)
     private String serviceType;
 
-    @NotNull(message = "Ô¤Ô¼¿ªÊ¼Ê±¼ä²»ÄÜÎª¿Õ")
-    @Future(message = "Ô¤Ô¼¿ªÊ¼Ê±¼ä±ØĞëÊÇÎ´À´Ê±¼ä")
+    @NotNull(message = "æ£°å‹­å®³å¯®â‚¬æ¿®å¬«æ¤‚é—‚ç¿ ç¬‰é‘³æˆ’è´Ÿç»Œï¿½")
+    @Future(message = "æ£°å‹­å®³å¯®â‚¬æ¿®å¬«æ¤‚é—‚æ‘ç¹€æ¤¤ç»˜æ§¸éˆï¿½é‰ãƒ¦æ¤‚é—‚ï¿½")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "Ô¤Ô¼¿ªÊ¼Ê±¼ä", required = true)
+    @Schema(description = "æ£°å‹­å®³å¯®â‚¬æ¿®å¬«æ¤‚é—‚ï¿½", required = true)
     private LocalDateTime startTime;
 
-    @NotNull(message = "Ô¤Ô¼½áÊøÊ±¼ä²»ÄÜÎª¿Õ")
-    @Future(message = "Ô¤Ô¼½áÊøÊ±¼ä±ØĞëÊÇÎ´À´Ê±¼ä")
+    @NotNull(message = "æ£°å‹­å®³ç¼æ’´æ½«éƒå •æ£¿æ¶“å¶ˆå…˜æ¶“è™¹â”–")
+    @Future(message = "æ£°å‹­å®³ç¼æ’´æ½«éƒå •æ£¿è¹‡å‘´ã€é„ï¿½éˆï¿½é‰ãƒ¦æ¤‚é—‚ï¿½")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "Ô¤Ô¼½áÊøÊ±¼ä", required = true)
+    @Schema(description = "æ£°å‹­å®³ç¼æ’´æ½«éƒå •æ£¿", required = true)
     private LocalDateTime endTime;
 
-    @Schema(description = "Ô¤Ô¼×´Ì¬")
+    @Schema(description = "æ£°å‹­å®³é˜èˆµâ‚¬ï¿½")
     private Appointment.AppointmentStatus status;
 
-    @DecimalMin(value = "0.0", message = "½ğ¶î²»ÄÜÎª¸ºÊı")
-    @Schema(description = "Ô¤Ô¼½ğ¶î")
+    @DecimalMin(value = "0.0", message = "é–²æˆ¦ï¿½æ¿…ç¬‰é‘³æˆ’è´Ÿç’ç†¸æšŸ")
+    @Schema(description = "æ£°å‹­å®³é–²æˆ¦ï¿½ï¿½")
     private BigDecimal amount;
 
-    @Size(max = 500, message = "±¸×¢ĞÅÏ¢²»ÄÜ³¬¹ı500×Ö·û")
-    @Schema(description = "±¸×¢ĞÅÏ¢")
+    @Size(max = 500, message = "æ¾¶å›¨æ•æ·‡â„ƒä¼…æ¶“å¶ˆå…˜ç“’å‘°ç¹ƒ500ç€›æ¥ƒï¿½ï¿½")
+    @Schema(description = "æ¾¶å›¨æ•æ·‡â„ƒä¼…")
     private String notes;
 
-    @Schema(description = "Ö§¸¶ID")
+    @Schema(description = "é€ï¿½æµ æ¥­D")
     private String paymentId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "´´½¨Ê±¼ä")
+    @Schema(description = "é’æ¶˜ç¼“éƒå •æ£¿")
     private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "¸üĞÂÊ±¼ä")
+    @Schema(description = "é‡å­˜æŸŠéƒå •æ£¿")
     private LocalDateTime updatedAt;
 
     /**
-     * ×ª»»ÎªÊµÌå¶ÔÏó
+     * æï¿½é¹ï¿½æ¶“å“„ç–„æµ£æ’³ï¿½ç¡…è–„
      * 
-     * @return Ô¤Ô¼ÊµÌå
+     * @return æ£°å‹­å®³ç€¹ç‚°ç¶‹
      */
     public Appointment toEntity() {
         Appointment appointment = new Appointment();
@@ -89,10 +89,10 @@ public class AppointmentDTO {
     }
 
     /**
-     * ´ÓÊµÌå¶ÔÏó´´½¨DTO
+     * æµ åº¡ç–„æµ£æ’³ï¿½ç¡…è–„é’æ¶˜ç¼“DTO
      * 
-     * @param appointment Ô¤Ô¼ÊµÌå
-     * @return Ô¤Ô¼DTO
+     * @param appointment æ£°å‹­å®³ç€¹ç‚°ç¶‹
+     * @return æ£°å‹­å®³DTO
      */
     public static AppointmentDTO fromEntity(Appointment appointment) {
         AppointmentDTO dto = new AppointmentDTO();

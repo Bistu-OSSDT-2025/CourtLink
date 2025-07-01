@@ -21,7 +21,7 @@ public class AppointmentController {
 
     @Operation(summary = "创建预约")
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@Valid @RequestBody AppointmentRequest request) {
+    public ResponseEntity<ApiResponse<Appointment>> createAppointment(@Valid @RequestBody AppointmentRequest request) {
         Appointment appointment = new Appointment();
         appointment.setUserId(request.getUserId());
         appointment.setProviderId(request.getProviderId());
@@ -31,28 +31,30 @@ public class AppointmentController {
         appointment.setAmount(request.getAmount());
         appointment.setNotes(request.getNotes());
         Appointment created = appointmentService.createAppointment(appointment);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(new ApiResponse<>(true, "预约成功", created));
     }
 
     @Operation(summary = "根据ID查询预约")
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointment(@PathVariable Long id) {
-        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+    public ResponseEntity<ApiResponse<Appointment>> getAppointment(@PathVariable Long id) {
+        Appointment appointment = appointmentService.getAppointmentById(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "查询成功", appointment));
     }
 
     @Operation(summary = "取消预约")
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<Appointment> cancelAppointment(@PathVariable Long id, @RequestParam String reason) {
-        return ResponseEntity.ok(appointmentService.cancelAppointment(id, reason));
+    public ResponseEntity<ApiResponse<Appointment>> cancelAppointment(@PathVariable Long id, @RequestParam String reason) {
+        Appointment cancelled = appointmentService.cancelAppointment(id, reason);
+        return ResponseEntity.ok(new ApiResponse<>(true, "取消成功", cancelled));
     }
 
     @Operation(summary = "查看我的预约（按用户ID）")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getAppointmentsByUserId(
+    public ResponseEntity<ApiResponse<?>> getAppointmentsByUserId(
             @PathVariable String userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
-        return ResponseEntity.ok(appointmentService.getAppointmentsByUserId(userId, pageable));
+        return ResponseEntity.ok(new ApiResponse<>(true, "查询成功", appointmentService.getAppointmentsByUserId(userId, pageable)));
     }
 } 
