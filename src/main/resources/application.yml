@@ -1,18 +1,18 @@
-spring:
+ï»¿spring:
   profiles:
     active: dev
   
   application:
     name: appointment-payment-system
   
-  # Êı¾İ¿âÅäÖÃ
+  # æ•°æ®åº“é…ç½®
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/appointment_system?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: password
   
-  # JPAÅäÖÃ
+  # JPAé…ç½®
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,7 +22,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
   
-  # RedisÅäÖÃ
+  # Redisé…ç½®
   redis:
     host: localhost
     port: 6379
@@ -36,7 +36,7 @@ spring:
         max-idle: 8
         min-idle: 0
   
-  # RabbitMQÅäÖÃ
+  # RabbitMQé…ç½®
   rabbitmq:
     host: localhost
     port: 5672
@@ -44,7 +44,7 @@ spring:
     password: guest
     virtual-host: /
   
-  # ÓÊ¼şÅäÖÃ
+  # é‚®ä»¶é…ç½®
   mail:
     host: smtp.gmail.com
     port: 587
@@ -57,13 +57,13 @@ spring:
           starttls:
             enable: true
 
-# ·şÎñÆ÷ÅäÖÃ
+# æœåŠ¡å™¨é…ç½®
 server:
   port: 8080
   servlet:
     context-path: /api
 
-# ÈÕÖ¾ÅäÖÃ
+# æ—¥å¿—é…ç½®
 logging:
   level:
     com.example.appointment: DEBUG
@@ -76,7 +76,7 @@ logging:
   file:
     name: logs/appointment-system.log
 
-# SwaggerÅäÖÃ
+# Swaggeré…ç½®
 springdoc:
   api-docs:
     path: /api-docs
@@ -84,9 +84,9 @@ springdoc:
     path: /swagger-ui.html
     operations-sorter: method
 
-# ×Ô¶¨ÒåÅäÖÃ
+# è‡ªå®šä¹‰é…ç½®
 appointment:
-  # Ô¤Ô¼ÅäÖÃ
+  # é¢„çº¦é…ç½®
   conflict-check:
     enabled: true
     buffer-minutes: 30
@@ -95,18 +95,18 @@ appointment:
       enabled: true
     sms:
       enabled: false
-  # ¶¨Ê±ÈÎÎñÅäÖÃ
+  # å®šæ—¶ä»»åŠ¡é…ç½®
   scheduler:
     cleanup-expired:
-      cron: "0 0 2 * * ?"  # Ã¿ÌìÁè³¿2µãÇåÀí¹ıÆÚÔ¤Ô¼
+      cron: "0 0 2 * * ?"  # æ¯å¤©å‡Œæ™¨2ç‚¹æ¸…ç†è¿‡æœŸé¢„çº¦
     send-reminders:
-      cron: "0 0 9 * * ?"  # Ã¿ÌìÉÏÎç9µã·¢ËÍÌáĞÑ
+      cron: "0 0 9 * * ?"  # æ¯å¤©ä¸Šåˆ9ç‚¹å‘é€æé†’
 
 payment:
-  # Ö§¸¶ÅäÖÃ
+  # æ”¯ä»˜é…ç½®
   timeout-seconds: 300
   retry-times: 3
-  # Ä£ÄâÖ§¸¶ÅäÖÃ
+  # æ¨¡æ‹Ÿæ”¯ä»˜é…ç½®
   mock:
     success-rate: 0.9
     processing-delay-ms: 2000 
