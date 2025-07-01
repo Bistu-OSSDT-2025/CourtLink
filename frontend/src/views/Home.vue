@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>»¶Ó­À´µ½ CourtLink ÔË¶¯³¡µØÔ¤Ô¼ÏµÍ³</h1>
+    <h1>æ¬¢è¿ä½¿ç”¨ CourtLink æ³•é™¢è°ƒè§£é¢„çº¦ç³»ç»Ÿ</h1>
     <el-row class="menu-container">
       <el-col :span="8" v-for="(item, index) in menuItems" :key="index">
         <el-card class="menu-card" shadow="hover">
@@ -23,21 +23,21 @@ const router = useRouter();
 
 const menuItems = ref([
   {
-    title: "³¡µØÔ¤Ô¼",
-    description: "ä¯ÀÀ²¢Ô¤Ô¼¸÷ÀàÔË¶¯³¡µØ",
-    buttonText: "Á¢¼´Ô¤Ô¼",
+    title: "è°ƒè§£é¢„çº¦",
+    description: "é¢„çº¦è°ƒè§£æœåŠ¡å’Œæ³•é™¢è®¾æ–½",
+    buttonText: "å¼€å§‹é¢„çº¦",
     route: "/booking",
   },
   {
-    title: "ÎÒµÄÔ¤Ô¼",
-    description: "²é¿´ºÍ¹ÜÀíÄúµÄÔ¤Ô¼¼ÇÂ¼",
-    buttonText: "²é¿´ÏêÇé",
+    title: "æˆ‘çš„é¢„çº¦",
+    description: "æŸ¥çœ‹å’Œç®¡ç†æ‚¨çš„é¢„çº¦è®°å½•",
+    buttonText: "æŸ¥çœ‹è¯¦æƒ…",
     route: "/my-bookings",
   },
   {
-    title: "³¡µØĞÅÏ¢",
-    description: "ÁË½â¸÷¸ö³¡µØµÄÏêÏ¸ĞÅÏ¢",
-    buttonText: "ÁË½â¸ü¶à",
+    title: "åœºæ‰€ä¿¡æ¯",
+    description: "äº†è§£å„ä¸ªåœºæ‰€çš„è¯¦ç»†ä¿¡æ¯",
+    buttonText: "äº†è§£æ›´å¤š",
     route: "/venues",
   },
 ]);

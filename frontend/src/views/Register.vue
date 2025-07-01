@@ -2,32 +2,32 @@
   <div class="register-container">
     <el-card class="register-card">
       <template #header>
-        <h2>×¢²á</h2>
+        <h2>æ³¨å†Œ</h2>
       </template>
       <el-form :model="registerForm" :rules="rules" ref="registerFormRef">
         <el-form-item prop="username">
-          <el-input v-model="registerForm.username" placeholder="ÓÃ»§Ãû">
+          <el-input v-model="registerForm.username" placeholder="ç”¨æˆ·å">
             <template #prefix>
               <el-icon><User /></el-icon>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="email">
-          <el-input v-model="registerForm.email" placeholder="ÓÊÏä">
+          <el-input v-model="registerForm.email" placeholder="é‚®ç®±">
             <template #prefix>
               <el-icon><Message /></el-icon>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="registerForm.password" type="password" placeholder="ÃÜÂë">
+          <el-input v-model="registerForm.password" type="password" placeholder="å¯†ç ">
             <template #prefix>
               <el-icon><Lock /></el-icon>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="confirmPassword">
-          <el-input v-model="registerForm.confirmPassword" type="password" placeholder="È·ÈÏÃÜÂë">
+          <el-input v-model="registerForm.confirmPassword" type="password" placeholder="ç¡®è®¤å¯†ç ">
             <template #prefix>
               <el-icon><Lock /></el-icon>
             </template>
@@ -35,12 +35,12 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleRegister" :loading="loading" class="register-button">
-            ×¢²á
+            æ³¨å†Œ
           </el-button>
         </el-form-item>
         <div class="register-links">
-          <span>ÒÑÓĞÕËºÅ£¿</span>
-          <router-link to="/login">Á¢¼´µÇÂ¼</router-link>
+          <span>å·²æœ‰è´¦å·ï¼Ÿ</span>
+          <router-link to="/login">ç‚¹å‡»ç™»å½•</router-link>
         </div>
       </el-form>
     </el-card>
@@ -65,9 +65,9 @@ const registerForm = reactive({
 
 const validatePass2 = (rule, value, callback) => {
   if (value === "") {
-    callback(new Error("ÇëÔÙ´ÎÊäÈëÃÜÂë"));
+    callback(new Error("è¯·å†æ¬¡è¾“å…¥å¯†ç "));
   } else if (value !== registerForm.password) {
-    callback(new Error("Á½´ÎÊäÈëÃÜÂë²»Ò»ÖÂ!"));
+    callback(new Error("ä¸¤æ¬¡è¾“å…¥å¯†ç ä¸ä¸€è‡´!"));
   } else {
     callback();
   }
@@ -75,19 +75,19 @@ const validatePass2 = (rule, value, callback) => {
 
 const rules = {
   username: [
-    { required: true, message: "ÇëÊäÈëÓÃ»§Ãû", trigger: "blur" },
-    { min: 3, message: "ÓÃ»§Ãû³¤¶È²»ÄÜĞ¡ÓÚ3Î»", trigger: "blur" },
+    { required: true, message: "è¯·è¾“å…¥ç”¨æˆ·å", trigger: "blur" },
+    { min: 3, message: "ç”¨æˆ·åé•¿åº¦ä¸èƒ½å°äº3ä½", trigger: "blur" },
   ],
   email: [
-    { required: true, message: "ÇëÊäÈëÓÊÏäµØÖ·", trigger: "blur" },
-    { type: "email", message: "ÇëÊäÈëÕıÈ·µÄÓÊÏäµØÖ·", trigger: "blur" },
+    { required: true, message: "è¯·è¾“å…¥é‚®ç®±åœ°å€", trigger: "blur" },
+    { type: "email", message: "è¯·è¾“å…¥æ­£ç¡®çš„é‚®ç®±åœ°å€", trigger: "blur" },
   ],
   password: [
-    { required: true, message: "ÇëÊäÈëÃÜÂë", trigger: "blur" },
-    { min: 6, message: "ÃÜÂë³¤¶È²»ÄÜĞ¡ÓÚ6Î»", trigger: "blur" },
+    { required: true, message: "è¯·è¾“å…¥å¯†ç ", trigger: "blur" },
+    { min: 6, message: "å¯†ç é•¿åº¦ä¸èƒ½å°äº6ä½", trigger: "blur" },
   ],
   confirmPassword: [
-    { required: true, message: "ÇëÔÙ´ÎÊäÈëÃÜÂë", trigger: "blur" },
+    { required: true, message: "è¯·å†æ¬¡è¾“å…¥å¯†ç ", trigger: "blur" },
     { validator: validatePass2, trigger: "blur" },
   ],
 };
@@ -98,13 +98,13 @@ const handleRegister = async () => {
   try {
     await registerFormRef.value.validate();
     loading.value = true;
-    // TODO: ÊµÏÖ×¢²áÂß¼­
+    // TODO: å®ç°æ³¨å†Œé€»è¾‘
     // const response = await register(registerForm);
     // if (response.success) {
     //   router.push("/login");
     // }
   } catch (error) {
-    console.error("×¢²áÊ§°Ü:", error);
+    console.error("æ³¨å†Œå¤±è´¥:", error);
   } finally {
     loading.value = false;
   }

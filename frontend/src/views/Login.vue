@@ -2,18 +2,18 @@
   <div class="login-container">
     <el-card class="login-card">
       <template #header>
-        <h2>µÇÂ¼</h2>
+        <h2>ç™»å½•</h2>
       </template>
       <el-form :model="loginForm" :rules="rules" ref="loginFormRef">
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username" placeholder="ÓÃ»§Ãû">
+          <el-input v-model="loginForm.username" placeholder="ç”¨æˆ·å">
             <template #prefix>
               <el-icon><User /></el-icon>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" placeholder="ÃÜÂë">
+          <el-input v-model="loginForm.password" type="password" placeholder="å¯†ç ">
             <template #prefix>
               <el-icon><Lock /></el-icon>
             </template>
@@ -21,12 +21,12 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleLogin" :loading="loading" class="login-button">
-            µÇÂ¼
+            ç™»å½•
           </el-button>
         </el-form-item>
         <div class="login-links">
-          <router-link to="/register">×¢²áĞÂÕËºÅ</router-link>
-          <router-link to="/forgot-password">Íü¼ÇÃÜÂë£¿</router-link>
+          <router-link to="/register">æ³¨å†Œæ–°è´¦å·</router-link>
+          <router-link to="/forgot-password">å¿˜è®°å¯†ç ï¼Ÿ</router-link>
         </div>
       </el-form>
     </el-card>
@@ -49,11 +49,11 @@ const loginForm = reactive({
 
 const rules = {
   username: [
-    { required: true, message: "ÇëÊäÈëÓÃ»§Ãû", trigger: "blur" },
+    { required: true, message: "è¯·è¾“å…¥ç”¨æˆ·å", trigger: "blur" },
   ],
   password: [
-    { required: true, message: "ÇëÊäÈëÃÜÂë", trigger: "blur" },
-    { min: 6, message: "ÃÜÂë³¤¶È²»ÄÜĞ¡ÓÚ6Î»", trigger: "blur" },
+    { required: true, message: "è¯·è¾“å…¥å¯†ç ", trigger: "blur" },
+    { min: 6, message: "å¯†ç é•¿åº¦ä¸èƒ½å°äº6ä½", trigger: "blur" },
   ],
 };
 
@@ -63,13 +63,13 @@ const handleLogin = async () => {
   try {
     await loginFormRef.value.validate();
     loading.value = true;
-    // TODO: ÊµÏÖµÇÂ¼Âß¼­
+    // TODO: å®ç°ç™»å½•é€»è¾‘
     // const response = await login(loginForm);
     // if (response.success) {
     //   router.push("/");
     // }
   } catch (error) {
-    console.error("µÇÂ¼Ê§°Ü:", error);
+    console.error("ç™»å½•å¤±è´¥:", error);
   } finally {
     loading.value = false;
   }
