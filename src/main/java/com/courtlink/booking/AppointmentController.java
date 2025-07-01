@@ -1,8 +1,8 @@
-package com.example.appointment;
+package com.courtlink.booking;
 
-import com.example.appointment.dto.AppointmentRequest;
-import com.example.appointment.entity.Appointment;
-import com.example.appointment.service.AppointmentService;
+import com.courtlink.booking.dto.AppointmentRequest;
+import com.courtlink.booking.entity.Appointment;
+import com.courtlink.booking.service.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -10,16 +10,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/appointments")
 @RequiredArgsConstructor
-@Tag(name = "Ô¤Ô¼¹ÜÀí", description = "Ô¤Ô¼Ïà¹Ø½Ó¿Ú")
+@Tag(name = "Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½", description = "Ô¤Ô¼ï¿½ï¿½Ø½Ó¿ï¿?)
 public class AppointmentController {
     private final AppointmentService appointmentService;
 
-    @Operation(summary = "´´½¨Ô¤Ô¼")
+    @Operation(summary = "ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼")
     @PostMapping
     public ResponseEntity<ApiResponse<Appointment>> createAppointment(@Valid @RequestBody AppointmentRequest request) {
         Appointment appointment = new Appointment();
@@ -31,30 +31,30 @@ public class AppointmentController {
         appointment.setAmount(request.getAmount());
         appointment.setNotes(request.getNotes());
         Appointment created = appointmentService.createAppointment(appointment);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Ô¤Ô¼³É¹¦", created));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Ô¤Ô¼ï¿½É¹ï¿½", created));
     }
 
-    @Operation(summary = "¸ù¾ÝID²éÑ¯Ô¤Ô¼")
+    @Operation(summary = "ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½Ñ¯Ô¤Ô¼")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Appointment>> getAppointment(@PathVariable Long id) {
         Appointment appointment = appointmentService.getAppointmentById(id);
-        return ResponseEntity.ok(new ApiResponse<>(true, "²éÑ¯³É¹¦", appointment));
+        return ResponseEntity.ok(new ApiResponse<>(true, "ï¿½ï¿½Ñ¯ï¿½É¹ï¿½", appointment));
     }
 
-    @Operation(summary = "È¡ÏûÔ¤Ô¼")
+    @Operation(summary = "È¡ï¿½ï¿½Ô¤Ô¼")
     @PostMapping("/{id}/cancel")
     public ResponseEntity<ApiResponse<Appointment>> cancelAppointment(@PathVariable Long id, @RequestParam String reason) {
         Appointment cancelled = appointmentService.cancelAppointment(id, reason);
-        return ResponseEntity.ok(new ApiResponse<>(true, "È¡Ïû³É¹¦", cancelled));
+        return ResponseEntity.ok(new ApiResponse<>(true, "È¡ï¿½ï¿½ï¿½É¹ï¿½", cancelled));
     }
 
-    @Operation(summary = "²é¿´ÎÒµÄÔ¤Ô¼£¨°´ÓÃ»§ID£©")
+    @Operation(summary = "ï¿½é¿´ï¿½Òµï¿½Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½IDï¿½ï¿½")
     @GetMapping("/user/{userId}")
     public ResponseEntity<ApiResponse<?>> getAppointmentsByUserId(
             @PathVariable String userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
-        return ResponseEntity.ok(new ApiResponse<>(true, "²éÑ¯³É¹¦", appointmentService.getAppointmentsByUserId(userId, pageable)));
+        return ResponseEntity.ok(new ApiResponse<>(true, "ï¿½ï¿½Ñ¯ï¿½É¹ï¿½", appointmentService.getAppointmentsByUserId(userId, pageable)));
     }
 } 

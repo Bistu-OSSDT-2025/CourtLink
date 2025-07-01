@@ -1,8 +1,8 @@
-package com.example.appointment.service.impl;
+package com.courtlink.booking.service.impl;
 
-import com.example.appointment.entity.Appointment;
-import com.example.appointment.repository.AppointmentRepository;
-import com.example.appointment.service.AppointmentService;
+import com.courtlink.booking.entity.Appointment;
+import com.courtlink.booking.repository.AppointmentRepository;
+import com.courtlink.booking.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Ô¤Ô¼·þÎñÊµÏÖÀà
+ * Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
  * 
  * @author Your Name
  * @version 1.0.0
@@ -33,23 +33,23 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public Appointment createAppointment(Appointment appointment) {
-        log.info("´´½¨Ô¤Ô¼: userId={}, providerId={}, startTime={}, endTime={}", 
+        log.info("ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼: userId={}, providerId={}, startTime={}, endTime={}", 
                 appointment.getUserId(), appointment.getProviderId(), 
                 appointment.getStartTime(), appointment.getEndTime());
 
-        // ¼ì²éÊ±¼ä³åÍ»
+        // ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í»
         if (hasTimeConflict(appointment.getProviderId(), appointment.getStartTime(), 
                 appointment.getEndTime(), null)) {
-            log.warn("Ô¤Ô¼Ê±¼ä³åÍ»: providerId={}, startTime={}, endTime={}", 
+            log.warn("Ô¤Ô¼Ê±ï¿½ï¿½ï¿½Í? providerId={}, startTime={}, endTime={}", 
                     appointment.getProviderId(), appointment.getStartTime(), appointment.getEndTime());
-            throw new RuntimeException("Ô¤Ô¼Ê±¼ä³åÍ»£¬ÇëÑ¡ÔñÆäËûÊ±¼ä");
+            throw new RuntimeException("Ô¤Ô¼Ê±ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿?);
         }
 
-        // ÉèÖÃ³õÊ¼×´Ì¬
+        // ï¿½ï¿½ï¿½Ã³ï¿½Ê¼×´Ì¬
         appointment.setStatus(Appointment.AppointmentStatus.PENDING);
         
         Appointment savedAppointment = appointmentRepository.save(appointment);
-        log.info("Ô¤Ô¼´´½¨³É¹¦: appointmentId={}", savedAppointment.getId());
+        log.info("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½: appointmentId={}", savedAppointment.getId());
         
         return savedAppointment;
     }
@@ -57,25 +57,25 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public Appointment updateAppointment(Long id, Appointment appointment) {
-        log.info("¸üÐÂÔ¤Ô¼: appointmentId={}", id);
+        log.info("ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼: appointmentId={}", id);
         
         Optional<Appointment> existingAppointment = appointmentRepository.findById(id);
         if (existingAppointment.isEmpty()) {
-            log.warn("Ô¤Ô¼²»´æÔÚ: appointmentId={}", id);
-            throw new RuntimeException("Ô¤Ô¼²»´æÔÚ");
+            log.warn("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: appointmentId={}", id);
+            throw new RuntimeException("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
 
         Appointment existing = existingAppointment.get();
         
-        // ¼ì²éÊ±¼ä³åÍ»£¨ÅÅ³ýµ±Ç°Ô¤Ô¼£©
+        // ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½Å³ï¿½ï¿½ï¿½Ç°Ô¤Ô¼ï¿½ï¿½
         if (hasTimeConflict(appointment.getProviderId(), appointment.getStartTime(), 
                 appointment.getEndTime(), id)) {
-            log.warn("Ô¤Ô¼Ê±¼ä³åÍ»: appointmentId={}, providerId={}, startTime={}, endTime={}", 
+            log.warn("Ô¤Ô¼Ê±ï¿½ï¿½ï¿½Í? appointmentId={}, providerId={}, startTime={}, endTime={}", 
                     id, appointment.getProviderId(), appointment.getStartTime(), appointment.getEndTime());
-            throw new RuntimeException("Ô¤Ô¼Ê±¼ä³åÍ»£¬ÇëÑ¡ÔñÆäËûÊ±¼ä");
+            throw new RuntimeException("Ô¤Ô¼Ê±ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿?);
         }
 
-        // ¸üÐÂ×Ö¶Î
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
         existing.setProviderId(appointment.getProviderId());
         existing.setServiceType(appointment.getServiceType());
         existing.setStartTime(appointment.getStartTime());
@@ -84,7 +84,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         existing.setNotes(appointment.getNotes());
 
         Appointment updatedAppointment = appointmentRepository.save(existing);
-        log.info("Ô¤Ô¼¸üÐÂ³É¹¦: appointmentId={}", updatedAppointment.getId());
+        log.info("Ô¤Ô¼ï¿½ï¿½ï¿½Â³É¹ï¿½: appointmentId={}", updatedAppointment.getId());
         
         return updatedAppointment;
     }
@@ -92,32 +92,32 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public Appointment cancelAppointment(Long id, String reason) {
-        log.info("È¡ÏûÔ¤Ô¼: appointmentId={}, reason={}", id, reason);
+        log.info("È¡ï¿½ï¿½Ô¤Ô¼: appointmentId={}, reason={}", id, reason);
         
         Optional<Appointment> appointment = appointmentRepository.findById(id);
         if (appointment.isEmpty()) {
-            log.warn("Ô¤Ô¼²»´æÔÚ: appointmentId={}", id);
-            throw new RuntimeException("Ô¤Ô¼²»´æÔÚ");
+            log.warn("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: appointmentId={}", id);
+            throw new RuntimeException("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
 
         Appointment existing = appointment.get();
         
-        // ¼ì²éÊÇ·ñ¿ÉÒÔÈ¡Ïû
+        // ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½
         if (existing.getStatus() == Appointment.AppointmentStatus.CANCELLED) {
-            log.warn("Ô¤Ô¼ÒÑÈ¡Ïû: appointmentId={}", id);
-            throw new RuntimeException("Ô¤Ô¼ÒÑÈ¡Ïû");
+            log.warn("Ô¤Ô¼ï¿½ï¿½È¡ï¿½ï¿½: appointmentId={}", id);
+            throw new RuntimeException("Ô¤Ô¼ï¿½ï¿½È¡ï¿½ï¿½");
         }
         
         if (existing.getStatus() == Appointment.AppointmentStatus.COMPLETED) {
-            log.warn("Ô¤Ô¼ÒÑÍê³É£¬ÎÞ·¨È¡Ïû: appointmentId={}", id);
-            throw new RuntimeException("Ô¤Ô¼ÒÑÍê³É£¬ÎÞ·¨È¡Ïû");
+            log.warn("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½Þ·ï¿½È¡ï¿½ï¿? appointmentId={}", id);
+            throw new RuntimeException("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½Þ·ï¿½È¡ï¿½ï¿?);
         }
 
         existing.setStatus(Appointment.AppointmentStatus.CANCELLED);
-        existing.setNotes(existing.getNotes() + " [È¡ÏûÔ­Òò: " + reason + "]");
+        existing.setNotes(existing.getNotes() + " [È¡ï¿½ï¿½Ô­ï¿½ï¿½: " + reason + "]");
 
         Appointment cancelledAppointment = appointmentRepository.save(existing);
-        log.info("Ô¤Ô¼È¡Ïû³É¹¦: appointmentId={}", cancelledAppointment.getId());
+        log.info("Ô¤Ô¼È¡ï¿½ï¿½ï¿½É¹ï¿½: appointmentId={}", cancelledAppointment.getId());
         
         return cancelledAppointment;
     }
@@ -125,25 +125,25 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public Appointment confirmAppointment(Long id) {
-        log.info("È·ÈÏÔ¤Ô¼: appointmentId={}", id);
+        log.info("È·ï¿½ï¿½Ô¤Ô¼: appointmentId={}", id);
         
         Optional<Appointment> appointment = appointmentRepository.findById(id);
         if (appointment.isEmpty()) {
-            log.warn("Ô¤Ô¼²»´æÔÚ: appointmentId={}", id);
-            throw new RuntimeException("Ô¤Ô¼²»´æÔÚ");
+            log.warn("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: appointmentId={}", id);
+            throw new RuntimeException("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
 
         Appointment existing = appointment.get();
         
         if (existing.getStatus() != Appointment.AppointmentStatus.PENDING) {
-            log.warn("Ô¤Ô¼×´Ì¬²»ÕýÈ·£¬ÎÞ·¨È·ÈÏ: appointmentId={}, status={}", id, existing.getStatus());
-            throw new RuntimeException("Ô¤Ô¼×´Ì¬²»ÕýÈ·£¬ÎÞ·¨È·ÈÏ");
+            log.warn("Ô¤Ô¼×´Ì¬ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Þ·ï¿½È·ï¿½ï¿½: appointmentId={}, status={}", id, existing.getStatus());
+            throw new RuntimeException("Ô¤Ô¼×´Ì¬ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Þ·ï¿½È·ï¿½ï¿½");
         }
 
         existing.setStatus(Appointment.AppointmentStatus.CONFIRMED);
 
         Appointment confirmedAppointment = appointmentRepository.save(existing);
-        log.info("Ô¤Ô¼È·ÈÏ³É¹¦: appointmentId={}", confirmedAppointment.getId());
+        log.info("Ô¤Ô¼È·ï¿½Ï³É¹ï¿½: appointmentId={}", confirmedAppointment.getId());
         
         return confirmedAppointment;
     }
@@ -151,37 +151,37 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public Appointment completeAppointment(Long id) {
-        log.info("Íê³ÉÔ¤Ô¼: appointmentId={}", id);
+        log.info("ï¿½ï¿½ï¿½Ô¤Ô? appointmentId={}", id);
         
         Optional<Appointment> appointment = appointmentRepository.findById(id);
         if (appointment.isEmpty()) {
-            log.warn("Ô¤Ô¼²»´æÔÚ: appointmentId={}", id);
-            throw new RuntimeException("Ô¤Ô¼²»´æÔÚ");
+            log.warn("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: appointmentId={}", id);
+            throw new RuntimeException("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
 
         Appointment existing = appointment.get();
         
         if (existing.getStatus() != Appointment.AppointmentStatus.CONFIRMED) {
-            log.warn("Ô¤Ô¼×´Ì¬²»ÕýÈ·£¬ÎÞ·¨Íê³É: appointmentId={}, status={}", id, existing.getStatus());
-            throw new RuntimeException("Ô¤Ô¼×´Ì¬²»ÕýÈ·£¬ÎÞ·¨Íê³É");
+            log.warn("Ô¤Ô¼×´Ì¬ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿? appointmentId={}, status={}", id, existing.getStatus());
+            throw new RuntimeException("Ô¤Ô¼×´Ì¬ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿?);
         }
 
         existing.setStatus(Appointment.AppointmentStatus.COMPLETED);
 
         Appointment completedAppointment = appointmentRepository.save(existing);
-        log.info("Ô¤Ô¼Íê³É³É¹¦: appointmentId={}", completedAppointment.getId());
+        log.info("Ô¤Ô¼ï¿½ï¿½É³É¹ï¿? appointmentId={}", completedAppointment.getId());
         
         return completedAppointment;
     }
 
     @Override
     public Appointment getAppointmentById(Long id) {
-        log.debug("²éÑ¯Ô¤Ô¼ÏêÇé: appointmentId={}", id);
+        log.debug("ï¿½ï¿½Ñ¯Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½: appointmentId={}", id);
         
         Optional<Appointment> appointment = appointmentRepository.findById(id);
         if (appointment.isEmpty()) {
-            log.warn("Ô¤Ô¼²»´æÔÚ: appointmentId={}", id);
-            throw new RuntimeException("Ô¤Ô¼²»´æÔÚ");
+            log.warn("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: appointmentId={}", id);
+            throw new RuntimeException("Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
         
         return appointment.get();
@@ -189,7 +189,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Page<Appointment> getAppointmentsByUserId(String userId, Pageable pageable) {
-        log.debug("²éÑ¯ÓÃ»§Ô¤Ô¼ÁÐ±í: userId={}, page={}, size={}", 
+        log.debug("ï¿½ï¿½Ñ¯ï¿½Ã»ï¿½Ô¤Ô¼ï¿½Ð±ï¿½: userId={}, page={}, size={}", 
                 userId, pageable.getPageNumber(), pageable.getPageSize());
         
         return appointmentRepository.findByUserIdOrderByStartTimeDesc(userId, pageable);
@@ -197,7 +197,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Page<Appointment> getAppointmentsByProviderId(String providerId, Pageable pageable) {
-        log.debug("²éÑ¯·þÎñÌá¹©ÕßÔ¤Ô¼ÁÐ±í: providerId={}, page={}, size={}", 
+        log.debug("ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½Ô¤Ô¼ï¿½Ð±ï¿½: providerId={}, page={}, size={}", 
                 providerId, pageable.getPageNumber(), pageable.getPageSize());
         
         return appointmentRepository.findByProviderIdOrderByStartTimeDesc(providerId, pageable);
@@ -205,7 +205,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Page<Appointment> getAppointmentsByStatus(Appointment.AppointmentStatus status, Pageable pageable) {
-        log.debug("²éÑ¯Ô¤Ô¼ÁÐ±í: status={}, page={}, size={}", 
+        log.debug("ï¿½ï¿½Ñ¯Ô¤Ô¼ï¿½Ð±ï¿½: status={}, page={}, size={}", 
                 status, pageable.getPageNumber(), pageable.getPageSize());
         
         return appointmentRepository.findByStatusOrderByStartTimeDesc(status, pageable);
@@ -213,14 +213,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public boolean hasTimeConflict(String providerId, LocalDateTime startTime, LocalDateTime endTime, Long excludeId) {
-        log.debug("¼ì²éÊ±¼ä³åÍ»: providerId={}, startTime={}, endTime={}, excludeId={}", 
+        log.debug("ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í»: providerId={}, startTime={}, endTime={}, excludeId={}", 
                 providerId, startTime, endTime, excludeId);
         
         List<Appointment> conflictingAppointments = appointmentRepository.findConflictingAppointments(
                 providerId, startTime, endTime, excludeId);
         
         boolean hasConflict = !conflictingAppointments.isEmpty();
-        log.debug("Ê±¼ä³åÍ»¼ì²é½á¹û: hasConflict={}, conflictCount={}", hasConflict, conflictingAppointments.size());
+        log.debug("Ê±ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½: hasConflict={}, conflictCount={}", hasConflict, conflictingAppointments.size());
         
         return hasConflict;
     }
@@ -228,7 +228,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getAppointmentsByTimeRange(LocalDateTime startTime, LocalDateTime endTime, 
                                                        Appointment.AppointmentStatus status) {
-        log.debug("²éÑ¯Ê±¼ä·¶Î§ÄÚÔ¤Ô¼: startTime={}, endTime={}, status={}", startTime, endTime, status);
+        log.debug("ï¿½ï¿½Ñ¯Ê±ï¿½ä·¶Î§ï¿½ï¿½Ô¤Ô¼: startTime={}, endTime={}, status={}", startTime, endTime, status);
         
         return appointmentRepository.findByTimeRangeAndStatus(startTime, endTime, status);
     }
@@ -236,7 +236,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getUpcomingAppointments(LocalDateTime startTime, LocalDateTime endTime, 
                                                     Appointment.AppointmentStatus status) {
-        log.debug("²éÑ¯¼´½«µ½ÆÚµÄÔ¤Ô¼: startTime={}, endTime={}, status={}", startTime, endTime, status);
+        log.debug("ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ô¤Ô¼: startTime={}, endTime={}, status={}", startTime, endTime, status);
         
         return appointmentRepository.findUpcomingAppointments(startTime, endTime, status);
     }
@@ -244,7 +244,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public int cleanupExpiredAppointments() {
-        log.info("¿ªÊ¼ÇåÀí¹ýÆÚÔ¤Ô¼");
+        log.info("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼");
         
         LocalDateTime currentTime = LocalDateTime.now();
         List<Appointment> expiredAppointments = appointmentRepository.findExpiredAppointments(
@@ -253,46 +253,46 @@ public class AppointmentServiceImpl implements AppointmentService {
         for (Appointment appointment : expiredAppointments) {
             appointment.setStatus(Appointment.AppointmentStatus.EXPIRED);
             appointmentRepository.save(appointment);
-            log.debug("±ê¼Ç¹ýÆÚÔ¤Ô¼: appointmentId={}", appointment.getId());
+            log.debug("ï¿½ï¿½Ç¹ï¿½ï¿½ï¿½Ô¤Ô? appointmentId={}", appointment.getId());
         }
         
-        log.info("¹ýÆÚÔ¤Ô¼ÇåÀíÍê³É: count={}", expiredAppointments.size());
+        log.info("ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿? count={}", expiredAppointments.size());
         return expiredAppointments.size();
     }
 
     @Override
     public void sendAppointmentReminder(Appointment appointment) {
-        log.info("·¢ËÍÔ¤Ô¼ÌáÐÑ: appointmentId={}, userId={}, startTime={}", 
+        log.info("ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½: appointmentId={}, userId={}, startTime={}", 
                 appointment.getId(), appointment.getUserId(), appointment.getStartTime());
         
-        // TODO: ÊµÏÖ¾ßÌåµÄÍ¨ÖªÂß¼­
-        // 1. ·¢ËÍÓÊ¼þÍ¨Öª
-        // 2. ·¢ËÍ¶ÌÐÅÍ¨Öª
-        // 3. ·¢ËÍÍÆËÍÍ¨Öª
+        // TODO: Êµï¿½Ö¾ï¿½ï¿½ï¿½ï¿½Í¨Öªï¿½ß¼ï¿?
+        // 1. ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Í¨Öª
+        // 2. ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½Í¨Öª
+        // 3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨Öª
         
-        log.info("Ô¤Ô¼ÌáÐÑ·¢ËÍÍê³É: appointmentId={}", appointment.getId());
+        log.info("Ô¤Ô¼ï¿½ï¿½ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿? appointmentId={}", appointment.getId());
     }
 
     @Override
     public void sendAppointmentNotification(Appointment appointment, String notificationType) {
-        log.info("·¢ËÍÔ¤Ô¼Í¨Öª: appointmentId={}, notificationType={}", appointment.getId(), notificationType);
+        log.info("ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼Í¨Öª: appointmentId={}, notificationType={}", appointment.getId(), notificationType);
         
-        // TODO: ÊµÏÖ¾ßÌåµÄÍ¨ÖªÂß¼­
-        // ¸ù¾ÝnotificationType·¢ËÍ²»Í¬ÀàÐÍµÄÍ¨Öª
+        // TODO: Êµï¿½Ö¾ï¿½ï¿½ï¿½ï¿½Í¨Öªï¿½ß¼ï¿?
+        // ï¿½ï¿½ï¿½ï¿½notificationTypeï¿½ï¿½ï¿½Í²ï¿½Í¬ï¿½ï¿½ï¿½Íµï¿½Í¨Öª
         
-        log.info("Ô¤Ô¼Í¨Öª·¢ËÍÍê³É: appointmentId={}, notificationType={}", appointment.getId(), notificationType);
+        log.info("Ô¤Ô¼Í¨Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿? appointmentId={}, notificationType={}", appointment.getId(), notificationType);
     }
 
     @Override
     public long countAppointmentsByUserIdAndStatus(String userId, Appointment.AppointmentStatus status) {
-        log.debug("Í³¼ÆÓÃ»§Ô¤Ô¼ÊýÁ¿: userId={}, status={}", userId, status);
+        log.debug("Í³ï¿½ï¿½ï¿½Ã»ï¿½Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½: userId={}, status={}", userId, status);
         
         return appointmentRepository.countByUserIdAndStatus(userId, status);
     }
 
     @Override
     public long countAppointmentsByProviderIdAndStatus(String providerId, Appointment.AppointmentStatus status) {
-        log.debug("Í³¼Æ·þÎñÌá¹©ÕßÔ¤Ô¼ÊýÁ¿: providerId={}, status={}", providerId, status);
+        log.debug("Í³ï¿½Æ·ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½: providerId={}, status={}", providerId, status);
         
         return appointmentRepository.countByProviderIdAndStatus(providerId, status);
     }

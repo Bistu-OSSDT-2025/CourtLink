@@ -1,20 +1,22 @@
-package com.example.appointment;
+package com.courtlink.booking;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * 预约管理与支付集成系统主启动类
+ * CourtLink棰勭害绠＄悊绯荤粺涓诲惎鍔ㄧ被
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 @SpringBootApplication
+@EnableCaching
 @EnableScheduling
-public class AppointmentApplication {
+public class BookingApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AppointmentApplication.class, args);
+        SpringApplication.run(BookingApplication.class, args);
     }
 } 

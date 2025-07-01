@@ -1,9 +1,9 @@
-package com.example.appointment;
+package com.courtlink.booking;
 
-import com.example.appointment.entity.Appointment;
-import com.example.appointment.entity.Payment;
-import com.example.appointment.repository.AppointmentRepository;
-import com.example.appointment.repository.PaymentRepository;
+import com.courtlink.booking.entity.Appointment;
+import com.courtlink.booking.entity.Payment;
+import com.courtlink.booking.repository.AppointmentRepository;
+import com.courtlink.booking.repository.PaymentRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,70 +17,70 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
-@Tag(name = "Ö§¸¶¹ÜÀí", description = "Ä£ÄâÖ§¸¶Óë¶©µ¥×´Ì¬¹ÜÀí")
+@Tag(name = "Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", description = "Ä£ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ë¶©ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½")
 public class PaymentController {
     private final PaymentRepository paymentRepository;
     private final AppointmentRepository appointmentRepository;
 
-    @Operation(summary = "Ä£ÄâÖ§¸¶")
+    @Operation(summary = "Ä£ï¿½ï¿½Ö§ï¿½ï¿½")
     @PostMapping("/pay")
     public ResponseEntity<ApiResponse<String>> pay(@RequestParam Long appointmentId, @RequestParam BigDecimal amount) {
         Optional<Appointment> opt = appointmentRepository.findById(appointmentId);
         if (opt.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼²»´æÔÚ", null));
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", null));
         }
         Appointment appointment = opt.get();
         if (appointment.getStatus() != Appointment.AppointmentStatus.CONFIRMED) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼Î´È·ÈÏ£¬ÎÞ·¨Ö§¸¶", null));
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼Î´È·ï¿½Ï£ï¿½ï¿½Þ·ï¿½Ö§ï¿½ï¿½", null));
         }
-        // Ä£ÄâÖ§¸¶³É¹¦
+        // Ä£ï¿½ï¿½Ö§ï¿½ï¿½ï¿½É¹ï¿½
         Payment payment = new Payment();
         payment.setAppointmentId(appointmentId);
         payment.setAmount(amount);
         payment.setStatus(Payment.PaymentStatus.SUCCESS);
         payment.setPaidAt(LocalDateTime.now());
         paymentRepository.save(payment);
-        // ¸üÐÂÔ¤Ô¼×´Ì¬
+        // ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼×´Ì¬
         appointment.setStatus(Appointment.AppointmentStatus.COMPLETED);
         appointment.setPaymentId(payment.getId().toString());
         appointmentRepository.save(appointment);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Ö§¸¶³É¹¦£¬Ô¤Ô¼ÒÑÍê³É", null));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Ö§ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿?, null));
     }
 
-    @Operation(summary = "Ä£ÄâÍË¿î")
+    @Operation(summary = "Ä£ï¿½ï¿½ï¿½Ë¿ï¿½")
     @PostMapping("/refund")
     public ResponseEntity<ApiResponse<String>> refund(@RequestParam Long appointmentId) {
         Optional<Appointment> opt = appointmentRepository.findById(appointmentId);
         if (opt.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼²»´æÔÚ", null));
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", null));
         }
         Appointment appointment = opt.get();
         if (appointment.getStatus() != Appointment.AppointmentStatus.COMPLETED) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ö»ÓÐÒÑÍê³ÉÔ¤Ô¼²ÅÄÜÍË¿î", null));
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Ë¿ï¿?, null));
         }
-        // Ä£ÄâÍË¿î
+        // Ä£ï¿½ï¿½ï¿½Ë¿ï¿½
         Payment payment = paymentRepository.findByAppointmentId(appointmentId).orElse(null);
         if (payment == null) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Î´ÕÒµ½Ö§¸¶¼ÇÂ¼", null));
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Î´ï¿½Òµï¿½Ö§ï¿½ï¿½ï¿½ï¿½Â¼", null));
         }
         payment.setStatus(Payment.PaymentStatus.REFUNDED);
         paymentRepository.save(payment);
         appointment.setStatus(Appointment.AppointmentStatus.CANCELLED);
         appointmentRepository.save(appointment);
-        return ResponseEntity.ok(new ApiResponse<>(true, "ÍË¿î³É¹¦£¬Ô¤Ô¼ÒÑÈ¡Ïû", null));
+        return ResponseEntity.ok(new ApiResponse<>(true, "ï¿½Ë¿ï¿½É¹ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½ï¿½È¡ï¿½ï¿?, null));
     }
 
-    @Operation(summary = "Ä£ÄâÖ§¸¶»Øµ÷")
+    @Operation(summary = "Ä£ï¿½ï¿½Ö§ï¿½ï¿½ï¿½Øµï¿½")
     @PostMapping("/callback")
     public ResponseEntity<ApiResponse<String>> paymentCallback(@RequestParam Long appointmentId) {
         Optional<Appointment> opt = appointmentRepository.findById(appointmentId);
         if (opt.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼²»´æÔÚ", null));
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", null));
         }
         Appointment appointment = opt.get();
-        // ¼ÙÉè»Øµ÷¼´Ö§¸¶³É¹¦
+        // ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½Ö§ï¿½ï¿½ï¿½É¹ï¿?
         appointment.setStatus(Appointment.AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Ö§¸¶»Øµ÷´¦Àí³É¹¦£¬Ô¤Ô¼×´Ì¬ÒÑ¸üÐÂ", null));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Ö§ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½Ô¤Ô¼×´Ì¬ï¿½Ñ¸ï¿½ï¿½ï¿½", null));
     }
 } 

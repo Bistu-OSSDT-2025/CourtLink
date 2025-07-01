@@ -1,6 +1,6 @@
-package com.example.appointment.repository;
+package com.courtlink.booking.repository;
 
-import com.example.appointment.entity.Appointment;
+import com.courtlink.booking.entity.Appointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 预约数据访问层接口
+ * 预约锟斤拷锟捷凤拷锟绞诧拷涌锟?
  * 
  * @author Your Name
  * @version 1.0.0
@@ -22,39 +22,39 @@ import java.util.Optional;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     /**
-     * 根据用户ID查询预约列表
+     * 锟斤拷锟斤拷锟矫伙拷ID锟斤拷询预约锟叫憋拷
      * 
-     * @param userId 用户ID
-     * @param pageable 分页参数
-     * @return 预约分页列表
+     * @param userId 锟矫伙拷ID
+     * @param pageable 锟斤拷页锟斤拷锟斤拷
+     * @return 预约锟斤拷页锟叫憋拷
      */
     Page<Appointment> findByUserIdOrderByStartTimeDesc(String userId, Pageable pageable);
 
     /**
-     * 根据服务提供者ID查询预约列表
+     * 锟斤拷锟捷凤拷锟斤拷锟结供锟斤拷ID锟斤拷询预约锟叫憋拷
      * 
-     * @param providerId 服务提供者ID
-     * @param pageable 分页参数
-     * @return 预约分页列表
+     * @param providerId 锟斤拷锟斤拷锟结供锟斤拷ID
+     * @param pageable 锟斤拷页锟斤拷锟斤拷
+     * @return 预约锟斤拷页锟叫憋拷
      */
     Page<Appointment> findByProviderIdOrderByStartTimeDesc(String providerId, Pageable pageable);
 
     /**
-     * 根据状态查询预约列表
+     * 锟斤拷锟斤拷状态锟斤拷询预约锟叫憋拷
      * 
      * @param status 预约状态
-     * @param pageable 分页参数
-     * @return 预约分页列表
+     * @param pageable 锟斤拷页锟斤拷锟斤拷
+     * @return 预约锟斤拷页锟叫憋拷
      */
     Page<Appointment> findByStatusOrderByStartTimeDesc(Appointment.AppointmentStatus status, Pageable pageable);
 
     /**
-     * 查询指定时间范围内的预约
+     * 锟斤拷询指锟斤拷时锟戒范围锟节碉拷预约
      * 
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startTime 锟斤拷始时锟斤拷
+     * @param endTime 锟斤拷锟斤拷时锟斤拷
      * @param status 预约状态
-     * @return 预约列表
+     * @return 预约锟叫憋拷
      */
     @Query("SELECT a FROM Appointment a WHERE a.startTime >= :startTime AND a.endTime <= :endTime AND a.status = :status")
     List<Appointment> findByTimeRangeAndStatus(@Param("startTime") LocalDateTime startTime,
@@ -62,13 +62,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                                               @Param("status") Appointment.AppointmentStatus status);
 
     /**
-     * 检查时间冲突
+     * 锟斤拷锟绞憋拷锟斤拷突
      * 
-     * @param providerId 服务提供者ID
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param excludeId 排除的预约ID（用于更新时）
-     * @return 冲突的预约列表
+     * @param providerId 锟斤拷锟斤拷锟结供锟斤拷ID
+     * @param startTime 锟斤拷始时锟斤拷
+     * @param endTime 锟斤拷锟斤拷时锟斤拷
+     * @param excludeId 锟脚筹拷锟斤拷预约ID锟斤拷锟斤拷锟节革拷锟斤拷时锟斤拷
+     * @return 锟斤拷突锟斤拷预约锟叫憋拷
      */
     @Query("SELECT a FROM Appointment a WHERE a.providerId = :providerId " +
            "AND a.status NOT IN ('CANCELLED', 'EXPIRED') " +
@@ -81,12 +81,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                                                  @Param("excludeId") Long excludeId);
 
     /**
-     * 查询即将到期的预约（用于发送提醒）
+     * 锟斤拷询锟斤拷锟斤拷锟斤拷锟节碉拷预约锟斤拷锟斤拷锟节凤拷锟斤拷锟斤拷锟窖ｏ拷
      * 
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startTime 锟斤拷始时锟斤拷
+     * @param endTime 锟斤拷锟斤拷时锟斤拷
      * @param status 预约状态
-     * @return 即将到期的预约列表
+     * @return 锟斤拷锟斤拷锟斤拷锟节碉拷预约锟叫憋拷
      */
     @Query("SELECT a FROM Appointment a WHERE a.startTime BETWEEN :startTime AND :endTime " +
            "AND a.status = :status")
@@ -95,39 +95,39 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                                               @Param("status") Appointment.AppointmentStatus status);
 
     /**
-     * 查询过期的预约
+     * 锟斤拷询锟斤拷锟节碉拷预约
      * 
-     * @param currentTime 当前时间
+     * @param currentTime 锟斤拷前时锟斤拷
      * @param status 预约状态
-     * @return 过期的预约列表
+     * @return 锟斤拷锟节碉拷预约锟叫憋拷
      */
     @Query("SELECT a FROM Appointment a WHERE a.endTime < :currentTime AND a.status = :status")
     List<Appointment> findExpiredAppointments(@Param("currentTime") LocalDateTime currentTime,
                                              @Param("status") Appointment.AppointmentStatus status);
 
     /**
-     * 根据支付ID查询预约
+     * 锟斤拷锟斤拷支锟斤拷ID锟斤拷询预约
      * 
-     * @param paymentId 支付ID
-     * @return 预约信息
+     * @param paymentId 支锟斤拷ID
+     * @return 预约锟斤拷息
      */
     Optional<Appointment> findByPaymentId(String paymentId);
 
     /**
-     * 统计用户预约数量
+     * 统锟斤拷锟矫伙拷预约锟斤拷锟斤拷
      * 
-     * @param userId 用户ID
+     * @param userId 锟矫伙拷ID
      * @param status 预约状态
-     * @return 预约数量
+     * @return 预约锟斤拷锟斤拷
      */
     long countByUserIdAndStatus(String userId, Appointment.AppointmentStatus status);
 
     /**
-     * 统计服务提供者预约数量
+     * 统锟狡凤拷锟斤拷锟结供锟斤拷预约锟斤拷锟斤拷
      * 
-     * @param providerId 服务提供者ID
+     * @param providerId 锟斤拷锟斤拷锟结供锟斤拷ID
      * @param status 预约状态
-     * @return 预约数量
+     * @return 预约锟斤拷锟斤拷
      */
     long countByProviderIdAndStatus(String providerId, Appointment.AppointmentStatus status);
 } 

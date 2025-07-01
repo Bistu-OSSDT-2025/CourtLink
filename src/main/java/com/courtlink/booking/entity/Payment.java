@@ -1,4 +1,4 @@
-package com.example.appointment.entity;
+package com.courtlink.booking.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,13 +7,13 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Ö§¸¶ÊµÌåÀà
+ * Ö§ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
  * 
  * @author Your Name
  * @version 1.0.0
@@ -22,94 +22,94 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "payments")
-@Schema(description = "Ö§¸¶ÐÅÏ¢")
+@Schema(description = "Ö§ï¿½ï¿½ï¿½ï¿½Ï¢")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Ö§¸¶ID")
+    @Schema(description = "Ö§ï¿½ï¿½ID")
     private Long id;
 
-    @NotBlank(message = "Ö§¸¶¶©µ¥ºÅ²»ÄÜÎª¿Õ")
+    @NotBlank(message = "Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å²ï¿½ï¿½ï¿½Îªï¿½ï¿½")
     @Column(name = "payment_no", nullable = false, unique = true)
-    @Schema(description = "Ö§¸¶¶©µ¥ºÅ")
+    @Schema(description = "Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
     private String paymentNo;
 
-    @NotBlank(message = "¹ØÁªÔ¤Ô¼ID²»ÄÜÎª¿Õ")
+    @NotBlank(message = "ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼IDï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")
     @Column(name = "appointment_id", nullable = false)
-    @Schema(description = "¹ØÁªÔ¤Ô¼ID")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ID")
     private String appointmentId;
 
-    @NotBlank(message = "ÓÃ»§ID²»ÄÜÎª¿Õ")
+    @NotBlank(message = "ï¿½Ã»ï¿½IDï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")
     @Column(name = "user_id", nullable = false)
-    @Schema(description = "ÓÃ»§ID")
+    @Schema(description = "ï¿½Ã»ï¿½ID")
     private String userId;
 
-    @NotNull(message = "Ö§¸¶½ð¶î²»ÄÜÎª¿Õ")
-    @DecimalMin(value = "0.01", message = "Ö§¸¶½ð¶î±ØÐë´óÓÚ0")
+    @NotNull(message = "Ö§ï¿½ï¿½ï¿½ï¿½î²»ï¿½ï¿½Îªï¿½ï¿?)
+    @DecimalMin(value = "0.01", message = "Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?")
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-    @Schema(description = "Ö§¸¶½ð¶î")
+    @Schema(description = "Ö§ï¿½ï¿½ï¿½ï¿½ï¿?)
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
-    @Schema(description = "Ö§¸¶·½Ê½")
+    @Schema(description = "Ö§ï¿½ï¿½ï¿½ï¿½Ê½")
     private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @Schema(description = "Ö§¸¶×´Ì¬")
+    @Schema(description = "Ö§ï¿½ï¿½×´Ì¬")
     private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(name = "transaction_id")
-    @Schema(description = "µÚÈý·½½»Ò×ID")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID")
     private String transactionId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "paid_at")
-    @Schema(description = "Ö§¸¶Íê³ÉÊ±¼ä")
+    @Schema(description = "Ö§ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿?)
     private LocalDateTime paidAt;
 
-    @Size(max = 500, message = "Ö§¸¶±¸×¢²»ÄÜ³¬¹ý500×Ö·û")
+    @Size(max = 500, message = "Ö§ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½Ü³ï¿½ï¿½ï¿½500ï¿½Ö·ï¿½")
     @Column(name = "notes", length = 500)
-    @Schema(description = "Ö§¸¶±¸×¢")
+    @Schema(description = "Ö§ï¿½ï¿½ï¿½ï¿½×¢")
     private String notes;
 
     @Column(name = "refund_amount", precision = 10, scale = 2)
-    @Schema(description = "ÍË¿î½ð¶î")
+    @Schema(description = "ï¿½Ë¿ï¿½ï¿½ï¿½")
     private BigDecimal refundAmount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "refunded_at")
-    @Schema(description = "ÍË¿îÊ±¼ä")
+    @Schema(description = "ï¿½Ë¿ï¿½Ê±ï¿½ï¿½")
     private LocalDateTime refundedAt;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Schema(description = "´´½¨Ê±¼ä")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at", nullable = false)
-    @Schema(description = "¸üÐÂÊ±¼ä")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½")
     private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "version")
-    @Schema(description = "°æ±¾ºÅ")
+    @Schema(description = "ï¿½æ±¾ï¿½ï¿½")
     private Long version;
 
     /**
-     * Ö§¸¶·½Ê½Ã¶¾Ù
+     * Ö§ï¿½ï¿½ï¿½ï¿½Ê½Ã¶ï¿½ï¿½
      */
     public enum PaymentMethod {
-        ALIPAY("Ö§¸¶±¦"),
-        WECHAT("Î¢ÐÅÖ§¸¶"),
-        BANK_CARD("ÒøÐÐ¿¨"),
-        CASH("ÏÖ½ð"),
-        MOCK("Ä£ÄâÖ§¸¶");
+        ALIPAY("Ö§ï¿½ï¿½ï¿½ï¿½"),
+        WECHAT("Î¢ï¿½ï¿½Ö§ï¿½ï¿½"),
+        BANK_CARD("ï¿½ï¿½ï¿½Ð¿ï¿½"),
+        CASH("ï¿½Ö½ï¿½"),
+        MOCK("Ä£ï¿½ï¿½Ö§ï¿½ï¿½");
 
         private final String description;
 
@@ -123,16 +123,16 @@ public class Payment {
     }
 
     /**
-     * Ö§¸¶×´Ì¬Ã¶¾Ù
+     * Ö§ï¿½ï¿½×´Ì¬Ã¶ï¿½ï¿½
      */
     public enum PaymentStatus {
-        PENDING("´ýÖ§¸¶"),
-        PROCESSING("´¦ÀíÖÐ"),
-        SUCCESS("Ö§¸¶³É¹¦"),
-        FAILED("Ö§¸¶Ê§°Ü"),
-        CANCELLED("ÒÑÈ¡Ïû"),
-        REFUNDED("ÒÑÍË¿î"),
-        PARTIAL_REFUNDED("²¿·ÖÍË¿î");
+        PENDING("ï¿½ï¿½Ö§ï¿½ï¿½"),
+        PROCESSING("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"),
+        SUCCESS("Ö§ï¿½ï¿½ï¿½É¹ï¿½"),
+        FAILED("Ö§ï¿½ï¿½Ê§ï¿½ï¿½"),
+        CANCELLED("ï¿½ï¿½È¡ï¿½ï¿½"),
+        REFUNDED("ï¿½ï¿½ï¿½Ë¿ï¿½"),
+        PARTIAL_REFUNDED("ï¿½ï¿½ï¿½ï¿½ï¿½Ë¿ï¿½");
 
         private final String description;
 

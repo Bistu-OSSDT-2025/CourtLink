@@ -1,4 +1,4 @@
-package com.example.appointment.entity;
+package com.courtlink.booking.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,13 +7,13 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 预约实体类
+ * 预约实锟斤拷锟斤拷
  * 
  * @author Your Name
  * @version 1.0.0
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "appointments")
-@Schema(description = "预约信息")
+@Schema(description = "预约锟斤拷息")
 public class Appointment {
 
     @Id
@@ -30,31 +30,31 @@ public class Appointment {
     @Schema(description = "预约ID")
     private Long id;
 
-    @NotBlank(message = "用户ID不能为空")
+    @NotBlank(message = "锟矫伙拷ID锟斤拷锟斤拷为锟斤拷")
     @Column(name = "user_id", nullable = false)
-    @Schema(description = "用户ID")
+    @Schema(description = "锟矫伙拷ID")
     private String userId;
 
-    @NotBlank(message = "服务提供者ID不能为空")
+    @NotBlank(message = "锟斤拷锟斤拷锟结供锟斤拷ID锟斤拷锟斤拷为锟斤拷")
     @Column(name = "provider_id", nullable = false)
-    @Schema(description = "服务提供者ID")
+    @Schema(description = "锟斤拷锟斤拷锟结供锟斤拷ID")
     private String providerId;
 
-    @NotBlank(message = "服务类型不能为空")
+    @NotBlank(message = "锟斤拷锟斤拷锟斤拷锟酵诧拷锟斤拷为锟斤拷")
     @Column(name = "service_type", nullable = false)
-    @Schema(description = "服务类型")
+    @Schema(description = "锟斤拷锟斤拷锟斤拷锟斤拷")
     private String serviceType;
 
-    @NotNull(message = "预约开始时间不能为空")
+    @NotNull(message = "预约锟斤拷始时锟戒不锟斤拷为锟斤拷")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "start_time", nullable = false)
-    @Schema(description = "预约开始时间")
+    @Schema(description = "预约锟斤拷始时锟斤拷")
     private LocalDateTime startTime;
 
-    @NotNull(message = "预约结束时间不能为空")
+    @NotNull(message = "预约锟斤拷锟斤拷时锟戒不锟斤拷为锟斤拷")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "end_time", nullable = false)
-    @Schema(description = "预约结束时间")
+    @Schema(description = "预约锟斤拷锟斤拷时锟斤拷")
     private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
@@ -62,46 +62,46 @@ public class Appointment {
     @Schema(description = "预约状态")
     private AppointmentStatus status = AppointmentStatus.PENDING;
 
-    @DecimalMin(value = "0.0", message = "金额不能为负数")
+    @DecimalMin(value = "0.0", message = "锟斤拷畈伙拷锟轿拷锟斤拷锟?)
     @Column(name = "amount", precision = 10, scale = 2)
-    @Schema(description = "预约金额")
+    @Schema(description = "预约锟斤拷锟?)
     private BigDecimal amount;
 
-    @Size(max = 500, message = "备注信息不能超过500字符")
+    @Size(max = 500, message = "锟斤拷注锟斤拷息锟斤拷锟杰筹拷锟斤拷500锟街凤拷")
     @Column(name = "notes", length = 500)
-    @Schema(description = "备注信息")
+    @Schema(description = "锟斤拷注锟斤拷息")
     private String notes;
 
     @Column(name = "payment_id")
-    @Schema(description = "支付ID")
+    @Schema(description = "支锟斤拷ID")
     private String paymentId;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Schema(description = "创建时间")
+    @Schema(description = "锟斤拷锟斤拷时锟斤拷")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at", nullable = false)
-    @Schema(description = "更新时间")
+    @Schema(description = "锟斤拷锟斤拷时锟斤拷")
     private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "version")
-    @Schema(description = "版本号")
+    @Schema(description = "锟芥本锟斤拷")
     private Long version;
 
     /**
-     * 预约状态枚举
+     * 预约状态枚锟斤拷
      */
     public enum AppointmentStatus {
-        PENDING("待确认"),
-        CONFIRMED("已确认"),
-        CANCELLED("已取消"),
-        COMPLETED("已完成"),
-        EXPIRED("已过期");
+        PENDING("锟斤拷确锟斤拷"),
+        CONFIRMED("锟斤拷确锟斤拷"),
+        CANCELLED("锟斤拷取锟斤拷"),
+        COMPLETED("锟斤拷锟斤拷锟?),
+        EXPIRED("锟窖癸拷锟斤拷");
 
         private final String description;
 

@@ -1,6 +1,6 @@
-package com.example.appointment.repository;
+package com.courtlink.booking.repository;
 
-import com.example.appointment.entity.Payment;
+import com.courtlink.booking.entity.Payment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Ö§¸¶Êý¾Ý·ÃÎÊ²ã½Ó¿Ú
+ * Ö§ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Ê²ï¿½Ó¿ï¿?
  * 
  * @author Your Name
  * @version 1.0.0
@@ -22,65 +22,65 @@ import java.util.Optional;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     /**
-     * ¸ù¾ÝÖ§¸¶¶©µ¥ºÅ²éÑ¯Ö§¸¶ÐÅÏ¢
+     * ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å²ï¿½Ñ¯Ö§ï¿½ï¿½ï¿½ï¿½Ï¢
      * 
-     * @param paymentNo Ö§¸¶¶©µ¥ºÅ
-     * @return Ö§¸¶ÐÅÏ¢
+     * @param paymentNo Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     * @return Ö§ï¿½ï¿½ï¿½ï¿½Ï¢
      */
     Optional<Payment> findByPaymentNo(String paymentNo);
 
     /**
-     * ¸ù¾ÝÓÃ»§ID²éÑ¯Ö§¸¶ÁÐ±í
+     * ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½IDï¿½ï¿½Ñ¯Ö§ï¿½ï¿½ï¿½Ð±ï¿½
      * 
-     * @param userId ÓÃ»§ID
-     * @param pageable ·ÖÒ³²ÎÊý
-     * @return Ö§¸¶·ÖÒ³ÁÐ±í
+     * @param userId ï¿½Ã»ï¿½ID
+     * @param pageable ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
+     * @return Ö§ï¿½ï¿½ï¿½ï¿½Ò³ï¿½Ð±ï¿½
      */
     Page<Payment> findByUserIdOrderByCreatedAtDesc(String userId, Pageable pageable);
 
     /**
-     * ¸ù¾ÝÔ¤Ô¼ID²éÑ¯Ö§¸¶ÐÅÏ¢
+     * ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼IDï¿½ï¿½Ñ¯Ö§ï¿½ï¿½ï¿½ï¿½Ï¢
      * 
      * @param appointmentId Ô¤Ô¼ID
-     * @return Ö§¸¶ÐÅÏ¢
+     * @return Ö§ï¿½ï¿½ï¿½ï¿½Ï¢
      */
     Optional<Payment> findByAppointmentId(String appointmentId);
 
     /**
-     * ¸ù¾Ý×´Ì¬²éÑ¯Ö§¸¶ÁÐ±í
+     * ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½Ñ¯Ö§ï¿½ï¿½ï¿½Ð±ï¿½
      * 
-     * @param status Ö§¸¶×´Ì¬
-     * @param pageable ·ÖÒ³²ÎÊý
-     * @return Ö§¸¶·ÖÒ³ÁÐ±í
+     * @param status Ö§ï¿½ï¿½×´Ì¬
+     * @param pageable ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
+     * @return Ö§ï¿½ï¿½ï¿½ï¿½Ò³ï¿½Ð±ï¿½
      */
     Page<Payment> findByStatusOrderByCreatedAtDesc(Payment.PaymentStatus status, Pageable pageable);
 
     /**
-     * ¸ù¾ÝÖ§¸¶·½Ê½²éÑ¯Ö§¸¶ÁÐ±í
+     * ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½Ñ¯Ö§ï¿½ï¿½ï¿½Ð±ï¿½
      * 
-     * @param paymentMethod Ö§¸¶·½Ê½
-     * @param pageable ·ÖÒ³²ÎÊý
-     * @return Ö§¸¶·ÖÒ³ÁÐ±í
+     * @param paymentMethod Ö§ï¿½ï¿½ï¿½ï¿½Ê½
+     * @param pageable ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
+     * @return Ö§ï¿½ï¿½ï¿½ï¿½Ò³ï¿½Ð±ï¿½
      */
     Page<Payment> findByPaymentMethodOrderByCreatedAtDesc(Payment.PaymentMethod paymentMethod, Pageable pageable);
 
     /**
-     * ²éÑ¯Ö¸¶¨Ê±¼ä·¶Î§ÄÚµÄÖ§¸¶¼ÇÂ¼
+     * ï¿½ï¿½Ñ¯Ö¸ï¿½ï¿½Ê±ï¿½ä·¶Î§ï¿½Úµï¿½Ö§ï¿½ï¿½ï¿½ï¿½Â¼
      * 
-     * @param startTime ¿ªÊ¼Ê±¼ä
-     * @param endTime ½áÊøÊ±¼ä
-     * @return Ö§¸¶ÁÐ±í
+     * @param startTime ï¿½ï¿½Ê¼Ê±ï¿½ï¿½
+     * @param endTime ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+     * @return Ö§ï¿½ï¿½ï¿½Ð±ï¿½
      */
     @Query("SELECT p FROM Payment p WHERE p.createdAt BETWEEN :startTime AND :endTime")
     List<Payment> findByTimeRange(@Param("startTime") LocalDateTime startTime,
                                  @Param("endTime") LocalDateTime endTime);
 
     /**
-     * ²éÑ¯´ý´¦ÀíµÄÖ§¸¶£¨ÓÃÓÚ¶¨Ê±ÈÎÎñ£©
+     * ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
      * 
-     * @param status Ö§¸¶×´Ì¬
-     * @param timeoutMinutes ³¬Ê±·ÖÖÓÊý
-     * @return ´ý´¦ÀíµÄÖ§¸¶ÁÐ±í
+     * @param status Ö§ï¿½ï¿½×´Ì¬
+     * @param timeoutMinutes ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ï¿½Ð±ï¿½
      */
     @Query("SELECT p FROM Payment p WHERE p.status = :status " +
            "AND p.createdAt < :timeoutTime")
@@ -88,31 +88,31 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
                                      @Param("timeoutTime") LocalDateTime timeoutTime);
 
     /**
-     * ²éÑ¯ÐèÒªÍË¿îµÄÖ§¸¶
+     * ï¿½ï¿½Ñ¯ï¿½ï¿½Òªï¿½Ë¿ï¿½ï¿½Ö§ï¿½ï¿?
      * 
-     * @param status Ö§¸¶×´Ì¬
-     * @return ÐèÒªÍË¿îµÄÖ§¸¶ÁÐ±í
+     * @param status Ö§ï¿½ï¿½×´Ì¬
+     * @return ï¿½ï¿½Òªï¿½Ë¿ï¿½ï¿½Ö§ï¿½ï¿½ï¿½Ð±ï¿?
      */
     @Query("SELECT p FROM Payment p WHERE p.status = :status AND p.refundAmount IS NULL")
     List<Payment> findPaymentsForRefund(@Param("status") Payment.PaymentStatus status);
 
     /**
-     * Í³¼ÆÓÃ»§Ö§¸¶½ð¶î
+     * Í³ï¿½ï¿½ï¿½Ã»ï¿½Ö§ï¿½ï¿½ï¿½ï¿½ï¿?
      * 
-     * @param userId ÓÃ»§ID
-     * @param status Ö§¸¶×´Ì¬
-     * @return Ö§¸¶×Ü½ð¶î
+     * @param userId ï¿½Ã»ï¿½ID
+     * @param status Ö§ï¿½ï¿½×´Ì¬
+     * @return Ö§ï¿½ï¿½ï¿½Ü½ï¿½ï¿?
      */
     @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.userId = :userId AND p.status = :status")
     Double sumAmountByUserIdAndStatus(@Param("userId") String userId,
                                      @Param("status") Payment.PaymentStatus status);
 
     /**
-     * Í³¼ÆÖ§¸¶³É¹¦ÂÊ
+     * Í³ï¿½ï¿½Ö§ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½
      * 
-     * @param startTime ¿ªÊ¼Ê±¼ä
-     * @param endTime ½áÊøÊ±¼ä
-     * @return Ö§¸¶³É¹¦ÂÊ
+     * @param startTime ï¿½ï¿½Ê¼Ê±ï¿½ï¿½
+     * @param endTime ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+     * @return Ö§ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½
      */
     @Query("SELECT " +
            "COUNT(CASE WHEN p.status = 'SUCCESS' THEN 1 END) * 100.0 / COUNT(p) " +
@@ -121,19 +121,19 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
                                @Param("endTime") LocalDateTime endTime);
 
     /**
-     * ¸ù¾ÝµÚÈý·½½»Ò×ID²éÑ¯Ö§¸¶ÐÅÏ¢
+     * ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½Ñ¯Ö§ï¿½ï¿½ï¿½ï¿½Ï¢
      * 
-     * @param transactionId µÚÈý·½½»Ò×ID
-     * @return Ö§¸¶ÐÅÏ¢
+     * @param transactionId ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
+     * @return Ö§ï¿½ï¿½ï¿½ï¿½Ï¢
      */
     Optional<Payment> findByTransactionId(String transactionId);
 
     /**
-     * ²éÑ¯Ê§°ÜµÄÖ§¸¶¼ÇÂ¼£¨ÓÃÓÚÖØÊÔ£©
+     * ï¿½ï¿½Ñ¯Ê§ï¿½Üµï¿½Ö§ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½
      * 
-     * @param status Ö§¸¶×´Ì¬
-     * @param retryCount ÖØÊÔ´ÎÊýÏÞÖÆ
-     * @return Ê§°ÜµÄÖ§¸¶ÁÐ±í
+     * @param status Ö§ï¿½ï¿½×´Ì¬
+     * @param retryCount ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     * @return Ê§ï¿½Üµï¿½Ö§ï¿½ï¿½ï¿½Ð±ï¿½
      */
     @Query("SELECT p FROM Payment p WHERE p.status = :status " +
            "AND p.retryCount < :maxRetryCount " +

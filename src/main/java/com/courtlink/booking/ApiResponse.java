@@ -1,4 +1,4 @@
-package com.example.appointment;
+package com.courtlink.booking;
 
 public class ApiResponse<T> {
     private boolean success;

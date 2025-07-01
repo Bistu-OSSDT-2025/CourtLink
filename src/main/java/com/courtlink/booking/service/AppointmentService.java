@@ -1,6 +1,6 @@
-package com.example.appointment.service;
+package com.courtlink.booking.service;
 
-import com.example.appointment.entity.Appointment;
+import com.courtlink.booking.entity.Appointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 预约管理服务接口
+ * 预约锟斤拷锟斤拷锟斤拷锟斤拷涌锟?
  * 
  * @author Your Name
  * @version 1.0.0
@@ -16,152 +16,152 @@ import java.util.List;
 public interface AppointmentService {
 
     /**
-     * 创建预约
+     * 锟斤拷锟斤拷预约
      * 
-     * @param appointment 预约信息
-     * @return 创建的预约
+     * @param appointment 预约锟斤拷息
+     * @return 锟斤拷锟斤拷锟斤拷预约
      */
     Appointment createAppointment(Appointment appointment);
 
     /**
-     * 更新预约
+     * 锟斤拷锟斤拷预约
      * 
      * @param id 预约ID
-     * @param appointment 预约信息
-     * @return 更新后的预约
+     * @param appointment 预约锟斤拷息
+     * @return 锟斤拷锟铰猴拷锟皆ぴ?
      */
     Appointment updateAppointment(Long id, Appointment appointment);
 
     /**
-     * 取消预约
+     * 取锟斤拷预约
      * 
      * @param id 预约ID
-     * @param reason 取消原因
-     * @return 取消后的预约
+     * @param reason 取锟斤拷原锟斤拷
+     * @return 取锟斤拷锟斤拷锟皆ぴ?
      */
     Appointment cancelAppointment(Long id, String reason);
 
     /**
-     * 确认预约
+     * 确锟斤拷预约
      * 
      * @param id 预约ID
-     * @return 确认后的预约
+     * @return 确锟较猴拷锟皆ぴ?
      */
     Appointment confirmAppointment(Long id);
 
     /**
-     * 完成预约
+     * 锟斤拷锟皆ぴ?
      * 
      * @param id 预约ID
-     * @return 完成后的预约
+     * @return 锟斤拷珊锟斤拷预约
      */
     Appointment completeAppointment(Long id);
 
     /**
-     * 根据ID查询预约
+     * 锟斤拷锟斤拷ID锟斤拷询预约
      * 
      * @param id 预约ID
-     * @return 预约信息
+     * @return 预约锟斤拷息
      */
     Appointment getAppointmentById(Long id);
 
     /**
-     * 根据用户ID查询预约列表
+     * 锟斤拷锟斤拷锟矫伙拷ID锟斤拷询预约锟叫憋拷
      * 
-     * @param userId 用户ID
-     * @param pageable 分页参数
-     * @return 预约分页列表
+     * @param userId 锟矫伙拷ID
+     * @param pageable 锟斤拷页锟斤拷锟斤拷
+     * @return 预约锟斤拷页锟叫憋拷
      */
     Page<Appointment> getAppointmentsByUserId(String userId, Pageable pageable);
 
     /**
-     * 根据服务提供者ID查询预约列表
+     * 锟斤拷锟捷凤拷锟斤拷锟结供锟斤拷ID锟斤拷询预约锟叫憋拷
      * 
-     * @param providerId 服务提供者ID
-     * @param pageable 分页参数
-     * @return 预约分页列表
+     * @param providerId 锟斤拷锟斤拷锟结供锟斤拷ID
+     * @param pageable 锟斤拷页锟斤拷锟斤拷
+     * @return 预约锟斤拷页锟叫憋拷
      */
     Page<Appointment> getAppointmentsByProviderId(String providerId, Pageable pageable);
 
     /**
-     * 根据状态查询预约列表
+     * 锟斤拷锟斤拷状态锟斤拷询预约锟叫憋拷
      * 
      * @param status 预约状态
-     * @param pageable 分页参数
-     * @return 预约分页列表
+     * @param pageable 锟斤拷页锟斤拷锟斤拷
+     * @return 预约锟斤拷页锟叫憋拷
      */
     Page<Appointment> getAppointmentsByStatus(Appointment.AppointmentStatus status, Pageable pageable);
 
     /**
-     * 检查时间冲突
+     * 锟斤拷锟绞憋拷锟斤拷突
      * 
-     * @param providerId 服务提供者ID
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param excludeId 排除的预约ID
-     * @return 是否存在冲突
+     * @param providerId 锟斤拷锟斤拷锟结供锟斤拷ID
+     * @param startTime 锟斤拷始时锟斤拷
+     * @param endTime 锟斤拷锟斤拷时锟斤拷
+     * @param excludeId 锟脚筹拷锟斤拷预约ID
+     * @return 锟角凤拷锟斤拷诔锟酵?
      */
     boolean hasTimeConflict(String providerId, LocalDateTime startTime, LocalDateTime endTime, Long excludeId);
 
     /**
-     * 查询指定时间范围内的预约
+     * 锟斤拷询指锟斤拷时锟戒范围锟节碉拷预约
      * 
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startTime 锟斤拷始时锟斤拷
+     * @param endTime 锟斤拷锟斤拷时锟斤拷
      * @param status 预约状态
-     * @return 预约列表
+     * @return 预约锟叫憋拷
      */
     List<Appointment> getAppointmentsByTimeRange(LocalDateTime startTime, LocalDateTime endTime, 
                                                 Appointment.AppointmentStatus status);
 
     /**
-     * 查询即将到期的预约（用于发送提醒）
+     * 锟斤拷询锟斤拷锟斤拷锟斤拷锟节碉拷预约锟斤拷锟斤拷锟节凤拷锟斤拷锟斤拷锟窖ｏ拷
      * 
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startTime 锟斤拷始时锟斤拷
+     * @param endTime 锟斤拷锟斤拷时锟斤拷
      * @param status 预约状态
-     * @return 即将到期的预约列表
+     * @return 锟斤拷锟斤拷锟斤拷锟节碉拷预约锟叫憋拷
      */
     List<Appointment> getUpcomingAppointments(LocalDateTime startTime, LocalDateTime endTime, 
                                              Appointment.AppointmentStatus status);
 
     /**
-     * 清理过期预约
+     * 锟斤拷锟斤拷锟斤拷锟斤拷预约
      * 
-     * @return 清理的预约数量
+     * @return 锟斤拷锟斤拷锟斤拷预约锟斤拷锟斤拷
      */
     int cleanupExpiredAppointments();
 
     /**
-     * 发送预约提醒
+     * 锟斤拷锟斤拷预约锟斤拷锟斤拷
      * 
-     * @param appointment 预约信息
+     * @param appointment 预约锟斤拷息
      */
     void sendAppointmentReminder(Appointment appointment);
 
     /**
-     * 发送预约通知
+     * 锟斤拷锟斤拷预约通知
      * 
-     * @param appointment 预约信息
-     * @param notificationType 通知类型
+     * @param appointment 预约锟斤拷息
+     * @param notificationType 通知锟斤拷锟斤拷
      */
     void sendAppointmentNotification(Appointment appointment, String notificationType);
 
     /**
-     * 统计用户预约数量
+     * 统锟斤拷锟矫伙拷预约锟斤拷锟斤拷
      * 
-     * @param userId 用户ID
+     * @param userId 锟矫伙拷ID
      * @param status 预约状态
-     * @return 预约数量
+     * @return 预约锟斤拷锟斤拷
      */
     long countAppointmentsByUserIdAndStatus(String userId, Appointment.AppointmentStatus status);
 
     /**
-     * 统计服务提供者预约数量
+     * 统锟狡凤拷锟斤拷锟结供锟斤拷预约锟斤拷锟斤拷
      * 
-     * @param providerId 服务提供者ID
+     * @param providerId 锟斤拷锟斤拷锟结供锟斤拷ID
      * @param status 预约状态
-     * @return 预约数量
+     * @return 预约锟斤拷锟斤拷
      */
     long countAppointmentsByProviderIdAndStatus(String providerId, Appointment.AppointmentStatus status);
 } 

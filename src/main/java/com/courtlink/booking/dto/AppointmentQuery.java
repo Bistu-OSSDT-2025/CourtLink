@@ -1,6 +1,6 @@
-package com.example.appointment.dto;
+package com.courtlink.booking.dto;
 
-import com.example.appointment.entity.Appointment;
+import com.courtlink.booking.entity.Appointment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -9,22 +9,22 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 /**
- * Ô¤Ô¼²éÑ¯Ìõ¼þ¶ÔÏó
+ * Ô¤Ô¼ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
  * @author Your Name
  * @version 1.0.0
  */
 @Data
-@Schema(description = "Ô¤Ô¼²éÑ¯Ìõ¼þ")
+@Schema(description = "Ô¤Ô¼ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½")
 public class AppointmentQuery {
 
-    @Schema(description = "ÓÃ»§ID", example = "user123")
+    @Schema(description = "ï¿½Ã»ï¿½ID", example = "user123")
     private String userId;
 
-    @Schema(description = "·þÎñÌá¹©ÕßID", example = "provider456")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½ID", example = "provider456")
     private String providerId;
 
-    @Schema(description = "·þÎñÀàÐÍ", example = "ÀºÇò³¡")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", example = "ï¿½ï¿½ï¿½ï¿½")
     private String serviceType;
 
     @Schema(description = "Ô¤Ô¼×´Ì¬", example = "PENDING")
@@ -32,33 +32,33 @@ public class AppointmentQuery {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "¿ªÊ¼Ê±¼ä·¶Î§-ÆðÊ¼", example = "2024-03-25T00:00:00")
+    @Schema(description = "ï¿½ï¿½Ê¼Ê±ï¿½ä·¶Î§-ï¿½ï¿½Ê¼", example = "2024-03-25T00:00:00")
     private LocalDateTime startTimeFrom;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "¿ªÊ¼Ê±¼ä·¶Î§-½áÊø", example = "2024-03-25T23:59:59")
+    @Schema(description = "ï¿½ï¿½Ê¼Ê±ï¿½ä·¶Î§-ï¿½ï¿½ï¿½ï¿½", example = "2024-03-25T23:59:59")
     private LocalDateTime startTimeTo;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "½áÊøÊ±¼ä·¶Î§-ÆðÊ¼", example = "2024-03-25T00:00:00")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä·¶Î§-ï¿½ï¿½Ê¼", example = "2024-03-25T00:00:00")
     private LocalDateTime endTimeFrom;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "½áÊøÊ±¼ä·¶Î§-½áÊø", example = "2024-03-25T23:59:59")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä·¶Î§-ï¿½ï¿½ï¿½ï¿½", example = "2024-03-25T23:59:59")
     private LocalDateTime endTimeTo;
 
-    @Schema(description = "Ò³Âë", example = "0")
+    @Schema(description = "Ò³ï¿½ï¿½", example = "0")
     private Integer page = 0;
 
-    @Schema(description = "Ã¿Ò³´óÐ¡", example = "10")
+    @Schema(description = "Ã¿Ò³ï¿½ï¿½Ð¡", example = "10")
     private Integer size = 10;
 
-    @Schema(description = "ÅÅÐò×Ö¶Î", example = "startTime")
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½", example = "startTime")
     private String sortBy = "startTime";
 
-    @Schema(description = "ÅÅÐò·½Ïò", example = "DESC", allowableValues = {"ASC", "DESC"})
+    @Schema(description = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", example = "DESC", allowableValues = {"ASC", "DESC"})
     private String sortDirection = "DESC";
 } 
