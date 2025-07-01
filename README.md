@@ -1,101 +1,285 @@
-# Ô¤Ô¼¹ÜÀíÓëÖ§¸¶¼¯³ÉÏµÍ³
+# CourtLink Booking Management System
 
-## ÏîÄ¿¸ÅÊö
+## é¡¹ç›®æ¦‚è¿°
 
-±¾ÏîÄ¿ÊÇÒ»¸ö»ùÓÚSpring BootµÄÔ¤Ô¼¹ÜÀíºÍÖ§¸¶¼¯³ÉÏµÍ³£¬Ö÷Òª°üº¬ÒÔÏÂºËĞÄÄ£¿é£º
+CourtLink Booking Management Systemæ˜¯ä¸€ä¸ªç°ä»£åŒ–çš„é¢„çº¦å’Œæ”¯ä»˜ç®¡ç†ç³»ç»Ÿï¼Œç”¨äºç®¡ç†çƒåœºé¢„çº¦ã€ç”¨æˆ·ç®¡ç†å’Œæ”¯ä»˜å¤„ç†ã€‚
 
-- **Ô¤Ô¼¹ÜÀíÄ£¿é (C)**: ´´½¨Ô¤Ô¼¡¢È¡ÏûÔ¤Ô¼¡¢²é¿´Ô¤Ô¼¡¢Ê±¼ä³åÍ»¼ì²é¡¢×´Ì¬¹ÜÀí¡¢Í¨ÖªÏµÍ³
-- **Ö§¸¶¼¯³ÉÄ£¿é (D)**: Ä£ÄâÖ§¸¶¡¢¶©µ¥×´Ì¬¸üĞÂ¡¢Ö§¸¶»Øµ÷¡¢ÍË¿î´¦Àí
+## æŠ€æœ¯æ ˆ
 
-## ¼¼ÊõÕ»
+### åç«¯æŠ€æœ¯
+- **Spring Boot 3.1.5** - ç°ä»£åŒ–çš„Javaå¾®æœåŠ¡æ¡†æ¶
+- **Java 21** - æœ€æ–°çš„LTS Javaç‰ˆæœ¬
+- **Spring Data JPA** - æ•°æ®æŒä¹…åŒ–å’ŒORM
+- **Spring Boot Validation** - æ•°æ®éªŒè¯
+- **Spring Boot Actuator** - åº”ç”¨ç›‘æ§å’Œå¥åº·æ£€æŸ¥
 
-- **ºó¶Ë¿ò¼Ü**: Spring Boot 2.7.x
-- **Êı¾İ¿â**: MySQL 8.0
-- **»º´æ**: Redis
-- **ÏûÏ¢¶ÓÁĞ**: RabbitMQ
-- **APIÎÄµµ**: Swagger/OpenAPI 3
-- **²âÊÔ¿ò¼Ü**: JUnit 5 + Mockito
-- **¹¹½¨¹¤¾ß**: Maven
-- **´úÂë¹æ·¶**: Google Java Style Guide
+### æ•°æ®åº“
+- **H2 Database** - å†…å­˜æ•°æ®åº“ï¼Œé€‚åˆå¼€å‘å’Œæµ‹è¯•
+- **Hibernate** - JPAå®ç°
 
-## ÏîÄ¿½á¹¹
+### ç¼“å­˜å’Œæ€§èƒ½
+- **Caffeine Cache** - é«˜æ€§èƒ½æœ¬åœ°ç¼“å­˜
+
+### æ–‡æ¡£å’ŒAPI
+- **SpringDoc OpenAPI 3** - APIæ–‡æ¡£è‡ªåŠ¨ç”Ÿæˆ
+- **Swagger UI** - äº¤äº’å¼APIæ–‡æ¡£ç•Œé¢
+
+### å¼€å‘å·¥å…·
+- **Lombok** - å‡å°‘æ ·æ¿ä»£ç 
+- **Maven** - é¡¹ç›®æ„å»ºå’Œä¾èµ–ç®¡ç†
+
+## åŠŸèƒ½ç‰¹æ€§
+
+### é¢„çº¦ç®¡ç†
+- âœ… åˆ›å»ºé¢„çº¦
+- âœ… æŸ¥çœ‹é¢„çº¦è¯¦æƒ…
+- âœ… å–æ¶ˆé¢„çº¦
+- âœ… å®Œæˆé¢„çº¦
+- âœ… æŒ‰ç”¨æˆ·æŸ¥è¯¢é¢„çº¦
+- âœ… æŒ‰æœåŠ¡æä¾›è€…æŸ¥è¯¢é¢„çº¦
+- âœ… é¢„çº¦çŠ¶æ€ç®¡ç†ï¼ˆPENDING, CONFIRMED, COMPLETED, CANCELLEDï¼‰
+
+### æ”¯ä»˜ç®¡ç†
+- âœ… æ”¯ä»˜å¤„ç†ï¼ˆæ¨¡æ‹Ÿï¼‰
+- âœ… é€€æ¬¾å¤„ç†ï¼ˆæ¨¡æ‹Ÿï¼‰
+- âœ… æ”¯ä»˜çŠ¶æ€è·Ÿè¸ª
+- âœ… å¤šç§æ”¯ä»˜æ–¹å¼æ”¯æŒï¼ˆALIPAY, WECHAT_PAY, BANK_CARDï¼‰
+
+### ç”¨æˆ·ç®¡ç†
+- âœ… ç”¨æˆ·æ³¨å†Œå’Œç™»å½•
+- âœ… ç”¨æˆ·ä¿¡æ¯ç®¡ç†
+- âœ… å¯†ç åŠ å¯†
+- âœ… ç”¨æˆ·çŠ¶æ€ç®¡ç†
+
+### çƒåœºç®¡ç†
+- âœ… çƒåœºä¿¡æ¯ç®¡ç†
+- âœ… çƒåœºçŠ¶æ€ç®¡ç†
+- âœ… çƒåœºå¯ç”¨æ€§æ£€æŸ¥
+
+## é¡¹ç›®ç»“æ„
 
 ```
-appointment-payment-system/
-©À©¤©¤ src/
-©¦   ©À©¤©¤ main/
-©¦   ©¦   ©À©¤©¤ java/com/example/appointment/
-©¦   ©¦   ©¦   ©À©¤©¤ AppointmentApplication.java
-©¦   ©¦   ©¦   ©À©¤©¤ config/
-©¦   ©¦   ©¦   ©À©¤©¤ controller/
-©¦   ©¦   ©¦   ©À©¤©¤ service/
-©¦   ©¦   ©¦   ©À©¤©¤ repository/
-©¦   ©¦   ©¦   ©À©¤©¤ entity/
-©¦   ©¦   ©¦   ©À©¤©¤ dto/
-©¦   ©¦   ©¦   ©À©¤©¤ exception/
-©¦   ©¦   ©¦   ©¸©¤©¤ util/
-©¦   ©¦   ©¸©¤©¤ resources/
-©¦   ©¦       ©À©¤©¤ application.yml
-©¦   ©¦       ©À©¤©¤ application-dev.yml
-©¦   ©¦       ©¸©¤©¤ application-prod.yml
-©¦   ©¸©¤©¤ test/
-©¦       ©¸©¤©¤ java/com/example/appointment/
-©À©¤©¤ docs/
-©À©¤©¤ scripts/
-©¸©¤©¤ pom.xml
+src/main/java/com/courtlink/
+â”œâ”€â”€ booking/                     # é¢„çº¦ç®¡ç†æ¨¡å—
+â”‚   â”œâ”€â”€ entity/                 # å®ä½“ç±»
+â”‚   â”œâ”€â”€ dto/                    # æ•°æ®ä¼ è¾“å¯¹è±¡
+â”‚   â”œâ”€â”€ service/                # ä¸šåŠ¡é€»è¾‘å±‚
+â”‚   â”œâ”€â”€ repository/             # æ•°æ®è®¿é—®å±‚
+â”‚   â”œâ”€â”€ AppointmentController.java  # é¢„çº¦æ§åˆ¶å™¨
+â”‚   â”œâ”€â”€ PaymentController.java     # æ”¯ä»˜æ§åˆ¶å™¨
+â”‚   â””â”€â”€ BookingApplication.java    # å¯åŠ¨ç±»
+â”œâ”€â”€ config/                     # é…ç½®ç±»
+â”œâ”€â”€ controller/                 # æ§åˆ¶å™¨
+â”œâ”€â”€ dto/                       # æ•°æ®ä¼ è¾“å¯¹è±¡
+â”œâ”€â”€ entity/                    # å®ä½“ç±»
+â”œâ”€â”€ enums/                     # æšä¸¾ç±»
+â”œâ”€â”€ repository/                # æ•°æ®è®¿é—®å±‚
+â”œâ”€â”€ service/                   # ä¸šåŠ¡é€»è¾‘å±‚
+â”œâ”€â”€ user/                      # ç”¨æˆ·ç®¡ç†æ¨¡å—
+â””â”€â”€ util/                      # å·¥å…·ç±»
 ```
 
-## ¿ª·¢Á÷³Ì
+## å¿«é€Ÿå¼€å§‹
 
-### ·ÖÖ§¹ÜÀí
-- `main`: Ö÷·ÖÖ§£¬ÓÃÓÚÉú²ú·¢²¼
-- `develop`: ¿ª·¢Ö÷·ÖÖ§
-- `feat/*`: ÌØĞÔ·ÖÖ§£¬Èç `feat/appointment-management`
-- `fix/*`: ĞŞ¸´·ÖÖ§
-- `release/*`: ·¢²¼·ÖÖ§
+### ç¯å¢ƒè¦æ±‚
+- Java 21+
+- Maven 3.8+
 
-### Ìá½»¹æ·¶
-- `feat`: ĞÂ¹¦ÄÜ
-- `fix`: ĞŞ¸´bug
-- `docs`: ÎÄµµ¸üĞÂ
-- `style`: ´úÂë¸ñÊ½»¯
-- `refactor`: ´úÂëÖØ¹¹
-- `test`: ²âÊÔÏà¹Ø
-- `chore`: ¹¹½¨/¹¤¾ßÏà¹Ø
+### è¿è¡Œåº”ç”¨
 
-## ¿ìËÙ¿ªÊ¼
-
-1. ¿ËÂ¡ÏîÄ¿
+1. å…‹éš†é¡¹ç›®
 ```bash
 git clone <repository-url>
-cd appointment-payment-system
+cd courtlink-booking
 ```
 
-2. ´´½¨²¢ÇĞ»»µ½¿ª·¢·ÖÖ§
+2. ç¼–è¯‘é¡¹ç›®
 ```bash
-git checkout -b develop
+mvn clean compile
 ```
 
-3. °²×°ÒÀÀµ
-```bash
-mvn clean install
-```
-
-4. ÔËĞĞÏîÄ¿
+3. è¿è¡Œåº”ç”¨
 ```bash
 mvn spring-boot:run
 ```
 
-## APIÎÄµµ
+4. è®¿é—®åº”ç”¨
+- åº”ç”¨åœ°å€ï¼šhttp://localhost:8080
+- Swagger UIï¼šhttp://localhost:8080/swagger-ui/index.html
+- APIæ–‡æ¡£ï¼šhttp://localhost:8080/v3/api-docs
 
-Æô¶¯ÏîÄ¿ºó·ÃÎÊ: http://localhost:8080/swagger-ui.html
+## APIæ¥å£
 
-## ²âÊÔ
+### é¢„çº¦ç®¡ç†API
 
+#### åˆ›å»ºé¢„çº¦
+```http
+POST /api/appointments?userId={userId}
+Content-Type: application/json
+
+{
+  "providerId": "provider123",
+  "serviceType": "court_booking",
+  "startTime": "2025-07-05T10:00:00",
+  "endTime": "2025-07-05T11:00:00",
+  "amount": 50.00,
+  "notes": "Test booking"
+}
+```
+
+#### æŸ¥çœ‹ç”¨æˆ·é¢„çº¦
+```http
+GET /api/appointments/user/{userId}?page=0&size=10
+```
+
+#### æŸ¥çœ‹é¢„çº¦è¯¦æƒ…
+```http
+GET /api/appointments/{id}
+```
+
+#### å–æ¶ˆé¢„çº¦
+```http
+POST /api/appointments/{id}/cancel
+```
+
+#### å®Œæˆé¢„çº¦
+```http
+POST /api/appointments/{id}/complete
+```
+
+### æ”¯ä»˜ç®¡ç†API
+
+#### å¤„ç†æ”¯ä»˜
+```http
+POST /api/payments/appointment/{appointmentId}/pay?paymentMethod=ALIPAY
+```
+
+#### å¤„ç†é€€æ¬¾
+```http
+POST /api/payments/appointment/{appointmentId}/refund
+```
+
+### ç”¨æˆ·ç®¡ç†API
+
+#### ç”¨æˆ·æ³¨å†Œ
+```http
+POST /api/users/register
+```
+
+#### ç”¨æˆ·ç™»å½•
+```http
+POST /api/users/login
+```
+
+### çƒåœºç®¡ç†API
+
+#### è·å–çƒåœºåˆ—è¡¨
+```http
+GET /api/courts?page=0&size=10
+```
+
+#### åˆ›å»ºçƒåœº
+```http
+POST /api/courts
+```
+
+## é…ç½®
+
+### åº”ç”¨é…ç½® (application.yml)
+
+```yaml
+server:
+  port: 8080
+
+spring:
+  application:
+    name: courtlink-booking
+  
+  # æ•°æ®åº“é…ç½®
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  # JPAé…ç½®
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  
+  # H2æ§åˆ¶å°
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# SpringDocé…ç½®
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+# æ—¥å¿—é…ç½®
+logging:
+  level:
+    com.courtlink: DEBUG
+    org.springframework.web: DEBUG
+```
+
+## å¼€å‘æŒ‡å—
+
+### ä»£ç è§„èŒƒ
+- ä½¿ç”¨æ ‡å‡†çš„Javaå‘½åçº¦å®š
+- æ‰€æœ‰å…¬å…±æ–¹æ³•éœ€è¦JavaDocæ³¨é‡Š
+- ä½¿ç”¨@Validæ³¨è§£è¿›è¡Œå‚æ•°éªŒè¯
+- ç»Ÿä¸€å¼‚å¸¸å¤„ç†
+
+### æ•°æ®åº“è®¾è®¡
+- ä½¿ç”¨JPAå®ä½“æ³¨è§£
+- éµå¾ªæ•°æ®åº“å‘½åè§„èŒƒ
+- å®ä½“å…³ç³»æ˜ å°„æ¸…æ™°
+
+### APIè®¾è®¡
+- éµå¾ªRESTfulè®¾è®¡åŸåˆ™
+- ç»Ÿä¸€è¿”å›æ ¼å¼
+- å®Œæ•´çš„APIæ–‡æ¡£
+
+## éƒ¨ç½²
+
+### æ‰“åŒ…åº”ç”¨
 ```bash
-# ÔËĞĞËùÓĞ²âÊÔ
-mvn test
+mvn clean package
+```
 
-# ÔËĞĞÌØ¶¨²âÊÔ
-mvn test -Dtest=AppointmentServiceTest
-``` 
+### è¿è¡ŒJARåŒ…
+```bash
+java -jar target/courtlink-booking-1.0.0.jar
+```
+
+## ç‰ˆæœ¬å†å²
+
+### v1.0.0 (2025-07-02)
+- âœ… Spring Boot 3.1.5æŠ€æœ¯æ ˆå‡çº§
+- âœ… Java 21æ”¯æŒ
+- âœ… å®Œæ•´çš„é¢„çº¦ç®¡ç†åŠŸèƒ½
+- âœ… æ”¯ä»˜ç®¡ç†é›†æˆ
+- âœ… ç”¨æˆ·ç®¡ç†æ¨¡å—
+- âœ… çƒåœºç®¡ç†åŠŸèƒ½
+- âœ… Swagger APIæ–‡æ¡£
+- âœ… å…¨é¢çš„å¼‚å¸¸å¤„ç†
+- âœ… ç»Ÿä¸€çš„å“åº”æ ¼å¼
+
+## è”ç³»æ–¹å¼
+
+- é¡¹ç›®ç»´æŠ¤ï¼šCourtLink Team
+- é‚®ç®±ï¼šsupport@courtlink.com
+
+## è®¸å¯è¯
+
+æœ¬é¡¹ç›®é‡‡ç”¨ MIT è®¸å¯è¯ã€‚è¯¦æƒ…è¯·å‚é˜… [LICENSE](LICENSE) æ–‡ä»¶ã€‚ 

@@ -13,95 +13,95 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * ԤԼʵ����
+ * Appointment Entity
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "appointments")
-@Schema(description = "ԤԼ��Ϣ")
+@Schema(description = "Appointment Information")
 public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "ԤԼID")
+    @Schema(description = "Appointment ID")
     private Long id;
 
-    @NotBlank(message = "�û�ID����Ϊ��")
+    @NotBlank(message = "User ID cannot be empty")
     @Column(name = "user_id", nullable = false)
-    @Schema(description = "�û�ID")
+    @Schema(description = "User ID")
     private String userId;
 
-    @NotBlank(message = "�����ṩ��ID����Ϊ��")
+    @NotBlank(message = "Provider ID cannot be empty")
     @Column(name = "provider_id", nullable = false)
-    @Schema(description = "�����ṩ��ID")
+    @Schema(description = "Service Provider ID")
     private String providerId;
 
-    @NotBlank(message = "�������Ͳ���Ϊ��")
+    @NotBlank(message = "Service type cannot be empty")
     @Column(name = "service_type", nullable = false)
-    @Schema(description = "��������")
+    @Schema(description = "Service Type")
     private String serviceType;
 
-    @NotNull(message = "ԤԼ��ʼʱ�䲻��Ϊ��")
+    @NotNull(message = "Appointment start time cannot be empty")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "start_time", nullable = false)
-    @Schema(description = "ԤԼ��ʼʱ��")
+    @Schema(description = "Appointment Start Time")
     private LocalDateTime startTime;
 
-    @NotNull(message = "ԤԼ����ʱ�䲻��Ϊ��")
+    @NotNull(message = "Appointment end time cannot be empty")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "end_time", nullable = false)
-    @Schema(description = "ԤԼ����ʱ��")
+    @Schema(description = "Appointment End Time")
     private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @Schema(description = "ԤԼ״̬")
+    @Schema(description = "Appointment Status")
     private AppointmentStatus status = AppointmentStatus.PENDING;
 
-    @DecimalMin(value = "0.0", message = "����Ϊ����?)
+    @DecimalMin(value = "0.0", message = "Amount cannot be negative")
     @Column(name = "amount", precision = 10, scale = 2)
-    @Schema(description = "ԤԼ���?)
+    @Schema(description = "Appointment Amount")
     private BigDecimal amount;
 
-    @Size(max = 500, message = "��ע��Ϣ���ܳ���500�ַ�")
+    @Size(max = 500, message = "Notes cannot exceed 500 characters")
     @Column(name = "notes", length = 500)
-    @Schema(description = "��ע��Ϣ")
+    @Schema(description = "Notes")
     private String notes;
 
     @Column(name = "payment_id")
-    @Schema(description = "֧��ID")
+    @Schema(description = "Payment ID")
     private String paymentId;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Schema(description = "����ʱ��")
+    @Schema(description = "Created At")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at", nullable = false)
-    @Schema(description = "����ʱ��")
+    @Schema(description = "Updated At")
     private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "version")
-    @Schema(description = "�汾��")
+    @Schema(description = "Version")
     private Long version;
 
     /**
-     * ԤԼ״̬ö��
+     * Appointment Status Enumeration
      */
     public enum AppointmentStatus {
-        PENDING("��ȷ��"),
-        CONFIRMED("��ȷ��"),
-        CANCELLED("��ȡ��"),
-        COMPLETED("�����?),
-        EXPIRED("�ѹ���");
+        PENDING("Pending"),
+        CONFIRMED("Confirmed"),
+        CANCELLED("Cancelled"),
+        COMPLETED("Completed"),
+        EXPIRED("Expired");
 
         private final String description;
 

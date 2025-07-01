@@ -10,68 +10,71 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 棰勭害鏁版嵁浼犺緭瀵硅�?
+ * Appointment Data Transfer Object
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 @Data
-@Schema(description = "棰勭害鏁版嵁浼犺緭瀵硅�?)
+@Schema(description = "Appointment data transfer object")
 public class AppointmentDTO {
 
-    @Schema(description = "棰勭害ID")
+    @Schema(description = "Appointment ID")
     private Long id;
 
-    @NotBlank(message = "鐢ㄦ埛ID涓嶈兘涓虹┖")
-    @Schema(description = "鐢ㄦ埛ID", required = true)
+    @NotBlank(message = "User ID cannot be empty")
+    @Schema(description = "User ID", required = true)
     private String userId;
 
-    @NotBlank(message = "鏈嶅姟鎻愪緵鑰匢D涓嶈兘涓虹┖")
-    @Schema(description = "鏈嶅姟鎻愪緵鑰匢D", required = true)
+    @NotBlank(message = "Provider ID cannot be empty")
+    @Schema(description = "Service Provider ID", required = true)
     private String providerId;
 
-    @NotBlank(message = "鏈嶅姟绫诲瀷涓嶈兘涓虹�?)
-    @Schema(description = "鏈嶅姟绫诲�?, required = true)
+    @NotBlank(message = "Service type cannot be empty")
+    @Schema(description = "Service Type", required = true)
     private String serviceType;
 
-    @NotNull(message = "棰勭害寮€濮嬫椂闂翠笉鑳戒负绌�")
-    @Future(message = "棰勭害寮€濮嬫椂闂村繀椤绘槸鏈�鏉ユ椂闂�")
+    @NotNull(message = "Appointment start time cannot be empty")
+    @Future(message = "Appointment start time must be in the future")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "棰勭害寮€濮嬫椂闂�", required = true)
+    @Schema(description = "Appointment Start Time", required = true)
     private LocalDateTime startTime;
 
-    @NotNull(message = "棰勭害缁撴潫鏃堕棿涓嶈兘涓虹�?)
-    @Future(message = "棰勭害缁撴潫鏃堕棿蹇呴』鏄�鏈�鏉ユ椂闂�")
+    @NotNull(message = "Appointment end time cannot be empty")
+    @Future(message = "Appointment end time must be in the future")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "棰勭害缁撴潫鏃堕�?, required = true)
+    @Schema(description = "Appointment End Time", required = true)
     private LocalDateTime endTime;
 
-    @Schema(description = "棰勭害鐘舵€�?)
+    @Schema(description = "Appointment Status")
     private Appointment.AppointmentStatus status;
 
-    @DecimalMin(value = "0.0", message = "閲戦�濅笉鑳戒负璐熸�?)
-    @Schema(description = "棰勭害閲戦��?)
+    @DecimalMin(value = "0.0", message = "Amount cannot be negative")
+    @Schema(description = "Appointment Amount")
     private BigDecimal amount;
 
-    @Size(max = 500, message = "澶囨敞淇℃伅涓嶈兘瓒呰繃500瀛楃��")
-    @Schema(description = "澶囨敞淇℃伅")
+    @Size(max = 500, message = "Notes cannot exceed 500 characters")
+    @Schema(description = "Notes")
     private String notes;
 
-    @Schema(description = "鏀�浠業D")
+    @Schema(description = "Payment ID")
     private String paymentId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "鍒涘缓鏃堕棿")
+    @Schema(description = "Created At")
     private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "鏇存柊鏃堕棿")
+    @Schema(description = "Updated At")
     private LocalDateTime updatedAt;
 
+    @Schema(description = "Version")
+    private Long version;
+
     /**
-     * 杞�鎹�涓哄疄浣撳�硅薄
+     * Convert to entity object
      * 
-     * @return 棰勭害瀹炰�?
+     * @return Appointment entity
      */
     public Appointment toEntity() {
         Appointment appointment = new Appointment();
@@ -81,18 +84,19 @@ public class AppointmentDTO {
         appointment.setServiceType(this.serviceType);
         appointment.setStartTime(this.startTime);
         appointment.setEndTime(this.endTime);
-        appointment.setStatus(this.status != null ? this.status : Appointment.AppointmentStatus.PENDING);
+        appointment.setStatus(this.status);
         appointment.setAmount(this.amount);
         appointment.setNotes(this.notes);
         appointment.setPaymentId(this.paymentId);
+        appointment.setVersion(this.version);
         return appointment;
     }
 
     /**
-     * 浠庡疄浣撳�硅薄鍒涘缓DTO
+     * Create DTO from entity object
      * 
-     * @param appointment 棰勭害瀹炰�?
-     * @return 棰勭害DTO
+     * @param appointment Appointment entity
+     * @return Appointment DTO
      */
     public static AppointmentDTO fromEntity(Appointment appointment) {
         AppointmentDTO dto = new AppointmentDTO();
@@ -108,6 +112,7 @@ public class AppointmentDTO {
         dto.setPaymentId(appointment.getPaymentId());
         dto.setCreatedAt(appointment.getCreatedAt());
         dto.setUpdatedAt(appointment.getUpdatedAt());
+        dto.setVersion(appointment.getVersion());
         return dto;
     }
 } 

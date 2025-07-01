@@ -1,5 +1,8 @@
 package com.courtlink.booking.service;
 
+import com.courtlink.booking.dto.AppointmentQuery;
+import com.courtlink.booking.dto.AppointmentRequest;
+import com.courtlink.booking.dto.AppointmentResponse;
 import com.courtlink.booking.entity.Appointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,160 +11,155 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * ԤԼ��������ӿ�?
+ * Appointment Service Interface
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 public interface AppointmentService {
 
     /**
-     * ����ԤԼ
+     * Create appointment
      * 
-     * @param appointment ԤԼ��Ϣ
-     * @return ������ԤԼ
+     * @param userId User ID
+     * @param request Appointment request
+     * @return Created appointment
      */
-    Appointment createAppointment(Appointment appointment);
+    AppointmentResponse createAppointment(String userId, AppointmentRequest request);
 
     /**
-     * ����ԤԼ
+     * Update appointment
      * 
-     * @param id ԤԼID
-     * @param appointment ԤԼ��Ϣ
-     * @return ���º��Ԥ�?
+     * @param id Appointment ID
+     * @param request Appointment request
+     * @return Updated appointment
      */
-    Appointment updateAppointment(Long id, Appointment appointment);
+    AppointmentResponse updateAppointment(Long id, AppointmentRequest request);
 
     /**
-     * ȡ��ԤԼ
+     * Cancel appointment
      * 
-     * @param id ԤԼID
-     * @param reason ȡ��ԭ��
-     * @return ȡ�����Ԥ�?
+     * @param id Appointment ID
+     * @return Cancelled appointment
      */
-    Appointment cancelAppointment(Long id, String reason);
+    AppointmentResponse cancelAppointment(Long id);
 
     /**
-     * ȷ��ԤԼ
+     * Complete appointment
      * 
-     * @param id ԤԼID
-     * @return ȷ�Ϻ��Ԥ�?
+     * @param id Appointment ID
+     * @return Completed appointment
      */
-    Appointment confirmAppointment(Long id);
+    AppointmentResponse completeAppointment(Long id);
 
     /**
-     * ���Ԥ�?
+     * Get appointment by ID
      * 
-     * @param id ԤԼID
-     * @return ��ɺ��ԤԼ
+     * @param id Appointment ID
+     * @return Appointment if found
      */
-    Appointment completeAppointment(Long id);
+    AppointmentResponse getAppointmentById(Long id);
 
     /**
-     * ����ID��ѯԤԼ
+     * Get appointments by user ID
      * 
-     * @param id ԤԼID
-     * @return ԤԼ��Ϣ
+     * @param userId User ID
+     * @param pageable Pagination
+     * @return Page of appointments
      */
-    Appointment getAppointmentById(Long id);
+    Page<AppointmentResponse> getAppointmentsByUserId(String userId, Pageable pageable);
 
     /**
-     * �����û�ID��ѯԤԼ�б�
+     * Get appointments by provider ID
      * 
-     * @param userId �û�ID
-     * @param pageable ��ҳ����
-     * @return ԤԼ��ҳ�б�
+     * @param providerId Provider ID
+     * @param pageable Pagination
+     * @return Page of appointments
      */
-    Page<Appointment> getAppointmentsByUserId(String userId, Pageable pageable);
+    Page<AppointmentResponse> getAppointmentsByProviderId(String providerId, Pageable pageable);
 
     /**
-     * ���ݷ����ṩ��ID��ѯԤԼ�б�
+     * Get appointments by status
      * 
-     * @param providerId �����ṩ��ID
-     * @param pageable ��ҳ����
-     * @return ԤԼ��ҳ�б�
+     * @param status Appointment status
+     * @param pageable Pagination
+     * @return Page of appointments
      */
-    Page<Appointment> getAppointmentsByProviderId(String providerId, Pageable pageable);
+    Page<AppointmentResponse> getAppointmentsByStatus(Appointment.AppointmentStatus status, Pageable pageable);
 
     /**
-     * ����״̬��ѯԤԼ�б�
+     * Search appointments with query
      * 
-     * @param status ԤԼ״̬
-     * @param pageable ��ҳ����
-     * @return ԤԼ��ҳ�б�
+     * @param query Search query
+     * @param pageable Pagination
+     * @return Page of appointments
      */
-    Page<Appointment> getAppointmentsByStatus(Appointment.AppointmentStatus status, Pageable pageable);
+    Page<AppointmentResponse> searchAppointments(AppointmentQuery query, Pageable pageable);
 
     /**
-     * ���ʱ���ͻ
+     * Get appointments by time range
      * 
-     * @param providerId �����ṩ��ID
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @param excludeId �ų���ԤԼID
-     * @return �Ƿ���ڳ��?
+     * @param startTime Start time
+     * @param endTime End time
+     * @return List of appointments
      */
-    boolean hasTimeConflict(String providerId, LocalDateTime startTime, LocalDateTime endTime, Long excludeId);
+    List<AppointmentResponse> getAppointmentsByTimeRange(LocalDateTime startTime, LocalDateTime endTime);
 
     /**
-     * ��ѯָ��ʱ�䷶Χ�ڵ�ԤԼ
+     * Check appointment conflicts
      * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @param status ԤԼ״̬
-     * @return ԤԼ�б�
+     * @param providerId Provider ID
+     * @param startTime Start time
+     * @param endTime End time
+     * @param excludeId Appointment ID to exclude
+     * @return True if conflict exists
      */
-    List<Appointment> getAppointmentsByTimeRange(LocalDateTime startTime, LocalDateTime endTime, 
-                                                Appointment.AppointmentStatus status);
+    boolean hasConflict(String providerId, LocalDateTime startTime, LocalDateTime endTime, Long excludeId);
 
     /**
-     * ��ѯ�������ڵ�ԤԼ�����ڷ������ѣ�
+     * Process expired appointments
      * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @param status ԤԼ״̬
-     * @return �������ڵ�ԤԼ�б�
+     * @return Number of processed appointments
      */
-    List<Appointment> getUpcomingAppointments(LocalDateTime startTime, LocalDateTime endTime, 
-                                             Appointment.AppointmentStatus status);
+    int processExpiredAppointments();
 
     /**
-     * ��������ԤԼ
+     * Get statistics by user ID
      * 
-     * @return ������ԤԼ����
+     * @param userId User ID
+     * @return Appointment statistics
      */
-    int cleanupExpiredAppointments();
+    AppointmentStatistics getStatisticsByUserId(String userId);
 
     /**
-     * ����ԤԼ����
-     * 
-     * @param appointment ԤԼ��Ϣ
+     * Appointment Statistics
      */
-    void sendAppointmentReminder(Appointment appointment);
+    class AppointmentStatistics {
+        private long totalCount;
+        private long completedCount;
+        private long cancelledCount;
+        private long pendingCount;
 
-    /**
-     * ����ԤԼ֪ͨ
-     * 
-     * @param appointment ԤԼ��Ϣ
-     * @param notificationType ֪ͨ����
-     */
-    void sendAppointmentNotification(Appointment appointment, String notificationType);
+        // Constructors, getters and setters
+        public AppointmentStatistics() {}
 
-    /**
-     * ͳ���û�ԤԼ����
-     * 
-     * @param userId �û�ID
-     * @param status ԤԼ״̬
-     * @return ԤԼ����
-     */
-    long countAppointmentsByUserIdAndStatus(String userId, Appointment.AppointmentStatus status);
+        public AppointmentStatistics(long totalCount, long completedCount, long cancelledCount, long pendingCount) {
+            this.totalCount = totalCount;
+            this.completedCount = completedCount;
+            this.cancelledCount = cancelledCount;
+            this.pendingCount = pendingCount;
+        }
 
-    /**
-     * ͳ�Ʒ����ṩ��ԤԼ����
-     * 
-     * @param providerId �����ṩ��ID
-     * @param status ԤԼ״̬
-     * @return ԤԼ����
-     */
-    long countAppointmentsByProviderIdAndStatus(String providerId, Appointment.AppointmentStatus status);
+        public long getTotalCount() { return totalCount; }
+        public void setTotalCount(long totalCount) { this.totalCount = totalCount; }
+
+        public long getCompletedCount() { return completedCount; }
+        public void setCompletedCount(long completedCount) { this.completedCount = completedCount; }
+
+        public long getCancelledCount() { return cancelledCount; }
+        public void setCancelledCount(long cancelledCount) { this.cancelledCount = cancelledCount; }
+
+        public long getPendingCount() { return pendingCount; }
+        public void setPendingCount(long pendingCount) { this.pendingCount = pendingCount; }
+    }
 } 

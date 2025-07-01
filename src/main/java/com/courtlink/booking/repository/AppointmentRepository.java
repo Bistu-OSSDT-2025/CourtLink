@@ -13,121 +13,121 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * ԤԼ���ݷ��ʲ�ӿ�?
+ * Appointment Data Access Interface
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     /**
-     * �����û�ID��ѯԤԼ�б�
+     * Find appointments by user ID
      * 
-     * @param userId �û�ID
-     * @param pageable ��ҳ����
-     * @return ԤԼ��ҳ�б�
+     * @param userId User ID
+     * @param pageable Pagination
+     * @return Page of appointments
      */
-    Page<Appointment> findByUserIdOrderByStartTimeDesc(String userId, Pageable pageable);
+    Page<Appointment> findByUserId(String userId, Pageable pageable);
 
     /**
-     * ���ݷ����ṩ��ID��ѯԤԼ�б�
+     * Find appointments by provider ID
      * 
-     * @param providerId �����ṩ��ID
-     * @param pageable ��ҳ����
-     * @return ԤԼ��ҳ�б�
+     * @param providerId Provider ID
+     * @param pageable Pagination
+     * @return Page of appointments
      */
-    Page<Appointment> findByProviderIdOrderByStartTimeDesc(String providerId, Pageable pageable);
+    Page<Appointment> findByProviderId(String providerId, Pageable pageable);
 
     /**
-     * ����״̬��ѯԤԼ�б�
+     * Find appointments by status
      * 
-     * @param status ԤԼ״̬
-     * @param pageable ��ҳ����
-     * @return ԤԼ��ҳ�б�
+     * @param status Appointment status
+     * @param pageable Pagination
+     * @return Page of appointments
      */
-    Page<Appointment> findByStatusOrderByStartTimeDesc(Appointment.AppointmentStatus status, Pageable pageable);
+    Page<Appointment> findByStatus(Appointment.AppointmentStatus status, Pageable pageable);
 
     /**
-     * ��ѯָ��ʱ�䷶Χ�ڵ�ԤԼ
+     * Find appointments by time range
      * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @param status ԤԼ״̬
-     * @return ԤԼ�б�
+     * @param startTime Start time
+     * @param endTime End time
+     * @return List of appointments
      */
-    @Query("SELECT a FROM Appointment a WHERE a.startTime >= :startTime AND a.endTime <= :endTime AND a.status = :status")
-    List<Appointment> findByTimeRangeAndStatus(@Param("startTime") LocalDateTime startTime,
-                                              @Param("endTime") LocalDateTime endTime,
-                                              @Param("status") Appointment.AppointmentStatus status);
+    @Query("SELECT a FROM Appointment a WHERE a.startTime >= :startTime AND a.endTime <= :endTime")
+    List<Appointment> findByTimeRange(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
     /**
-     * ���ʱ���ͻ
+     * Check for conflicting appointments
      * 
-     * @param providerId �����ṩ��ID
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @param excludeId �ų���ԤԼID�����ڸ���ʱ��
-     * @return ��ͻ��ԤԼ�б�
+     * @param providerId Provider ID
+     * @param startTime Start time
+     * @param endTime End time
+     * @param excludeId Appointment ID to exclude
+     * @return Count of conflicting appointments
      */
-    @Query("SELECT a FROM Appointment a WHERE a.providerId = :providerId " +
-           "AND a.status NOT IN ('CANCELLED', 'EXPIRED') " +
-           "AND ((a.startTime < :endTime AND a.endTime > :startTime) " +
-           "OR (a.startTime = :startTime AND a.endTime = :endTime)) " +
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.providerId = :providerId " +
+           "AND ((a.startTime < :endTime AND a.endTime > :startTime)) " +
+           "AND a.status IN ('PENDING', 'CONFIRMED') " +
            "AND (:excludeId IS NULL OR a.id != :excludeId)")
-    List<Appointment> findConflictingAppointments(@Param("providerId") String providerId,
-                                                 @Param("startTime") LocalDateTime startTime,
-                                                 @Param("endTime") LocalDateTime endTime,
-                                                 @Param("excludeId") Long excludeId);
+    long countConflictingAppointments(@Param("providerId") String providerId,
+                                      @Param("startTime") LocalDateTime startTime,
+                                      @Param("endTime") LocalDateTime endTime,
+                                      @Param("excludeId") Long excludeId);
 
     /**
-     * ��ѯ�������ڵ�ԤԼ�����ڷ������ѣ�
+     * Find expired appointments
      * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @param status ԤԼ״̬
-     * @return �������ڵ�ԤԼ�б�
+     * @param cutoffTime Cutoff time
+     * @return List of expired appointments
      */
-    @Query("SELECT a FROM Appointment a WHERE a.startTime BETWEEN :startTime AND :endTime " +
-           "AND a.status = :status")
-    List<Appointment> findUpcomingAppointments(@Param("startTime") LocalDateTime startTime,
-                                              @Param("endTime") LocalDateTime endTime,
-                                              @Param("status") Appointment.AppointmentStatus status);
+    @Query("SELECT a FROM Appointment a WHERE a.endTime < :cutoffTime AND a.status = 'PENDING'")
+    List<Appointment> findExpiredAppointments(@Param("cutoffTime") LocalDateTime cutoffTime);
 
     /**
-     * ��ѯ���ڵ�ԤԼ
+     * Count appointments by user ID and status
      * 
-     * @param currentTime ��ǰʱ��
-     * @param status ԤԼ״̬
-     * @return ���ڵ�ԤԼ�б�
-     */
-    @Query("SELECT a FROM Appointment a WHERE a.endTime < :currentTime AND a.status = :status")
-    List<Appointment> findExpiredAppointments(@Param("currentTime") LocalDateTime currentTime,
-                                             @Param("status") Appointment.AppointmentStatus status);
-
-    /**
-     * ����֧��ID��ѯԤԼ
-     * 
-     * @param paymentId ֧��ID
-     * @return ԤԼ��Ϣ
-     */
-    Optional<Appointment> findByPaymentId(String paymentId);
-
-    /**
-     * ͳ���û�ԤԼ����
-     * 
-     * @param userId �û�ID
-     * @param status ԤԼ״̬
-     * @return ԤԼ����
+     * @param userId User ID
+     * @param status Appointment status
+     * @return Count of appointments
      */
     long countByUserIdAndStatus(String userId, Appointment.AppointmentStatus status);
 
     /**
-     * ͳ�Ʒ����ṩ��ԤԼ����
+     * Find appointments by user ID and status
      * 
-     * @param providerId �����ṩ��ID
-     * @param status ԤԼ״̬
-     * @return ԤԼ����
+     * @param userId User ID
+     * @param status Appointment status
+     * @return List of appointments
+     */
+    List<Appointment> findByUserIdAndStatus(String userId, Appointment.AppointmentStatus status);
+
+    /**
+     * Find recent appointments
+     * 
+     * @param userId User ID
+     * @param days Number of days
+     * @return List of recent appointments
+     */
+    @Query("SELECT a FROM Appointment a WHERE a.userId = :userId " +
+           "AND a.createdAt >= :since ORDER BY a.createdAt DESC")
+    List<Appointment> findRecentAppointments(@Param("userId") String userId, @Param("since") LocalDateTime since);
+
+    /**
+     * Find appointment by payment ID
+     * 
+     * @param paymentId Payment ID
+     * @return Appointment if found
+     */
+    Optional<Appointment> findByPaymentId(String paymentId);
+
+    /**
+     * Count appointments by provider ID and status
+     * 
+     * @param providerId Provider ID
+     * @param status Appointment status
+     * @return Count of appointments
      */
     long countByProviderIdAndStatus(String providerId, Appointment.AppointmentStatus status);
 } 

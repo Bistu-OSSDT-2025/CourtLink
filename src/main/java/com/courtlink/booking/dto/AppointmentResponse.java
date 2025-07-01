@@ -1,7 +1,7 @@
 package com.courtlink.booking.dto;
 
-import com.courtlink.booking.entity.Appointment;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.courtlink.booking.entity.Appointment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -9,60 +9,60 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * ԤԼ��Ӧ����
+ * Appointment Response DTO
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 @Data
-@Schema(description = "ԤԼ��Ӧ����")
+@Schema(description = "Appointment response data")
 public class AppointmentResponse {
 
-    @Schema(description = "ԤԼID", example = "1")
+    @Schema(description = "Appointment ID")
     private Long id;
 
-    @Schema(description = "�û�ID", example = "user123")
+    @Schema(description = "User ID")
     private String userId;
 
-    @Schema(description = "�����ṩ��ID", example = "provider456")
+    @Schema(description = "Service provider ID")
     private String providerId;
 
-    @Schema(description = "��������", example = "����")
+    @Schema(description = "Service type")
     private String serviceType;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "ԤԼ��ʼʱ��", example = "2024-03-25T10:00:00")
+    @Schema(description = "Appointment start time")
     private LocalDateTime startTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "ԤԼ����ʱ��", example = "2024-03-25T12:00:00")
+    @Schema(description = "Appointment end time")
     private LocalDateTime endTime;
 
-    @Schema(description = "ԤԼ״̬", example = "PENDING")
+    @Schema(description = "Appointment status")
     private Appointment.AppointmentStatus status;
 
-    @Schema(description = "ԤԼ���?, example = "100.00")
+    @Schema(description = "Appointment amount")
     private BigDecimal amount;
 
-    @Schema(description = "��ע��Ϣ", example = "��׼������")
+    @Schema(description = "Notes")
     private String notes;
 
-    @Schema(description = "֧��ID", example = "PAY123456789")
+    @Schema(description = "Payment ID")
     private String paymentId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "����ʱ��", example = "2024-03-21T10:00:00")
+    @Schema(description = "Created at")
     private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "����ʱ��", example = "2024-03-21T10:00:00")
+    @Schema(description = "Updated at")
     private LocalDateTime updatedAt;
 
     /**
-     * ��ʵ����󴴽���Ӧ����?
+     * Create from entity
      * 
-     * @param appointment ԤԼʵ��
-     * @return ԤԼ��Ӧ����
+     * @param appointment Appointment entity
+     * @return AppointmentResponse
      */
     public static AppointmentResponse fromEntity(Appointment appointment) {
         AppointmentResponse response = new AppointmentResponse();

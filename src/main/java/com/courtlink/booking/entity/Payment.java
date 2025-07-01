@@ -13,107 +13,108 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * ֧��ʵ����
+ * Payment Entity
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "payments")
-@Schema(description = "֧����Ϣ")
+@Schema(description = "Payment Information")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "֧��ID")
+    @Schema(description = "Payment ID")
     private Long id;
 
-    @NotBlank(message = "֧�������Ų���Ϊ��")
+    @NotBlank(message = "Payment number cannot be empty")
     @Column(name = "payment_no", nullable = false, unique = true)
-    @Schema(description = "֧��������")
+    @Schema(description = "Payment Number")
     private String paymentNo;
 
-    @NotBlank(message = "����ԤԼID����Ϊ��")
+    @NotBlank(message = "Appointment ID cannot be empty")
     @Column(name = "appointment_id", nullable = false)
-    @Schema(description = "����ԤԼID")
+    @Schema(description = "Associated Appointment ID")
     private String appointmentId;
 
-    @NotBlank(message = "�û�ID����Ϊ��")
+    @NotBlank(message = "User ID cannot be empty")
     @Column(name = "user_id", nullable = false)
-    @Schema(description = "�û�ID")
+    @Schema(description = "User ID")
     private String userId;
 
-    @NotNull(message = "֧������Ϊ��?)
-    @DecimalMin(value = "0.01", message = "֧�����������?")
+    @NotNull(message = "Payment amount cannot be empty")
+    @DecimalMin(value = "0.01", message = "Payment amount must be greater than 0")
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-    @Schema(description = "֧�����?)
+    @Schema(description = "Payment Amount")
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", nullable = false)
-    @Schema(description = "֧����ʽ")
-    private PaymentMethod paymentMethod;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @Schema(description = "֧��״̬")
+    @Schema(description = "Payment Status")
     private PaymentStatus status = PaymentStatus.PENDING;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
+    @Schema(description = "Payment Method")
+    private PaymentMethod paymentMethod;
+
     @Column(name = "transaction_id")
-    @Schema(description = "����������ID")
+    @Schema(description = "Transaction ID")
     private String transactionId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "paid_at")
-    @Schema(description = "֧�����ʱ��?)
+    @Schema(description = "Payment Time")
     private LocalDateTime paidAt;
 
-    @Size(max = 500, message = "֧����ע���ܳ���500�ַ�")
-    @Column(name = "notes", length = 500)
-    @Schema(description = "֧����ע")
-    private String notes;
-
     @Column(name = "refund_amount", precision = 10, scale = 2)
-    @Schema(description = "�˿���")
+    @Schema(description = "Refund Amount")
     private BigDecimal refundAmount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "refunded_at")
-    @Schema(description = "�˿�ʱ��")
-    private LocalDateTime refundedAt;
+    @Column(name = "refund_at")
+    @Schema(description = "Refund Time")
+    private LocalDateTime refundAt;
+
+    @Size(max = 500, message = "Notes cannot exceed 500 characters")
+    @Column(name = "notes", length = 500)
+    @Schema(description = "Notes")
+    private String notes;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Schema(description = "����ʱ��")
+    @Schema(description = "Created At")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at", nullable = false)
-    @Schema(description = "����ʱ��")
+    @Schema(description = "Updated At")
     private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "version")
-    @Schema(description = "�汾��")
+    @Schema(description = "Version")
     private Long version;
 
     /**
-     * ֧����ʽö��
+     * Payment Status Enumeration
      */
-    public enum PaymentMethod {
-        ALIPAY("֧����"),
-        WECHAT("΢��֧��"),
-        BANK_CARD("���п�"),
-        CASH("�ֽ�"),
-        MOCK("ģ��֧��");
+    public enum PaymentStatus {
+        PENDING("Pending"),
+        PROCESSING("Processing"),
+        SUCCESS("Success"),
+        FAILED("Failed"),
+        CANCELLED("Cancelled"),
+        REFUNDED("Refunded");
 
         private final String description;
 
-        PaymentMethod(String description) {
+        PaymentStatus(String description) {
             this.description = description;
         }
 
@@ -123,20 +124,19 @@ public class Payment {
     }
 
     /**
-     * ֧��״̬ö��
+     * Payment Method Enumeration
      */
-    public enum PaymentStatus {
-        PENDING("��֧��"),
-        PROCESSING("������"),
-        SUCCESS("֧���ɹ�"),
-        FAILED("֧��ʧ��"),
-        CANCELLED("��ȡ��"),
-        REFUNDED("���˿�"),
-        PARTIAL_REFUNDED("�����˿�");
+    public enum PaymentMethod {
+        CREDIT_CARD("Credit Card"),
+        DEBIT_CARD("Debit Card"),
+        PAYPAL("PayPal"),
+        BANK_TRANSFER("Bank Transfer"),
+        CASH("Cash"),
+        OTHER("Other");
 
         private final String description;
 
-        PaymentStatus(String description) {
+        PaymentMethod(String description) {
             this.description = description;
         }
 

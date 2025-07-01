@@ -8,136 +8,123 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * ֧�����ݷ��ʲ�ӿ�?
+ * Payment Data Access Interface
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     /**
-     * ����֧�������Ų�ѯ֧����Ϣ
+     * Find payment by payment number
      * 
-     * @param paymentNo ֧��������
-     * @return ֧����Ϣ
+     * @param paymentNo Payment number
+     * @return Payment if found
      */
     Optional<Payment> findByPaymentNo(String paymentNo);
 
     /**
-     * �����û�ID��ѯ֧���б�
+     * Find payment by appointment ID
      * 
-     * @param userId �û�ID
-     * @param pageable ��ҳ����
-     * @return ֧����ҳ�б�
-     */
-    Page<Payment> findByUserIdOrderByCreatedAtDesc(String userId, Pageable pageable);
-
-    /**
-     * ����ԤԼID��ѯ֧����Ϣ
-     * 
-     * @param appointmentId ԤԼID
-     * @return ֧����Ϣ
+     * @param appointmentId Appointment ID
+     * @return Payment if found
      */
     Optional<Payment> findByAppointmentId(String appointmentId);
 
     /**
-     * ����״̬��ѯ֧���б�
+     * Find payments by user ID
      * 
-     * @param status ֧��״̬
-     * @param pageable ��ҳ����
-     * @return ֧����ҳ�б�
+     * @param userId User ID
+     * @param pageable Pagination
+     * @return Page of payments
      */
-    Page<Payment> findByStatusOrderByCreatedAtDesc(Payment.PaymentStatus status, Pageable pageable);
+    Page<Payment> findByUserId(String userId, Pageable pageable);
 
     /**
-     * ����֧����ʽ��ѯ֧���б�
+     * Find payments by status
      * 
-     * @param paymentMethod ֧����ʽ
-     * @param pageable ��ҳ����
-     * @return ֧����ҳ�б�
+     * @param status Payment status
+     * @param pageable Pagination
+     * @return Page of payments
      */
-    Page<Payment> findByPaymentMethodOrderByCreatedAtDesc(Payment.PaymentMethod paymentMethod, Pageable pageable);
+    Page<Payment> findByStatus(Payment.PaymentStatus status, Pageable pageable);
 
     /**
-     * ��ѯָ��ʱ�䷶Χ�ڵ�֧����¼
+     * Find payments by payment method
      * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @return ֧���б�
+     * @param paymentMethod Payment method
+     * @param pageable Pagination
+     * @return Page of payments
      */
-    @Query("SELECT p FROM Payment p WHERE p.createdAt BETWEEN :startTime AND :endTime")
-    List<Payment> findByTimeRange(@Param("startTime") LocalDateTime startTime,
-                                 @Param("endTime") LocalDateTime endTime);
+    Page<Payment> findByPaymentMethod(Payment.PaymentMethod paymentMethod, Pageable pageable);
 
     /**
-     * ��ѯ��������֧�������ڶ�ʱ����
+     * Find payments by time range
      * 
-     * @param status ֧��״̬
-     * @param timeoutMinutes ��ʱ������
-     * @return ��������֧���б�
+     * @param startTime Start time
+     * @param endTime End time
+     * @return List of payments
      */
-    @Query("SELECT p FROM Payment p WHERE p.status = :status " +
-           "AND p.createdAt < :timeoutTime")
-    List<Payment> findPendingPayments(@Param("status") Payment.PaymentStatus status,
-                                     @Param("timeoutTime") LocalDateTime timeoutTime);
+    @Query("SELECT p FROM Payment p WHERE p.createdAt >= :startTime AND p.createdAt <= :endTime")
+    List<Payment> findByTimeRange(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
     /**
-     * ��ѯ��Ҫ�˿��֧��?
+     * Find pending payments
      * 
-     * @param status ֧��״̬
-     * @return ��Ҫ�˿��֧���б�?
+     * @return List of pending payments
+     */
+    List<Payment> findByStatus(Payment.PaymentStatus status);
+
+    /**
+     * Find payments requiring refund
+     * 
+     * @param status Payment status
+     * @return List of payments requiring refund
      */
     @Query("SELECT p FROM Payment p WHERE p.status = :status AND p.refundAmount IS NULL")
     List<Payment> findPaymentsForRefund(@Param("status") Payment.PaymentStatus status);
 
     /**
-     * ͳ���û�֧�����?
+     * Sum payment amounts by user and status
      * 
-     * @param userId �û�ID
-     * @param status ֧��״̬
-     * @return ֧���ܽ��?
+     * @param userId User ID
+     * @param status Payment status
+     * @return Total amount
      */
     @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.userId = :userId AND p.status = :status")
-    Double sumAmountByUserIdAndStatus(@Param("userId") String userId,
-                                     @Param("status") Payment.PaymentStatus status);
+    BigDecimal sumAmountByUserIdAndStatus(@Param("userId") String userId, @Param("status") Payment.PaymentStatus status);
 
     /**
-     * ͳ��֧���ɹ���
+     * Count payments by status
      * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @return ֧���ɹ���
+     * @param status Payment status
+     * @return Count of payments
      */
-    @Query("SELECT " +
-           "COUNT(CASE WHEN p.status = 'SUCCESS' THEN 1 END) * 100.0 / COUNT(p) " +
-           "FROM Payment p WHERE p.createdAt BETWEEN :startTime AND :endTime")
-    Double calculateSuccessRate(@Param("startTime") LocalDateTime startTime,
-                               @Param("endTime") LocalDateTime endTime);
+    long countByStatus(Payment.PaymentStatus status);
 
     /**
-     * ���ݵ���������ID��ѯ֧����Ϣ
+     * Find failed payments for retry
      * 
-     * @param transactionId ����������ID
-     * @return ֧����Ϣ
+     * @param retryBefore Retry before time
+     * @return List of failed payments
      */
-    Optional<Payment> findByTransactionId(String transactionId);
+    @Query("SELECT p FROM Payment p WHERE p.status = 'FAILED' AND p.updatedAt < :retryBefore")
+    List<Payment> findFailedPaymentsForRetry(@Param("retryBefore") LocalDateTime retryBefore);
 
     /**
-     * ��ѯʧ�ܵ�֧����¼���������ԣ�
+     * Find successful payments by date range
      * 
-     * @param status ֧��״̬
-     * @param retryCount ���Դ�������
-     * @return ʧ�ܵ�֧���б�
+     * @param startDate Start date
+     * @param endDate End date
+     * @return List of successful payments
      */
-    @Query("SELECT p FROM Payment p WHERE p.status = :status " +
-           "AND p.retryCount < :maxRetryCount " +
-           "ORDER BY p.createdAt ASC")
-    List<Payment> findFailedPaymentsForRetry(@Param("status") Payment.PaymentStatus status,
-                                            @Param("maxRetryCount") int maxRetryCount);
+    @Query("SELECT p FROM Payment p WHERE p.status = 'SUCCESS' AND p.paidAt >= :startDate AND p.paidAt <= :endDate")
+    List<Payment> findSuccessfulPaymentsByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 } 

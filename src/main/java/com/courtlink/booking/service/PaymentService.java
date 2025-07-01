@@ -9,163 +9,135 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * ֧����������ӿ�?
+ * Payment Service Interface
  * 
- * @author Your Name
+ * @author CourtLink Team
  * @version 1.0.0
  */
 public interface PaymentService {
 
     /**
-     * ����֧������
+     * Create payment
      * 
-     * @param payment ֧����Ϣ
-     * @return ������֧������
+     * @param payment Payment information
+     * @return Created payment
      */
     Payment createPayment(Payment payment);
 
     /**
-     * ����֧��
+     * Process payment
      * 
-     * @param paymentNo ֧��������
-     * @param paymentMethod ֧����ʽ
-     * @return �������֧������?
+     * @param paymentNo Payment number
+     * @param paymentMethod Payment method
+     * @return Processed payment
      */
     Payment processPayment(String paymentNo, Payment.PaymentMethod paymentMethod);
 
     /**
-     * ģ��֧������
+     * Mock payment processing
      * 
-     * @param paymentNo ֧��������
-     * @return �������֧������?
+     * @param paymentNo Payment number
+     * @return Processed payment
      */
     Payment processMockPayment(String paymentNo);
 
     /**
-     * ����֧���ص�
+     * Handle payment callback
      * 
-     * @param paymentNo ֧��������
-     * @param transactionId ����������ID
-     * @param success �Ƿ�ɹ�?
-     * @return �������֧������?
+     * @param paymentNo Payment number
+     * @param transactionId Transaction ID
+     * @param success Whether successful
+     * @return Updated payment
      */
     Payment handlePaymentCallback(String paymentNo, String transactionId, boolean success);
 
     /**
-     * �˿��
+     * Process refund
      * 
-     * @param paymentNo ֧��������
-     * @param refundAmount �˿���
-     * @param reason �˿�ԭ��
-     * @return �������֧������?
+     * @param paymentNo Payment number
+     * @param refundAmount Refund amount
+     * @param reason Refund reason
+     * @return Updated payment
      */
     Payment processRefund(String paymentNo, BigDecimal refundAmount, String reason);
 
     /**
-     * ȡ��֧��
+     * Cancel payment
      * 
-     * @param paymentNo ֧��������
-     * @return ȡ�����֧������?
+     * @param paymentNo Payment number
+     * @return Cancelled payment
      */
     Payment cancelPayment(String paymentNo);
 
     /**
-     * ����֧�������Ų�ѯ֧����Ϣ
+     * Retry failed payment
      * 
-     * @param paymentNo ֧��������
-     * @return ֧����Ϣ
-     */
-    Payment getPaymentByPaymentNo(String paymentNo);
-
-    /**
-     * �����û�ID��ѯ֧���б�
-     * 
-     * @param userId �û�ID
-     * @param pageable ��ҳ����
-     * @return ֧����ҳ�б�
-     */
-    Page<Payment> getPaymentsByUserId(String userId, Pageable pageable);
-
-    /**
-     * ����״̬��ѯ֧���б�
-     * 
-     * @param status ֧��״̬
-     * @param pageable ��ҳ����
-     * @return ֧����ҳ�б�
-     */
-    Page<Payment> getPaymentsByStatus(Payment.PaymentStatus status, Pageable pageable);
-
-    /**
-     * ����֧����ʽ��ѯ֧���б�
-     * 
-     * @param paymentMethod ֧����ʽ
-     * @param pageable ��ҳ����
-     * @return ֧����ҳ�б�
-     */
-    Page<Payment> getPaymentsByPaymentMethod(Payment.PaymentMethod paymentMethod, Pageable pageable);
-
-    /**
-     * ��ѯָ��ʱ�䷶Χ�ڵ�֧����¼
-     * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @return ֧���б�
-     */
-    List<Payment> getPaymentsByTimeRange(LocalDateTime startTime, LocalDateTime endTime);
-
-    /**
-     * ������ʱ֧��
-     * 
-     * @return ������֧������
-     */
-    int processTimeoutPayments();
-
-    /**
-     * ����ʧ�ܵ�֧��
-     * 
-     * @param paymentNo ֧��������
-     * @return ���Ժ��֧������?
+     * @param paymentNo Payment number
+     * @return Retried payment
      */
     Payment retryFailedPayment(String paymentNo);
 
     /**
-     * ͳ���û�֧�����?
+     * Sum payment amount by user and status
      * 
-     * @param userId �û�ID
-     * @param status ֧��״̬
-     * @return ֧���ܽ��?
+     * @param userId User ID
+     * @param status Payment status
+     * @return Total amount
      */
     BigDecimal sumAmountByUserIdAndStatus(String userId, Payment.PaymentStatus status);
 
     /**
-     * ͳ��֧���ɹ���
+     * Get payment by number
      * 
-     * @param startTime ��ʼʱ��
-     * @param endTime ����ʱ��
-     * @return ֧���ɹ���
+     * @param paymentNo Payment number
+     * @return Payment if found
      */
-    Double calculateSuccessRate(LocalDateTime startTime, LocalDateTime endTime);
+    Payment getPaymentByNo(String paymentNo);
 
     /**
-     * ����֧��������
+     * Get payments by user ID
      * 
-     * @return ֧��������
+     * @param userId User ID
+     * @param pageable Pagination
+     * @return Page of payments
      */
-    String generatePaymentNo();
+    Page<Payment> getPaymentsByUserId(String userId, Pageable pageable);
 
     /**
-     * ��֤֧������
+     * Get payments by status
      * 
-     * @param payment ֧������
-     * @return �Ƿ���Ч
+     * @param status Payment status
+     * @param pageable Pagination
+     * @return Page of payments
      */
-    boolean validatePayment(Payment payment);
+    Page<Payment> getPaymentsByStatus(Payment.PaymentStatus status, Pageable pageable);
 
     /**
-     * ����֧��֪ͨ
+     * Get pending payments
      * 
-     * @param payment ֧������
-     * @param notificationType ֪ͨ����
+     * @return List of pending payments
      */
-    void sendPaymentNotification(Payment payment, String notificationType);
+    List<Payment> getPendingPayments();
+
+    /**
+     * Payment status enumeration
+     */
+    enum PaymentStatus {
+        PENDING("Pending"),
+        PROCESSING("Processing"),
+        SUCCESS("Success"),
+        FAILED("Failed"),
+        CANCELLED("Cancelled"),
+        REFUNDED("Refunded");
+
+        private final String description;
+
+        PaymentStatus(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
 } 
