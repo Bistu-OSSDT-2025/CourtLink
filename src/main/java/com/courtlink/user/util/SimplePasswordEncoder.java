@@ -1,4 +1,4 @@
-package com.bistu.ossdt.courtlink.user.util;
+package com.courtlink.user.util;
 
 import org.springframework.stereotype.Component;
 import java.security.MessageDigest;
