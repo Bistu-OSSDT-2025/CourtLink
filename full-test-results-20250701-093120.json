@@ -1,0 +1,251 @@
+﻿{
+    "Failed":  4,
+    "Details":  [
+                    {
+                        "Name":  "System Health Check",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"application\":\"CourtLink\",\"version\":\"1.0.0\",\"status\":\"UP\",\"timestamp\":\"2025-07-01T09:31:18.6375795\"}"
+                    },
+                    {
+                        "Name":  "Simple Health Check",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "OK"
+                    },
+                    {
+                        "Name":  "Readiness Check",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"status\":\"READY\",\"timestamp\":\"2025-07-01T09:31:18.7146025\"}"
+                    },
+                    {
+                        "Name":  "Liveness Check",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"status\":\"LIVE\",\"timestamp\":\"2025-07-01T09:31:18.7369878\"}"
+                    },
+                    {
+                        "Name":  "User Module Health Check",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"timestamp\":1751333478755,\"module\":\"ç¨æ·ç®¡ç\",\"status\":\"UP\"}"
+                    },
+                    {
+                        "Name":  "Register User: fulltest1",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"fulltest1@test.com\",\"active\":true}"
+                    },
+                    {
+                        "Name":  "Register User: fulltest2",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":12,\"username\":\"fulltest2\",\"password\":null,\"email\":\"fulltest2@test.com\",\"active\":true}"
+                    },
+                    {
+                        "Name":  "Login User: fulltest1",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"token\":\"simple_token_11_1751333478960\",\"tokenType\":\"Bearer\",\"user\":{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"fulltest1@test.com\",\"active\":true}}"
+                    },
+                    {
+                        "Name":  "Login User: fulltest2",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"token\":\"simple_token_12_1751333479005\",\"tokenType\":\"Bearer\",\"user\":{\"id\":12,\"username\":\"fulltest2\",\"password\":null,\"email\":\"fulltest2@test.com\",\"active\":true}}"
+                    },
+                    {
+                        "Name":  "Get User by ID",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"fulltest1@test.com\",\"active\":true}"
+                    },
+                    {
+                        "Name":  "Get User by Username",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"fulltest1@test.com\",\"active\":true}"
+                    },
+                    {
+                        "Name":  "Get User by Email",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"fulltest1@test.com\",\"active\":true}"
+                    },
+                    {
+                        "Name":  "Get Users List (Paginated)",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"content\":[{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"fulltest1@test.com\",\"active\":true},{\"id\":12,\"username\":\"fulltest2\",\"password\":null,\"email\":\"fulltest2@test.com\",\"active\":true}],\"pageable\":{\"pageNumber\":0,\"pageSize\":20,\"sort\":{\"empty\":true,\"sorted\":false,\"unsorted\":true},\"offset\":0,\"paged\":true,\"unpaged\":false},\"last\":true,\"totalElements\":2,\"totalPages\":1,\"first\":true,\"numberOfElements\":2,\"size\":20,\"number\":0,\"sort\":{\"empty\":true,\"sorted\":false,\"unsorted\":true},\"empty\":false}"
+                    },
+                    {
+                        "Name":  "Get All Users List",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "[{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"fulltest1@test.com\",\"active\":true},{\"id\":12,\"username\":\"fulltest2\",\"password\":null,\"email\":\"fulltest2@test.com\",\"active\":true}]"
+                    },
+                    {
+                        "Name":  "Check Username Exists",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"exists\":true}"
+                    },
+                    {
+                        "Name":  "Check Email Exists",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"exists\":true}"
+                    },
+                    {
+                        "Name":  "Validate Correct Password",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"valid\":true}"
+                    },
+                    {
+                        "Name":  "Validate Wrong Password",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"valid\":false}"
+                    },
+                    {
+                        "Name":  "Change Password",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"message\":\"å¯ç ä¿®æ¹æå\"}"
+                    },
+                    {
+                        "Name":  "Reset Password",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"message\":\"å¯ç éç½®æå\"}"
+                    },
+                    {
+                        "Name":  "Deactivate User",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"message\":\"ç¨æ·åç¨æå\"}"
+                    },
+                    {
+                        "Name":  "Activate User",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"message\":\"ç¨æ·æ¿æ´»æå\"}"
+                    },
+                    {
+                        "Name":  "Toggle User Status",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"message\":\"ç¨æ·ç¶æåæ¢æå\"}"
+                    },
+                    {
+                        "Name":  "Update User Information",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":11,\"username\":\"fulltest1\",\"password\":null,\"email\":\"updated_fulltest1_at_test.com@test.com\",\"active\":true}"
+                    },
+                    {
+                        "Name":  "Create Court: Full Test Court 1",
+                        "StatusCode":  201,
+                        "Success":  true,
+                        "Response":  "{\"id\":2,\"name\":\"Full Test Court 1\",\"location\":\"Test Location 1\",\"description\":\"Description for Full Test Court 1\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.630827\",\"updatedAt\":\"2025-07-01T09:31:19.630827\"}"
+                    },
+                    {
+                        "Name":  "Create Court: Full Test Court 2",
+                        "StatusCode":  201,
+                        "Success":  true,
+                        "Response":  "{\"id\":3,\"name\":\"Full Test Court 2\",\"location\":\"Test Location 2\",\"description\":\"Description for Full Test Court 2\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.663421\",\"updatedAt\":\"2025-07-01T09:31:19.663421\"}"
+                    },
+                    {
+                        "Name":  "Get All Courts",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "[{\"id\":2,\"name\":\"Full Test Court 1\",\"location\":\"Test Location 1\",\"description\":\"Description for Full Test Court 1\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.630827\",\"updatedAt\":\"2025-07-01T09:31:19.630827\"},{\"id\":3,\"name\":\"Full Test Court 2\",\"location\":\"Test Location 2\",\"description\":\"Description for Full Test Court 2\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.663421\",\"updatedAt\":\"2025-07-01T09:31:19.663421\"}]"
+                    },
+                    {
+                        "Name":  "Search Courts by Keyword",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "[{\"id\":2,\"name\":\"Full Test Court 1\",\"location\":\"Test Location 1\",\"description\":\"Description for Full Test Court 1\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.630827\",\"updatedAt\":\"2025-07-01T09:31:19.630827\"},{\"id\":3,\"name\":\"Full Test Court 2\",\"location\":\"Test Location 2\",\"description\":\"Description for Full Test Court 2\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.663421\",\"updatedAt\":\"2025-07-01T09:31:19.663421\"}]"
+                    },
+                    {
+                        "Name":  "Search Courts by Status",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "[{\"id\":2,\"name\":\"Full Test Court 1\",\"location\":\"Test Location 1\",\"description\":\"Description for Full Test Court 1\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.630827\",\"updatedAt\":\"2025-07-01T09:31:19.630827\"},{\"id\":3,\"name\":\"Full Test Court 2\",\"location\":\"Test Location 2\",\"description\":\"Description for Full Test Court 2\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.663421\",\"updatedAt\":\"2025-07-01T09:31:19.663421\"}]"
+                    },
+                    {
+                        "Name":  "Get Court Details",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":2,\"name\":\"Full Test Court 1\",\"location\":\"Test Location 1\",\"description\":\"Description for Full Test Court 1\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.630827\",\"updatedAt\":\"2025-07-01T09:31:19.630827\"}"
+                    },
+                    {
+                        "Name":  "Update Court Information",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":2,\"name\":\"Updated Full Test Court 1\",\"location\":\"Updated Test Location 1\",\"description\":\"Updated description\",\"status\":\"AVAILABLE\",\"createdAt\":\"2025-07-01T09:31:19.630827\",\"updatedAt\":\"2025-07-01T09:31:19.630827\"}"
+                    },
+                    {
+                        "Name":  "Change Court Status to Maintenance",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  "{\"id\":2,\"name\":\"Updated Full Test Court 1\",\"location\":\"Updated Test Location 1\",\"description\":\"Updated description\",\"status\":\"MAINTENANCE\",\"createdAt\":\"2025-07-01T09:31:19.630827\",\"updatedAt\":\"2025-07-01T09:31:19.863004\"}"
+                    },
+                    {
+                        "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                        "Name":  "Access Non-existent User",
+                        "Success":  false
+                    },
+                    {
+                        "Error":  "远程服务器返回错误: (404) 未找到。",
+                        "Name":  "Access Non-existent Court",
+                        "Success":  false
+                    },
+                    {
+                        "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                        "Name":  "Send Invalid JSON",
+                        "Success":  false
+                    },
+                    {
+                        "Error":  "远程服务器返回错误: (400) 错误的请求。",
+                        "Name":  "Register Duplicate Username",
+                        "Success":  false
+                    },
+                    {
+                        "Name":  "Delete Court: Full Test Court 1",
+                        "StatusCode":  204,
+                        "Success":  true,
+                        "Response":  [
+
+                                     ]
+                    },
+                    {
+                        "Name":  "Delete Court: Full Test Court 2",
+                        "StatusCode":  204,
+                        "Success":  true,
+                        "Response":  [
+
+                                     ]
+                    },
+                    {
+                        "Name":  "Delete User: fulltest1",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  [
+
+                                     ]
+                    },
+                    {
+                        "Name":  "Delete User: fulltest2",
+                        "StatusCode":  200,
+                        "Success":  true,
+                        "Response":  [
+
+                                     ]
+                    }
+                ],
+    "Total":  40,
+    "Passed":  36
+}
