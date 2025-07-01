@@ -70,6 +70,20 @@ public class UserGlobalExceptionHandler {
     }
 
     /**
+     * 处理用户不存在异常
+     */
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("code", 404);
+        response.put("message", ex.getMessage());
+        response.put("timestamp", System.currentTimeMillis());
+        
+        log.warn("用户不存在: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    /**
      * 处理实体不存在异常
      */
     @ExceptionHandler(EntityNotFoundException.class)

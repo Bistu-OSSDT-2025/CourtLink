@@ -4,6 +4,7 @@ import com.courtlink.user.dto.LoginRequest;
 import com.courtlink.user.dto.LoginResponse;
 import com.courtlink.user.dto.UserDTO;
 import com.courtlink.user.entity.User;
+import com.courtlink.user.exception.UserNotFoundException;
 import com.courtlink.user.repository.UserRepository;
 import com.courtlink.user.service.UserService;
 import com.courtlink.user.util.SimplePasswordEncoder;
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserDTO findByUsername(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException("用户名", username));
         return convertToDTO(user);
     }
 
@@ -86,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException("邮箱", email));
         return convertToDTO(user);
     }
 
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserDTO findById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException(id));
         return convertToDTO(user);
     }
 
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
         log.info("更新用户信息: {}", id);
         
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         if (!user.getEmail().equals(userDTO.getEmail()) && 
             userRepository.existsByEmailAndIdNot(userDTO.getEmail(), id)) {
@@ -128,7 +129,7 @@ public class UserServiceImpl implements UserService {
         log.info("删除用户: {}", id);
         
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("用户不存在");
+            throw new UserNotFoundException(id);
         }
         userRepository.deleteById(id);
         
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public boolean validatePassword(Long id, String password) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException(id));
         return passwordEncoder.matches(password, user.getPassword());
     }
 
@@ -175,7 +176,7 @@ public class UserServiceImpl implements UserService {
         log.info("修改用户密码: {}", id);
         
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new RuntimeException("原密码错误");
@@ -192,7 +193,7 @@ public class UserServiceImpl implements UserService {
         log.info("重置用户密码: {}", id);
         
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
@@ -205,7 +206,7 @@ public class UserServiceImpl implements UserService {
         log.info("切换用户状态: {}", id);
         
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         user.setActive(!user.getActive());
         userRepository.save(user);
@@ -218,7 +219,7 @@ public class UserServiceImpl implements UserService {
         log.info("激活用户: {}", id);
         
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         user.setActive(true);
         userRepository.save(user);
