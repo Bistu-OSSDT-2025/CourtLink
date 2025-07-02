@@ -53,8 +53,14 @@ class AppointmentServiceTest {
         appointmentRequest = new AppointmentRequest();
         appointmentRequest.setProviderId("provider123");
         appointmentRequest.setServiceType("court_booking");
-        appointmentRequest.setStartTime(LocalDateTime.now().plusDays(1));
-        appointmentRequest.setEndTime(LocalDateTime.now().plusDays(1).plusHours(1));
+        // 设置为明天的整点时间
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1)
+            .withHour(14)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0);
+        appointmentRequest.setStartTime(tomorrow);
+        appointmentRequest.setEndTime(tomorrow.plusHours(1));
         appointmentRequest.setAmount(new BigDecimal("50.00"));
         appointmentRequest.setNotes("Test appointment");
 
@@ -63,8 +69,8 @@ class AppointmentServiceTest {
         appointment.setUserId("user123");
         appointment.setProviderId("provider123");
         appointment.setServiceType("court_booking");
-        appointment.setStartTime(LocalDateTime.now().plusDays(1));
-        appointment.setEndTime(LocalDateTime.now().plusDays(1).plusHours(1));
+        appointment.setStartTime(tomorrow);
+        appointment.setEndTime(tomorrow.plusHours(1));
         appointment.setAmount(new BigDecimal("50.00"));
         appointment.setStatus(Appointment.AppointmentStatus.PENDING);
         appointment.setNotes("Test appointment");
@@ -260,5 +266,102 @@ class AppointmentServiceTest {
         assertThat(response.getContent().get(0).getStatus()).isEqualTo(Appointment.AppointmentStatus.PENDING.name());
         
         verify(appointmentRepository).findByStatus(Appointment.AppointmentStatus.PENDING, pageable);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when start time is not on the hour")
+    void shouldThrowExceptionWhenStartTimeIsNotOnTheHour() {
+        // Given
+        LocalDateTime invalidStartTime = LocalDateTime.now().plusDays(1)
+            .withHour(14)
+            .withMinute(30)
+            .withSecond(0);
+        appointmentRequest.setStartTime(invalidStartTime);
+        appointmentRequest.setEndTime(invalidStartTime.plusHours(1));
+
+        // When & Then
+        assertThatThrownBy(() -> appointmentService.createAppointment("user123", appointmentRequest))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessage("预约开始时间必须是整点（如：14:00）");
+    }
+
+    @Test
+    @DisplayName("Should throw exception when end time is not on the hour")
+    void shouldThrowExceptionWhenEndTimeIsNotOnTheHour() {
+        // Given
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1)
+            .withHour(14)
+            .withMinute(0)
+            .withSecond(0);
+        LocalDateTime invalidEndTime = startTime.plusMinutes(90);
+        appointmentRequest.setStartTime(startTime);
+        appointmentRequest.setEndTime(invalidEndTime);
+
+        // When & Then
+        assertThatThrownBy(() -> appointmentService.createAppointment("user123", appointmentRequest))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessage("预约结束时间必须是整点（如：15:00）");
+    }
+
+    @Test
+    @DisplayName("Should throw exception when booking duration is less than 1 hour")
+    void shouldThrowExceptionWhenBookingDurationIsLessThanOneHour() {
+        // Given
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1)
+            .withHour(14)
+            .withMinute(0)
+            .withSecond(0);
+        LocalDateTime endTime = startTime.plusMinutes(30);
+        appointmentRequest.setStartTime(startTime);
+        appointmentRequest.setEndTime(endTime);
+
+        // When & Then
+        assertThatThrownBy(() -> appointmentService.createAppointment("user123", appointmentRequest))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessage("预约时长必须在1-2小时之间");
+    }
+
+    @Test
+    @DisplayName("Should throw exception when booking duration is more than 2 hours")
+    void shouldThrowExceptionWhenBookingDurationIsMoreThanTwoHours() {
+        // Given
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1)
+            .withHour(14)
+            .withMinute(0)
+            .withSecond(0);
+        LocalDateTime endTime = startTime.plusHours(3);
+        appointmentRequest.setStartTime(startTime);
+        appointmentRequest.setEndTime(endTime);
+
+        // When & Then
+        assertThatThrownBy(() -> appointmentService.createAppointment("user123", appointmentRequest))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessage("预约时长必须在1-2小时之间");
+    }
+
+    @Test
+    @DisplayName("Should create appointment successfully with valid time range")
+    void shouldCreateAppointmentSuccessfullyWithValidTimeRange() {
+        // Given
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1)
+            .withHour(14)
+            .withMinute(0)
+            .withSecond(0);
+        LocalDateTime endTime = startTime.plusHours(2);
+        appointmentRequest.setStartTime(startTime);
+        appointmentRequest.setEndTime(endTime);
+        
+        when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+
+        // When
+        AppointmentResponse response = appointmentService.createAppointment("user123", appointmentRequest);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getId()).isEqualTo(1L);
+        assertThat(response.getUserId()).isEqualTo("user123");
+        assertThat(response.getStatus()).isEqualTo(Appointment.AppointmentStatus.PENDING.name());
+        
+        verify(appointmentRepository).save(any(Appointment.class));
     }
 } 

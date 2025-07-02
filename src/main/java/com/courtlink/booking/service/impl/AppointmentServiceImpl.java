@@ -282,15 +282,22 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new RuntimeException("预约结束时间必须在开始时间之后");
         }
 
-        // 验证预约时长不能超过4小时
-        Duration duration = Duration.between(startTime, endTime);
-        if (duration.toHours() > 4) {
-            throw new RuntimeException("预约时长不能超过4小时");
+        // 计算预约时长（小时）
+        long hours = Duration.between(startTime, endTime).toHours();
+
+        // 验证预约时长必须在1-2小时之间
+        if (hours < 1 || hours > 2) {
+            throw new RuntimeException("预约时长必须在1-2小时之间");
         }
 
-        // 验证预约时长不能少于30分钟
-        if (duration.toMinutes() < 30) {
-            throw new RuntimeException("预约时长不能少于30分钟");
+        // 验证开始时间必须是整点
+        if (startTime.getMinute() != 0 || startTime.getSecond() != 0) {
+            throw new RuntimeException("预约开始时间必须是整点（如：14:00）");
+        }
+
+        // 验证结束时间必须是整点
+        if (endTime.getMinute() != 0 || endTime.getSecond() != 0) {
+            throw new RuntimeException("预约结束时间必须是整点（如：15:00）");
         }
     }
 
