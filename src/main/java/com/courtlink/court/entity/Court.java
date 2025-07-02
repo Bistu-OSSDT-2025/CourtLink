@@ -70,6 +70,19 @@ public class Court {
     @Column(name = "operating_hours", nullable = false)
     private Integer operatingHours = 14; // 默认营业时间为14小时（如：8:00-22:00）
 
+    // 维护相关字段
+    @Column(name = "maintenance_reason", length = 500)
+    private String maintenanceReason; // 维护原因
+    
+    @Column(name = "maintenance_start_time")
+    private LocalDateTime maintenanceStartTime; // 维护开始时间
+    
+    @Column(name = "maintenance_end_time")
+    private LocalDateTime maintenanceEndTime; // 预计维护结束时间
+    
+    @Column(name = "maintenance_by", length = 100)
+    private String maintenanceBy; // 维护负责人
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
