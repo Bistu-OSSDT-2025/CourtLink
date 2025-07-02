@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,11 +39,17 @@ public class AppointmentServiceImpl implements AppointmentService {
         log.info("Creating appointment: userId={}, providerId={}, startTime={}, endTime={}",
                 userId, request.getProviderId(), request.getStartTime(), request.getEndTime());
 
-        // Check for time conflicts
-        if (hasConflict(request.getProviderId(), request.getStartTime(), request.getEndTime(), null)) {
-            log.warn("Appointment time conflict: providerId={}, startTime={}, endTime={}",
-                    request.getProviderId(), request.getStartTime(), request.getEndTime());
-            throw new RuntimeException("Appointment time conflict, please choose a different time");
+        // 验证预约时间
+        validateAppointmentTime(request.getStartTime(), request.getEndTime());
+
+        // 检查时间冲突
+        List<Appointment> conflictingAppointments = appointmentRepository.findConflictingAppointments(
+            request.getProviderId(), request.getStartTime(), request.getEndTime(), null);
+
+        if (!conflictingAppointments.isEmpty()) {
+            log.warn("Appointment time conflict: providerId={}, startTime={}, endTime={}, conflictCount={}", 
+                request.getProviderId(), request.getStartTime(), request.getEndTime(), conflictingAppointments.size());
+            throw new RuntimeException("预约时间冲突，请选择其他时间段");
         }
 
         // Create appointment
@@ -55,6 +62,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAmount(request.getAmount());
         appointment.setNotes(request.getNotes());
         appointment.setStatus(Appointment.AppointmentStatus.PENDING);
+        appointment.setCreatedAt(LocalDateTime.now());
+        appointment.setUpdatedAt(LocalDateTime.now());
         
         Appointment savedAppointment = appointmentRepository.save(appointment);
         log.info("Appointment created successfully: appointmentId={}", savedAppointment.getId());
@@ -104,6 +113,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                     log.warn("Appointment not found: appointmentId={}", id);
                     return new RuntimeException("Appointment not found");
                 });
+
+        if (appointment.getStatus() == Appointment.AppointmentStatus.COMPLETED) {
+            throw new RuntimeException("Cannot cancel a completed appointment");
+        }
+
+        if (appointment.getStatus() != Appointment.AppointmentStatus.PENDING 
+            && appointment.getStatus() != Appointment.AppointmentStatus.CONFIRMED) {
+            throw new RuntimeException("Appointment cannot be cancelled in current status: " + appointment.getStatus());
+        }
 
         appointment.setStatus(Appointment.AppointmentStatus.CANCELLED);
         Appointment savedAppointment = appointmentRepository.save(appointment);
@@ -244,8 +262,39 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalStateException("Appointment cannot be confirmed because it is not in PENDING status");
         }
 
+        // 设置支付ID
+        appointment.setPaymentId(appointment.getPaymentId());
         appointment.setStatus(Appointment.AppointmentStatus.CONFIRMED);
         appointment = appointmentRepository.save(appointment);
         return AppointmentResponse.fromEntity(appointment);
+    }
+
+    private void validateAppointmentTime(LocalDateTime startTime, LocalDateTime endTime) {
+        LocalDateTime now = LocalDateTime.now();
+        
+        // 验证开始时间不能是过去时间
+        if (startTime.isBefore(now)) {
+            throw new RuntimeException("预约开始时间不能是过去时间");
+        }
+
+        // 验证结束时间必须在开始时间之后
+        if (!endTime.isAfter(startTime)) {
+            throw new RuntimeException("预约结束时间必须在开始时间之后");
+        }
+
+        // 验证预约时长不能超过4小时
+        Duration duration = Duration.between(startTime, endTime);
+        if (duration.toHours() > 4) {
+            throw new RuntimeException("预约时长不能超过4小时");
+        }
+
+        // 验证预约时长不能少于30分钟
+        if (duration.toMinutes() < 30) {
+            throw new RuntimeException("预约时长不能少于30分钟");
+        }
+    }
+
+    private void checkTimeConflict(String providerId, LocalDateTime startTime, LocalDateTime endTime, Long excludeId) {
+        // Implementation of checkTimeConflict method
     }
 } 

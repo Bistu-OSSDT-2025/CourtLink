@@ -41,11 +41,32 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
+    @Transactional
     public CourtDTO createCourt(CourtDTO courtDTO) {
         log.info("创建场地: {}", courtDTO);
-        validateCourtDTO(courtDTO);
+        
+        // 参数验证
+        if (StringUtils.isEmpty(courtDTO.getName())) {
+            throw new IllegalArgumentException("场地名称不能为空");
+        }
+        if (courtDTO.getName().length() > 100) {
+            throw new IllegalArgumentException("场地名称不能超过100个字符");
+        }
+        if (courtDTO.getDescription() != null && courtDTO.getDescription().length() > 500) {
+            throw new IllegalArgumentException("场地描述不能超过500个字符");
+        }
+        
         Court court = new Court();
         BeanUtils.copyProperties(courtDTO, court);
+        
+        // 设置默认值
+        if (court.getStatus() == null) {
+            court.setStatus("AVAILABLE");
+        }
+        if (court.getIsActive() == null) {
+            court.setIsActive(true);
+        }
+        
         court = courtRepository.save(court);
         return convertToDTO(court);
     }

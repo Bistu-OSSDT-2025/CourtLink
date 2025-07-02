@@ -130,4 +130,16 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      * @return Count of appointments
      */
     long countByProviderIdAndStatus(String providerId, Appointment.AppointmentStatus status);
+
+    @Query("SELECT a FROM Appointment a " +
+           "WHERE a.providerId = :providerId " +
+           "AND ((a.startTime < :endTime AND a.endTime > :startTime)) " +
+           "AND a.status IN ('PENDING', 'CONFIRMED') " +
+           "AND (:excludeId IS NULL OR a.id <> :excludeId)")
+    List<Appointment> findConflictingAppointments(
+        @Param("providerId") String providerId,
+        @Param("startTime") LocalDateTime startTime,
+        @Param("endTime") LocalDateTime endTime,
+        @Param("excludeId") Long excludeId
+    );
 } 

@@ -1,8 +1,13 @@
 package com.courtlink.booking.service.impl;
 
 import com.courtlink.booking.entity.Payment;
+import com.courtlink.booking.entity.Appointment;
 import com.courtlink.booking.repository.PaymentRepository;
+import com.courtlink.booking.repository.AppointmentRepository;
 import com.courtlink.booking.service.PaymentService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.Set;
 
 /**
  * Payment Service Implementation
@@ -27,14 +33,31 @@ import java.util.UUID;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final Validator validator;
 
     @Override
     @Transactional
     public Payment createPayment(Payment payment) {
-        payment.setPaymentNo(generatePaymentNo());
-        payment.setStatus(Payment.PaymentStatus.PENDING);
-        payment.setCreatedAt(LocalDateTime.now());
-        payment.setUpdatedAt(LocalDateTime.now());
+        log.info("Creating payment: {}", payment);
+
+        // 验证支付对象
+        Set<ConstraintViolation<Payment>> violations = validator.validate(payment);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        // 设置默认值
+        if (payment.getStatus() == null) {
+            payment.setStatus(Payment.PaymentStatus.PENDING);
+        }
+        if (payment.getCreatedAt() == null) {
+            payment.setCreatedAt(LocalDateTime.now());
+        }
+        if (payment.getUpdatedAt() == null) {
+            payment.setUpdatedAt(LocalDateTime.now());
+        }
+
         return paymentRepository.save(payment);
     }
 
@@ -51,7 +74,17 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         // 模拟支付处理
-        return processMockPayment(paymentNo);
+        Payment processedPayment = processMockPayment(paymentNo);
+
+        // 如果支付成功，更新预约的支付ID
+        if (processedPayment.getStatus() == Payment.PaymentStatus.SUCCESS) {
+            Appointment appointment = appointmentRepository.findById(Long.valueOf(processedPayment.getAppointmentId()))
+                    .orElseThrow(() -> new IllegalStateException("Appointment not found: " + processedPayment.getAppointmentId()));
+            appointment.setPaymentId(processedPayment.getId().toString());
+            appointmentRepository.save(appointment);
+        }
+
+        return processedPayment;
     }
 
     @Override

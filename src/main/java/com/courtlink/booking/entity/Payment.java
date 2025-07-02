@@ -30,26 +30,35 @@ public class Payment {
     @Schema(description = "Payment ID")
     private Long id;
 
-    @NotBlank(message = "Payment number cannot be empty")
-    @Column(name = "payment_no", nullable = false, unique = true)
-    @Schema(description = "Payment Number")
-    private String paymentNo;
-
-    @NotBlank(message = "Appointment ID cannot be empty")
-    @Column(name = "appointment_id", nullable = false)
-    @Schema(description = "Associated Appointment ID")
-    private String appointmentId;
-
-    @NotBlank(message = "User ID cannot be empty")
+    @NotNull(message = "用户ID不能为空")
     @Column(name = "user_id", nullable = false)
     @Schema(description = "User ID")
     private String userId;
 
-    @NotNull(message = "Payment amount cannot be empty")
-    @DecimalMin(value = "0.01", message = "Payment amount must be greater than 0")
+    @NotNull(message = "预约ID不能为空")
+    @Column(name = "appointment_id", nullable = false)
+    @Schema(description = "Associated Appointment ID")
+    private String appointmentId;
+
+    @NotNull(message = "支付编号不能为空")
+    @Column(name = "payment_no", nullable = false, unique = true)
+    @Schema(description = "Payment Number")
+    private String paymentNo;
+
+    @NotNull(message = "支付金额不能为空")
+    @DecimalMin(value = "0.01", message = "支付金额必须大于0")
+    @DecimalMax(value = "99999.99", message = "支付金额不能超过99999.99")
+    @Digits(integer = 5, fraction = 2, message = "支付金额格式不正确，整数部分不能超过5位，小数部分不能超过2位")
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     @Schema(description = "Payment Amount")
     private BigDecimal amount;
+
+    @DecimalMin(value = "0.00", message = "退款金额不能为负数")
+    @DecimalMax(value = "99999.99", message = "退款金额不能超过99999.99")
+    @Digits(integer = 5, fraction = 2, message = "退款金额格式不正确，整数部分不能超过5位，小数部分不能超过2位")
+    @Column(name = "refund_amount", precision = 10, scale = 2)
+    @Schema(description = "Refund Amount")
+    private BigDecimal refundAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -69,10 +78,6 @@ public class Payment {
     @Column(name = "paid_at")
     @Schema(description = "Payment Time")
     private LocalDateTime paidAt;
-
-    @Column(name = "refund_amount", precision = 10, scale = 2)
-    @Schema(description = "Refund Amount")
-    private BigDecimal refundAmount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "refund_at")
