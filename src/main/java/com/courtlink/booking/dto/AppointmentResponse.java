@@ -39,7 +39,7 @@ public class AppointmentResponse {
     private LocalDateTime endTime;
 
     @Schema(description = "Appointment status")
-    private Appointment.AppointmentStatus status;
+    private String status;
 
     @Schema(description = "Appointment amount")
     private BigDecimal amount;
@@ -72,7 +72,7 @@ public class AppointmentResponse {
         response.setServiceType(appointment.getServiceType());
         response.setStartTime(appointment.getStartTime());
         response.setEndTime(appointment.getEndTime());
-        response.setStatus(appointment.getStatus());
+        response.setStatus(appointment.getStatus().name());
         response.setAmount(appointment.getAmount());
         response.setNotes(appointment.getNotes());
         response.setPaymentId(appointment.getPaymentId());

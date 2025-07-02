@@ -72,9 +72,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
            "AND a.status IN ('PENDING', 'CONFIRMED') " +
            "AND (:excludeId IS NULL OR a.id != :excludeId)")
     long countConflictingAppointments(@Param("providerId") String providerId,
-                                      @Param("startTime") LocalDateTime startTime,
-                                      @Param("endTime") LocalDateTime endTime,
-                                      @Param("excludeId") Long excludeId);
+                                                 @Param("startTime") LocalDateTime startTime,
+                                                 @Param("endTime") LocalDateTime endTime,
+                                                 @Param("excludeId") Long excludeId);
 
     /**
      * Find expired appointments

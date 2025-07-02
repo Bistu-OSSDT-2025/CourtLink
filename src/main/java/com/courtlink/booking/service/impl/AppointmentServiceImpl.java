@@ -3,7 +3,9 @@ package com.courtlink.booking.service.impl;
 import com.courtlink.booking.dto.AppointmentQuery;
 import com.courtlink.booking.dto.AppointmentRequest;
 import com.courtlink.booking.dto.AppointmentResponse;
+import com.courtlink.booking.dto.AppointmentStatistics;
 import com.courtlink.booking.entity.Appointment;
+import com.courtlink.booking.exception.ResourceNotFoundException;
 import com.courtlink.booking.repository.AppointmentRepository;
 import com.courtlink.booking.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
@@ -53,10 +55,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAmount(request.getAmount());
         appointment.setNotes(request.getNotes());
         appointment.setStatus(Appointment.AppointmentStatus.PENDING);
-
+        
         Appointment savedAppointment = appointmentRepository.save(appointment);
         log.info("Appointment created successfully: appointmentId={}", savedAppointment.getId());
-
+        
         return AppointmentResponse.fromEntity(savedAppointment);
     }
 
@@ -64,7 +66,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     public AppointmentResponse updateAppointment(Long id, AppointmentRequest request) {
         log.info("Updating appointment: appointmentId={}", id);
-
+        
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Appointment not found: appointmentId={}", id);
@@ -88,7 +90,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
         log.info("Appointment updated successfully: appointmentId={}", savedAppointment.getId());
-
+        
         return AppointmentResponse.fromEntity(savedAppointment);
     }
 
@@ -96,7 +98,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     public AppointmentResponse cancelAppointment(Long id) {
         log.info("Cancelling appointment: appointmentId={}", id);
-
+        
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Appointment not found: appointmentId={}", id);
@@ -114,7 +116,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     public AppointmentResponse completeAppointment(Long id) {
         log.info("Completing appointment: appointmentId={}", id);
-
+        
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Appointment not found: appointmentId={}", id);
@@ -131,7 +133,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentResponse getAppointmentById(Long id) {
         log.info("Getting appointment by ID: appointmentId={}", id);
-
+        
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Appointment not found: appointmentId={}", id);
@@ -230,5 +232,20 @@ public class AppointmentServiceImpl implements AppointmentService {
         long totalCount = completedCount + cancelledCount + pendingCount + confirmedCount;
         
         return new AppointmentStatistics(totalCount, completedCount, cancelledCount, pendingCount);
+    }
+
+    @Override
+    @Transactional
+    public AppointmentResponse confirmAppointment(Long id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id: " + id));
+
+        if (appointment.getStatus() != Appointment.AppointmentStatus.PENDING) {
+            throw new IllegalStateException("Appointment cannot be confirmed because it is not in PENDING status");
+        }
+
+        appointment.setStatus(Appointment.AppointmentStatus.CONFIRMED);
+        appointment = appointmentRepository.save(appointment);
+        return AppointmentResponse.fromEntity(appointment);
     }
 } 

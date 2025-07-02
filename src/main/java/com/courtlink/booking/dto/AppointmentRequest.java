@@ -1,6 +1,5 @@
 package com.courtlink.booking.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -18,12 +17,16 @@ import java.time.LocalDateTime;
 @Schema(description = "Appointment request data")
 public class AppointmentRequest {
 
+    @NotBlank(message = "User ID cannot be empty")
+    @Schema(description = "User ID", required = true, example = "user_001")
+    private String userId;
+
     @NotBlank(message = "Provider ID cannot be empty")
     @Schema(description = "Service provider ID", required = true, example = "provider_001")
     private String providerId;
 
     @NotBlank(message = "Service type cannot be empty")
-    @Schema(description = "Service type", required = true, example = "court_booking")
+    @Schema(description = "Service type", required = true, example = "BADMINTON")
     private String serviceType;
 
     @NotNull(message = "Appointment start time cannot be empty")

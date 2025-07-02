@@ -53,6 +53,14 @@ public interface AppointmentService {
     AppointmentResponse completeAppointment(Long id);
 
     /**
+     * Confirm appointment
+     * 
+     * @param id Appointment ID
+     * @return Confirmed appointment
+     */
+    AppointmentResponse confirmAppointment(Long id);
+
+    /**
      * Get appointment by ID
      * 
      * @param id Appointment ID

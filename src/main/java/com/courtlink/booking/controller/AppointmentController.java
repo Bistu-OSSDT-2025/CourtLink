@@ -1,5 +1,6 @@
-package com.courtlink.booking;
+package com.courtlink.booking.controller;
 
+import com.courtlink.booking.ApiResponse;
 import com.courtlink.booking.dto.AppointmentRequest;
 import com.courtlink.booking.dto.AppointmentResponse;
 import com.courtlink.booking.service.AppointmentService;
@@ -23,10 +24,18 @@ public class AppointmentController {
     @Operation(summary = "Create appointment")
     @PostMapping
     public ResponseEntity<ApiResponse<AppointmentResponse>> createAppointment(
-            @Valid @RequestBody AppointmentRequest request,
-            @RequestParam String userId) {
-        AppointmentResponse created = appointmentService.createAppointment(userId, request);
+            @Valid @RequestBody AppointmentRequest request) {
+        AppointmentResponse created = appointmentService.createAppointment(request.getUserId(), request);
         return ResponseEntity.ok(new ApiResponse<>(true, "Appointment created successfully", created));
+    }
+
+    @Operation(summary = "Update appointment")
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<AppointmentResponse>> updateAppointment(
+            @PathVariable Long id,
+            @Valid @RequestBody AppointmentRequest request) {
+        AppointmentResponse updated = appointmentService.updateAppointment(id, request);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Appointment updated successfully", updated));
     }
 
     @Operation(summary = "Get appointment by ID")
@@ -48,6 +57,13 @@ public class AppointmentController {
     public ResponseEntity<ApiResponse<AppointmentResponse>> completeAppointment(@PathVariable Long id) {
         AppointmentResponse completed = appointmentService.completeAppointment(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "Completion successful", completed));
+    }
+
+    @Operation(summary = "Confirm appointment")
+    @PostMapping("/{id}/confirm")
+    public ResponseEntity<ApiResponse<AppointmentResponse>> confirmAppointment(@PathVariable Long id) {
+        AppointmentResponse confirmed = appointmentService.confirmAppointment(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Confirmation successful", confirmed));
     }
 
     @Operation(summary = "Get appointments by user ID")
