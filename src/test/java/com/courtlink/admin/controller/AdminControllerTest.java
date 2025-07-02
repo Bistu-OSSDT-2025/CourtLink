@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -82,6 +83,7 @@ class AdminControllerTest {
     @Test
     void login_InvalidRequest() throws Exception {
         loginRequest.setPassword("");
+        loginRequest.setUsername("");
 
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -103,7 +105,7 @@ class AdminControllerTest {
     @Test
     void getCurrentAdmin_Unauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/admin/profile"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -112,33 +114,43 @@ class AdminControllerTest {
         Admin updateRequest = new Admin();
         updateRequest.setEmail("updated@test.com");
 
-        when(adminService.updateAdmin(1L, updateRequest)).thenReturn(testAdmin);
+        Admin updatedAdmin = new Admin();
+        updatedAdmin.setId(1L);
+        updatedAdmin.setUsername("testAdmin");
+        updatedAdmin.setEmail("updated@test.com");
+
+        when(adminService.getCurrentAdmin()).thenReturn(testAdmin);
+        when(adminService.updateAdmin(anyLong(), any(Admin.class))).thenReturn(updatedAdmin);
 
         mockMvc.perform(put("/api/v1/admin/profile")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("admin@test.com"));
+                .andExpect(jsonPath("$.email").value("updated@test.com"));
     }
 
     @Test
     @WithMockUser(username = "testAdmin", roles = {"ADMIN"})
     void checkAuth_Success() throws Exception {
         when(adminService.isAdmin()).thenReturn(true);
+        when(adminService.isSuperAdmin()).thenReturn(false);
 
-        mockMvc.perform(get("/api/v1/admin/check-auth"))
+        mockMvc.perform(get("/api/v1/check-auth"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andExpect(jsonPath("$.isAdmin").value(true))
+                .andExpect(jsonPath("$.isSuperAdmin").value(false));
     }
 
     @Test
     @WithMockUser(username = "testSuperAdmin", roles = {"SUPER_ADMIN"})
     void checkAuth_SuperAdmin() throws Exception {
+        when(adminService.isAdmin()).thenReturn(false);
         when(adminService.isSuperAdmin()).thenReturn(true);
 
-        mockMvc.perform(get("/api/v1/super-admin/check-auth"))
+        mockMvc.perform(get("/api/v1/check-auth"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andExpect(jsonPath("$.isAdmin").value(false))
+                .andExpect(jsonPath("$.isSuperAdmin").value(true));
     }
 
     @Test

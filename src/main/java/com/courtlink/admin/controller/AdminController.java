@@ -23,7 +23,7 @@ public class AdminController {
 
     @PostMapping("/auth/login")
     @Operation(summary = "管理员登录")
-    public ResponseEntity<String> login(@RequestBody AdminLoginRequest request) {
+    public ResponseEntity<String> login(@Valid @RequestBody AdminLoginRequest request) {
         return ResponseEntity.ok(adminService.login(request));
     }
 
@@ -32,6 +32,15 @@ public class AdminController {
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<Admin> getProfile() {
         return ResponseEntity.ok(adminService.getCurrentAdmin());
+    }
+
+    @PutMapping("/admin/profile")
+    @Operation(summary = "更新当前管理员信息")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<Admin> updateProfile(@Valid @RequestBody Admin adminDetails) {
+        Admin currentAdmin = adminService.getCurrentAdmin();
+        Admin updatedAdmin = adminService.updateAdmin(currentAdmin.getId(), adminDetails);
+        return ResponseEntity.ok(updatedAdmin);
     }
 
     @GetMapping("/super-admin/dashboard")
