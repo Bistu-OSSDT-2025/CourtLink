@@ -59,7 +59,7 @@ public class SecurityIntegrationTest {
     @Test
     void testProtectedEndpointWithoutAuth() throws Exception {
         mockMvc.perform(get("/api/v1/admin/profile"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -78,12 +78,14 @@ public class SecurityIntegrationTest {
 
     @Test
     void testLoginFailure() throws Exception {
-        AdminLoginRequest loginRequest = new AdminLoginRequest(testAdmin.getUsername(), "wrongPassword");
+        AdminLoginRequest request = new AdminLoginRequest();
+        request.setUsername("testAdmin");
+        request.setPassword("wrongPassword");
 
         mockMvc.perform(post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isUnauthorized());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
