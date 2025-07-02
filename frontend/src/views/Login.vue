@@ -37,8 +37,11 @@
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { User, Lock } from "@element-plus/icons-vue";
+import { useUserStore } from "../store/user";
+import { ElMessage } from "element-plus";
 
 const router = useRouter();
+const userStore = useUserStore();
 const loginFormRef = ref(null);
 const loading = ref(false);
 
@@ -63,13 +66,16 @@ const handleLogin = async () => {
   try {
     await loginFormRef.value.validate();
     loading.value = true;
-    // TODO: 实现登录逻辑
-    // const response = await login(loginForm);
-    // if (response.success) {
-    //   router.push("/");
-    // }
+    
+    await userStore.login({
+      username: loginForm.username,
+      password: loginForm.password
+    });
+    
+    ElMessage.success("登录成功");
+    router.push("/");
   } catch (error) {
-    console.error("登录失败:", error);
+    ElMessage.error(error.message || "登录失败，请稍后重试");
   } finally {
     loading.value = false;
   }

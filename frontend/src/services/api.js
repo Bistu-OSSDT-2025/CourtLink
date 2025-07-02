@@ -1,60 +1,92 @@
 import axios from "axios";
+import { useUserStore } from "../store/user";
+import { ElMessage } from "element-plus";
+import router from "../router";
 
+// åˆ›å»ºaxioså®žä¾‹
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: "http://localhost:8082/api",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// ÇëÇóÀ¹½ØÆ÷
+// è¯·æ±‚æ‹¦æˆªå™¨
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    console.error("ÇëÇó´íÎó:", error);
     return Promise.reject(error);
   }
 );
 
-// ÏìÓ¦À¹½ØÆ÷
+// å“åº”æ‹¦æˆªå™¨
 api.interceptors.response.use(
   (response) => {
     return response.data;
   },
   (error) => {
-    console.error("ÏìÓ¦´íÎó:", error);
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          // Î´ÊÚÈ¨£¬Çå³ý token ²¢Ìø×ªµ½µÇÂ¼Ò³
-          localStorage.removeItem("token");
-          window.location.href = "/login";
+          // æœªæŽˆæƒï¼Œæ¸…é™¤tokenå¹¶è·³è½¬åˆ°ç™»å½•é¡µé¢
+          const userStore = useUserStore();
+          userStore.logout();
+          router.push("/login");
+          ElMessage.error("ç™»å½•å·²è¿‡æœŸï¼Œè¯·é‡æ–°ç™»å½•");
           break;
         case 403:
-          // È¨ÏÞ²»×ã
-          console.error("È¨ÏÞ²»×ã");
+          // æƒé™ä¸è¶³
+          ElMessage.error("æ²¡æœ‰æƒé™è®¿é—®è¯¥èµ„æº");
           break;
         case 404:
-          // ÇëÇóµÄ×ÊÔ´²»´æÔÚ
-          console.error("ÇëÇóµÄ×ÊÔ´²»´æÔÚ");
-          break;
-        case 500:
-          // ·þÎñÆ÷´íÎó
-          console.error("·þÎñÆ÷´íÎó");
+          // èµ„æºä¸å­˜åœ¨
+          ElMessage.error("è¯·æ±‚çš„èµ„æºä¸å­˜åœ¨");
           break;
         default:
-          console.error("Î´Öª´íÎó");
+          ElMessage.error(error.response.data?.message || "æœåŠ¡å™¨é”™è¯¯");
       }
+    } else if (error.request) {
+      ElMessage.error("ç½‘ç»œé”™è¯¯ï¼Œè¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œè¿žæŽ¥");
+    } else {
+      ElMessage.error("è¯·æ±‚é”™è¯¯");
     }
     return Promise.reject(error);
   }
 );
+
+// APIæŽ¥å£
+export const authAPI = {
+  login: (credentials) => api.post("/auth/login", credentials),
+  register: (userData) => api.post("/auth/register", userData),
+  logout: () => api.post("/auth/logout"),
+  forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
+  resetPassword: (token, password) => api.post("/auth/reset-password", { token, password }),
+};
+
+export const courtAPI = {
+  getAllCourts: () => api.get("/courts"),
+  getCourtById: (id) => api.get(`/courts/${id}`),
+  getAvailableCourts: (date) => api.get("/courts/available", { params: { date } })
+};
+
+export const appointmentAPI = {
+  createAppointment: (appointmentData) => api.post("/appointments", appointmentData),
+  getMyAppointments: () => api.get("/appointments/my"),
+  cancelAppointment: (id) => api.post(`/appointments/${id}/cancel`),
+  getAppointmentById: (id) => api.get(`/appointments/${id}`)
+};
+
+export const paymentAPI = {
+  createPayment: (paymentData) => api.post("/payments", paymentData),
+  getPaymentStatus: (id) => api.get(`/payments/${id}/status`),
+  processPayment: (id, paymentMethod) => api.post(`/payments/${id}/process`, { paymentMethod })
+};
 
 export default api;
