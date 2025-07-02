@@ -1,60 +1,31 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
-    password: 
+    password: password
     driver-class-name: org.h2.Driver
-    
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
-        
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      
-  cache:
-    type: simple
+        dialect: org.hibernate.dialect.H2Dialect
 
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-    
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiration: 86400000 # 24 hours
+
 logging:
   level:
-    com.courtlink.booking: DEBUG
-    org.springframework.web: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    
-server:
-  port: 0  # Random port for tests
-  servlet:
-    context-path: /
+    org.springframework.security: DEBUG
+    com.courtlink: DEBUG
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-      base-path: /actuator
-  endpoint:
-    health:
-      show-details: always
-        
-springdoc:
-  api-docs:
-    enabled: true
-    path: /v3/api-docs
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
-    config-url: /v3/api-docs/swagger-config
-  packages-to-scan: com.courtlink
-  paths-to-match: /api/** 
+admin:
+  super:
+    username: superadmin
+    password: Admin@123
+  default:
+    username: admin
+    password: Admin@123 

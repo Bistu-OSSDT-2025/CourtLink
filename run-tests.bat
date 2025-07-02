@@ -1,68 +1,36 @@
 @echo off
-echo ========================================
-echo CourtLink ÔË¶¯³¡µØÔ¤Ô¼ÏµÍ³ - ²âÊÔÔËĞĞ½Å±¾
-echo ========================================
-echo.
+setlocal enabledelayedexpansion
 
-echo [1/5] ÇåÀíÖ®Ç°µÄ²âÊÔ½á¹û...
-if exist target\surefire-reports rmdir /s /q target\surefire-reports
-if exist target\test-classes rmdir /s /q target\test-classes
-echo ÇåÀíÍê³É
-echo.
+echo é€‰æ‹©è¦è¿è¡Œçš„æµ‹è¯•ç±»å‹ï¼š
+echo 1. æ‰€æœ‰æµ‹è¯•
+echo 2. å•å…ƒæµ‹è¯•
+echo 3. é›†æˆæµ‹è¯•
+echo 4. æ€§èƒ½æµ‹è¯•
+echo 5. å®‰å…¨æµ‹è¯•
+echo 6. ç«¯åˆ°ç«¯æµ‹è¯•
 
-echo [2/5] ±àÒëÏîÄ¿...
-call mvn clean compile test-compile
-if %errorlevel% neq 0 (
-    echo ±àÒëÊ§°Ü£¬Çë¼ì²é´úÂë´íÎó
-    pause
+set /p choice=è¯·è¾“å…¥é€‰é¡¹ï¼ˆ1-6ï¼‰ï¼š
+
+if "%choice%"=="1" (
+    powershell -ExecutionPolicy Bypass -File comprehensive-test.ps1 -TestType all
+) else if "%choice%"=="2" (
+    powershell -ExecutionPolicy Bypass -File comprehensive-test.ps1 -TestType unit
+) else if "%choice%"=="3" (
+    powershell -ExecutionPolicy Bypass -File comprehensive-test.ps1 -TestType integration
+) else if "%choice%"=="4" (
+    set /p users=è¯·è¾“å…¥å¹¶å‘ç”¨æˆ·æ•°ï¼ˆé»˜è®¤100ï¼‰ï¼š
+    set /p duration=è¯·è¾“å…¥æµ‹è¯•æŒç»­æ—¶é—´ï¼ˆæ ¼å¼ï¼š1h/30mï¼Œé»˜è®¤1hï¼‰ï¼š
+    if "!users!"=="" set users=100
+    if "!duration!"=="" set duration=1h
+    powershell -ExecutionPolicy Bypass -File comprehensive-test.ps1 -TestType performance -ConcurrentUsers !users! -Duration !duration!
+) else if "%choice%"=="5" (
+    powershell -ExecutionPolicy Bypass -File comprehensive-test.ps1 -TestType security
+) else if "%choice%"=="6" (
+    powershell -ExecutionPolicy Bypass -File comprehensive-test.ps1 -TestType e2e
+) else (
+    echo æ— æ•ˆçš„é€‰é¡¹ï¼
     exit /b 1
 )
-echo ±àÒë³É¹¦
-echo.
 
-echo [3/5] ÔËĞĞµ¥Ôª²âÊÔ...
-call mvn test -Dtest=*Test -DfailIfNoTests=false
-if %errorlevel% neq 0 (
-    echo µ¥Ôª²âÊÔÊ§°Ü
-    pause
-    exit /b 1
-)
-echo µ¥Ôª²âÊÔÍê³É
-echo.
-
-echo [4/5] ÔËĞĞ¼¯³É²âÊÔ...
-call mvn test -Dtest=*IntegrationTest -DfailIfNoTests=false
-if %errorlevel% neq 0 (
-    echo ¼¯³É²âÊÔÊ§°Ü
-    pause
-    exit /b 1
-)
-echo ¼¯³É²âÊÔÍê³É
-echo.
-
-echo [5/5] ÔËĞĞĞÔÄÜ²âÊÔ...
-call mvn test -Dtest=*PerformanceTest -DfailIfNoTests=false
-if %errorlevel% neq 0 (
-    echo ĞÔÄÜ²âÊÔÊ§°Ü
-    pause
-    exit /b 1
-)
-echo ĞÔÄÜ²âÊÔÍê³É
-echo.
-
-echo ========================================
-echo ËùÓĞ²âÊÔÍê³É£¡
-echo ========================================
-echo.
-echo ²âÊÔ±¨¸æÎ»ÖÃ£º
-echo - µ¥Ôª²âÊÔ: target\surefire-reports\
-echo - ¸²¸ÇÂÊ±¨¸æ: target\site\jacoco\
-echo.
-
-echo ÊÇ·ñ´ò¿ª²âÊÔ±¨¸æ£¿(Y/N)
-set /p choice=
-if /i "%choice%"=="Y" (
-    start target\surefire-reports\
-)
-
+echo æµ‹è¯•å®Œæˆï¼
 pause 

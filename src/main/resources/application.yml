@@ -1,5 +1,5 @@
 server:
-  port: 8095
+  port: 8080
   servlet:
     context-path: /api
   tomcat:
@@ -15,10 +15,10 @@ spring:
     name: CourtLink
   
   datasource:
-    url: jdbc:h2:mem:courtlink;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: 
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/courtlink?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       pool-name: CourtLinkHikariCP
       maximum-pool-size: 20
@@ -32,11 +32,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
 
   h2:
@@ -68,8 +69,11 @@ logging:
     com.courtlink: DEBUG
     org.springframework.web: INFO
     org.hibernate: INFO
+    org.springframework.security: DEBUG
   file:
     name: logs/courtlink.log
+    max-size: 10MB
+    max-history: 7
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
@@ -111,3 +115,27 @@ payment:
   mock:
     success-rate: 0.9
     processing-delay-ms: 2000
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiration: 86400000 # 24 hours
+
+admin:
+  super:
+    username: superadmin
+    password: SuperAdmin@2024
+  default:
+    username: admin
+    password: Admin@2024
+
+court:
+  types:
+    - 标准羽毛球场
+    - 多功能羽毛球场
+    - 初学者羽毛球场
+  price:
+    min: 50.00
+    max: 200.00
+  operation:
+    start-time: "06:00"
+    end-time: "22:00"

@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -229,15 +232,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deactivateUser(Long id) {
-        log.info("禁用用户: {}", id);
-        
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
-
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         user.setActive(false);
         userRepository.save(user);
-        
-        log.info("用户禁用成功: {}", id);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || 
+            authentication instanceof AnonymousAuthenticationToken) {
+            throw new RuntimeException("No authenticated user found");
+        }
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Current user not found: " + username));
     }
 
     private UserDTO convertToDTO(User user) {
