@@ -94,6 +94,7 @@ public class CourtInitializationService implements CommandLineRunner {
         court.setRules(rules);
         court.setStatus(CourtStatus.AVAILABLE);
         court.setEnabled(true);
+        court.setCourtLocation(Court.CourtLocation.INDOOR);
         court.setCreatedAt(LocalDateTime.now());
         court.setLastModifiedAt(LocalDateTime.now());
         court.setLastModifiedBy("system");

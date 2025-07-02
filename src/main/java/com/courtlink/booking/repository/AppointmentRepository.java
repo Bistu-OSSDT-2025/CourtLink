@@ -144,11 +144,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
         @Param("excludeId") Long excludeId
     );
 
-    List<Appointment> findByUserId(Long userId);
-    
     List<Appointment> findByCourtId(Long courtId);
-    
-    List<Appointment> findByStatus(AppointmentStatus status);
     
     @Query("SELECT a FROM Appointment a WHERE a.courtId = :courtId AND " +
            "((a.startTime <= :endTime AND a.endTime >= :startTime) OR " +
@@ -158,7 +154,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime);
     
-    Page<Appointment> findByUserId(Long userId, Pageable pageable);
+
     
     Page<Appointment> findByCourtId(Long courtId, Pageable pageable);
     
@@ -177,7 +173,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT a FROM Appointment a WHERE a.userId = :userId AND " +
            "a.startTime >= :startTime AND a.startTime < :endTime")
     List<Appointment> findByUserIdAndDateRange(
-            @Param("userId") Long userId,
+            @Param("userId") String userId,
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime);
     

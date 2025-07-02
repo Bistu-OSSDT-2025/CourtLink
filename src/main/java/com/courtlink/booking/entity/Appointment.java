@@ -40,6 +40,10 @@ public class Appointment {
     @Schema(description = "Service Provider ID")
     private String providerId;
 
+    @Column(name = "court_id")
+    @Schema(description = "Court ID")
+    private Long courtId;
+
     @NotBlank(message = "Service type cannot be empty")
     @Column(name = "service_type", nullable = false)
     @Schema(description = "Service Type")

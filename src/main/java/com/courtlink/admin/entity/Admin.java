@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class Admin implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "admin_roles", joinColumns = @JoinColumn(name = "admin_id"))
     @Column(name = "role")
-    private Set<String> roles;
+    private Set<String> roles = new HashSet<>();
 
     private boolean enabled = true;
 
@@ -65,6 +66,9 @@ public class Admin implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
         return roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
