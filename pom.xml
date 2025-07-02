@@ -12,17 +12,10 @@
     </parent>
 
     <groupId>com.courtlink</groupId>
-<<<<<<< HEAD
-    <artifactId>courtlink-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>CourtLink API</name>
-    <description>Court Booking System API</description>
-=======
     <artifactId>courtlink-booking</artifactId>
     <version>1.0.0</version>
     <name>CourtLink Booking System</name>
     <description>Court Booking Management System</description>
->>>>>>> feat/booking-management
 
     <properties>
         <java.version>21</java.version>
@@ -35,27 +28,17 @@
     </properties>
 
     <dependencies>
-<<<<<<< HEAD
-        <!-- Spring Boot -->
-=======
         <!-- Spring Boot Starters -->
->>>>>>> feat/booking-management
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-<<<<<<< HEAD
-=======
         
->>>>>>> feat/booking-management
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-<<<<<<< HEAD
-=======
         
->>>>>>> feat/booking-management
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -93,11 +76,7 @@
             <optional>true</optional>
         </dependency>
 
-<<<<<<< HEAD
-        <!-- Test -->
-=======
         <!-- Test Dependencies -->
->>>>>>> feat/booking-management
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -123,11 +102,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-<<<<<<< HEAD
-                    <mainClass>com.courtlink.CourtLinkApplication</mainClass>
-=======
                     <mainClass>com.courtlink.booking.BookingApplication</mainClass>
->>>>>>> feat/booking-management
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
