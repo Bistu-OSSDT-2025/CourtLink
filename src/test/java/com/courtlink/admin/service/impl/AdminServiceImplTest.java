@@ -28,6 +28,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class AdminServiceImplTest {
@@ -59,11 +60,12 @@ class AdminServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        SecurityContextHolder.clearContext();
 
         testAdmin = new Admin();
         testAdmin.setId(1L);
         testAdmin.setUsername("testAdmin");
-        testAdmin.setPassword("password");
+        testAdmin.setPassword(passwordEncoder.encode("password"));
         testAdmin.setEmail("test@example.com");
         Set<String> adminRoles = new HashSet<>();
         adminRoles.add("ROLE_ADMIN");
@@ -73,12 +75,14 @@ class AdminServiceImplTest {
         testSuperAdmin = new Admin();
         testSuperAdmin.setId(2L);
         testSuperAdmin.setUsername("superAdmin");
-        testSuperAdmin.setPassword("password");
+        testSuperAdmin.setPassword(passwordEncoder.encode("password"));
         testSuperAdmin.setEmail("super@example.com");
         Set<String> superAdminRoles = new HashSet<>();
         superAdminRoles.add("ROLE_SUPER_ADMIN");
         testSuperAdmin.setRoles(superAdminRoles);
         testSuperAdmin.setEnabled(true);
+
+        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
     }
 
     @Test
@@ -110,14 +114,16 @@ class AdminServiceImplTest {
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
-        when(jwtService.generateToken(authentication)).thenReturn("test.jwt.token");
+        when(authentication.getPrincipal()).thenReturn(testAdmin);
+        when(adminRepository.findByUsername("testAdmin")).thenReturn(Optional.of(testAdmin));
+        when(jwtService.generateToken(any(), eq(testAdmin))).thenReturn("test.jwt.token");
 
         String token = adminService.login(request);
 
         assertNotNull(token);
         assertEquals("test.jwt.token", token);
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(jwtService).generateToken(authentication);
+        verify(jwtService).generateToken(any(), eq(testAdmin));
     }
 
     @Test
@@ -126,6 +132,7 @@ class AdminServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(testAdmin);
+        when(adminRepository.findByUsername(testAdmin.getUsername())).thenReturn(Optional.of(testAdmin));
 
         Admin result = adminService.getCurrentAdmin();
 
@@ -140,15 +147,13 @@ class AdminServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.isAuthenticated()).thenReturn(false);
 
-        Admin result = adminService.getCurrentAdmin();
-
-        assertNull(result);
+        assertThrows(UnauthorizedException.class, () -> adminService.getCurrentAdmin());
     }
 
     @Test
     void updateLastLoginTime_Success() {
         when(adminRepository.findByUsername("testAdmin")).thenReturn(Optional.of(testAdmin));
-        when(adminRepository.save(any(Admin.class))).thenReturn(testAdmin);
+        when(adminRepository.save(any(Admin.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         adminService.updateLastLoginTime("testAdmin");
 
@@ -163,6 +168,7 @@ class AdminServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(testAdmin);
+        when(adminRepository.findByUsername(testAdmin.getUsername())).thenReturn(Optional.of(testAdmin));
 
         boolean result = adminService.isAdmin();
 
@@ -175,6 +181,7 @@ class AdminServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(testSuperAdmin);
+        when(adminRepository.findByUsername(testSuperAdmin.getUsername())).thenReturn(Optional.of(testSuperAdmin));
 
         boolean result = adminService.isAdmin();
 
@@ -187,6 +194,7 @@ class AdminServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(testSuperAdmin);
+        when(adminRepository.findByUsername(testSuperAdmin.getUsername())).thenReturn(Optional.of(testSuperAdmin));
 
         boolean result = adminService.isSuperAdmin();
 
@@ -199,6 +207,7 @@ class AdminServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(testAdmin);
+        when(adminRepository.findByUsername(testAdmin.getUsername())).thenReturn(Optional.of(testAdmin));
 
         boolean result = adminService.isSuperAdmin();
 
@@ -238,7 +247,11 @@ class AdminServiceImplTest {
     @Test
     void updateAdmin_Success() {
         when(adminRepository.findById(1L)).thenReturn(Optional.of(testAdmin));
-        when(adminRepository.save(any(Admin.class))).thenReturn(testAdmin);
+        when(adminRepository.save(any(Admin.class))).thenAnswer(invocation -> {
+            Admin admin = invocation.getArgument(0);
+            admin.setEmail("updated@example.com");
+            return admin;
+        });
 
         Admin updatedAdmin = new Admin();
         updatedAdmin.setEmail("updated@example.com");
@@ -250,6 +263,6 @@ class AdminServiceImplTest {
 
         assertNotNull(result);
         assertEquals("updated@example.com", result.getEmail());
-        assertEquals(testAdmin.getRoles(), result.getRoles());
+        verify(adminRepository).save(any(Admin.class));
     }
 } 

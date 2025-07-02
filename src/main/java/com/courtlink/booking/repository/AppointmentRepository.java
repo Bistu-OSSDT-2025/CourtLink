@@ -1,6 +1,7 @@
 package com.courtlink.booking.repository;
 
 import com.courtlink.booking.entity.Appointment;
+import com.courtlink.booking.entity.Appointment.AppointmentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,7 +47,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      * @param pageable Pagination
      * @return Page of appointments
      */
-    Page<Appointment> findByStatus(Appointment.AppointmentStatus status, Pageable pageable);
+    Page<Appointment> findByStatus(AppointmentStatus status, Pageable pageable);
 
     /**
      * Find appointments by time range
@@ -92,7 +93,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      * @param status Appointment status
      * @return Count of appointments
      */
-    long countByUserIdAndStatus(String userId, Appointment.AppointmentStatus status);
+    long countByUserIdAndStatus(String userId, AppointmentStatus status);
 
     /**
      * Find appointments by user ID and status
@@ -101,7 +102,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      * @param status Appointment status
      * @return List of appointments
      */
-    List<Appointment> findByUserIdAndStatus(String userId, Appointment.AppointmentStatus status);
+    List<Appointment> findByUserIdAndStatus(String userId, AppointmentStatus status);
 
     /**
      * Find recent appointments
@@ -129,7 +130,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      * @param status Appointment status
      * @return Count of appointments
      */
-    long countByProviderIdAndStatus(String providerId, Appointment.AppointmentStatus status);
+    long countByProviderIdAndStatus(String providerId, AppointmentStatus status);
 
     @Query("SELECT a FROM Appointment a " +
            "WHERE a.providerId = :providerId " +
@@ -142,4 +143,48 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
         @Param("endTime") LocalDateTime endTime,
         @Param("excludeId") Long excludeId
     );
+
+    List<Appointment> findByUserId(Long userId);
+    
+    List<Appointment> findByCourtId(Long courtId);
+    
+    List<Appointment> findByStatus(AppointmentStatus status);
+    
+    @Query("SELECT a FROM Appointment a WHERE a.courtId = :courtId AND " +
+           "((a.startTime <= :endTime AND a.endTime >= :startTime) OR " +
+           "(a.startTime >= :startTime AND a.startTime < :endTime))")
+    List<Appointment> findOverlappingAppointments(
+            @Param("courtId") Long courtId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
+    
+    Page<Appointment> findByUserId(Long userId, Pageable pageable);
+    
+    Page<Appointment> findByCourtId(Long courtId, Pageable pageable);
+    
+    @Query("SELECT a FROM Appointment a WHERE a.startTime >= :startTime AND a.startTime < :endTime")
+    List<Appointment> findByDateRange(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
+    
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.courtId = :courtId AND " +
+           "a.startTime >= :startTime AND a.startTime < :endTime")
+    long countByCourtIdAndDateRange(
+            @Param("courtId") Long courtId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
+    
+    @Query("SELECT a FROM Appointment a WHERE a.userId = :userId AND " +
+           "a.startTime >= :startTime AND a.startTime < :endTime")
+    List<Appointment> findByUserIdAndDateRange(
+            @Param("userId") Long userId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
+    
+    @Query("SELECT a FROM Appointment a WHERE a.status = :status AND " +
+           "a.startTime >= :startTime AND a.startTime < :endTime")
+    List<Appointment> findByStatusAndDateRange(
+            @Param("status") AppointmentStatus status,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
 } 

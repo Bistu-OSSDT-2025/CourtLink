@@ -14,9 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,40 +55,34 @@ class AdminAuthenticationIntegrationTest {
     void setUp() {
         adminRepository.deleteAll();
 
-        testAdmin = new Admin();
-        testAdmin.setUsername("testAdmin");
-        testAdmin.setPassword(passwordEncoder.encode("password"));
-        testAdmin.setEmail("test@example.com");
-        Set<String> adminRoles = new HashSet<>();
-        adminRoles.add("ROLE_ADMIN");
-        testAdmin.setRoles(adminRoles);
-        testAdmin.setEnabled(true);
-        testAdmin.setCreatedAt(LocalDateTime.now());
+        testAdmin = createTestAdmin();
+        testSuperAdmin = createTestSuperAdmin();
         adminRepository.save(testAdmin);
-
-        testSuperAdmin = new Admin();
-        testSuperAdmin.setUsername("superAdmin");
-        testSuperAdmin.setPassword(passwordEncoder.encode("password"));
-        testSuperAdmin.setEmail("super@example.com");
-        Set<String> superAdminRoles = new HashSet<>();
-        superAdminRoles.add("ROLE_SUPER_ADMIN");
-        testSuperAdmin.setRoles(superAdminRoles);
-        testSuperAdmin.setEnabled(true);
-        testSuperAdmin.setCreatedAt(LocalDateTime.now());
         adminRepository.save(testSuperAdmin);
     }
 
     @Test
-    void loginSuccess() throws Exception {
-        AdminLoginRequest request = new AdminLoginRequest();
-        request.setUsername("testAdmin");
-        request.setPassword(TEST_PASSWORD);
+    void testSuccessfulLogin() throws Exception {
+        AdminLoginRequest loginRequest = new AdminLoginRequest(testAdmin.getUsername(), "password");
 
-        mockMvc.perform(post("/api/v1/admin/login")
+        MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists());
+                .andReturn();
+
+        String token = result.getResponse().getContentAsString();
+        assert !token.isEmpty();
+    }
+
+    @Test
+    void testFailedLogin() throws Exception {
+        AdminLoginRequest loginRequest = new AdminLoginRequest(testAdmin.getUsername(), "wrongPassword");
+
+        mockMvc.perform(post("/api/v1/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -228,5 +223,43 @@ class AdminAuthenticationIntegrationTest {
         Admin superAdmin = adminRepository.findByUsername("superAdmin").orElseThrow();
         assertTrue(superAdmin.getRoles().contains("ROLE_SUPER_ADMIN"));
         assertFalse(superAdmin.getRoles().contains("ROLE_ADMIN"));
+    }
+
+    private Admin createTestAdmin() {
+        Admin admin = new Admin();
+        admin.setUsername("testAdmin");
+        admin.setPassword(passwordEncoder.encode("password"));
+        admin.setEmail("test@example.com");
+        admin.setRoles(createTestRoles());
+        admin.setEnabled(true);
+        admin.setCreatedAt(new Date());
+        admin.setUpdatedAt(new Date());
+        admin.setPhone("1234567890");
+        admin.setRealName("Test Admin");
+        admin.setLastLoginAt(new Date());
+        return admin;
+    }
+
+    private Admin createTestSuperAdmin() {
+        Admin admin = new Admin();
+        admin.setUsername("superAdmin");
+        admin.setPassword(passwordEncoder.encode("password"));
+        admin.setEmail("super@example.com");
+        Set<String> roles = new HashSet<>();
+        roles.add("ROLE_SUPER_ADMIN");
+        admin.setRoles(roles);
+        admin.setEnabled(true);
+        admin.setCreatedAt(new Date());
+        admin.setUpdatedAt(new Date());
+        admin.setPhone("1234567890");
+        admin.setRealName("Super Admin");
+        admin.setLastLoginAt(new Date());
+        return admin;
+    }
+
+    private Set<String> createTestRoles() {
+        Set<String> roles = new HashSet<>();
+        roles.add("ROLE_ADMIN");
+        return roles;
     }
 } 

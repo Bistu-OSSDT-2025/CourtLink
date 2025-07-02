@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,47 +19,38 @@ public abstract class BaseAdminServiceTest {
     protected AdminRepository adminRepository;
 
     @Mock
-    protected AuthenticationManager authenticationManager;
+    protected JwtService jwtService;
 
     @Mock
-    protected JwtService jwtService;
+    protected AuthenticationManager authenticationManager;
 
     @Mock
     protected PasswordEncoder passwordEncoder;
 
-    protected Admin testAdmin;
-    protected Admin testSuperAdmin;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        initializeTestAdmin();
-        initializeTestSuperAdmin();
     }
 
-    protected void initializeTestAdmin() {
-        testAdmin = new Admin();
-        testAdmin.setId(1L);
-        testAdmin.setUsername("testAdmin");
-        testAdmin.setPassword("password");
-        testAdmin.setEmail("test@example.com");
-        Set<String> adminRoles = new HashSet<>();
-        adminRoles.add("ROLE_ADMIN");
-        testAdmin.setRoles(adminRoles);
-        testAdmin.setEnabled(true);
-        testAdmin.setCreatedAt(LocalDateTime.now());
+    protected Admin createTestAdmin() {
+        Admin admin = new Admin();
+        admin.setId(1L);
+        admin.setUsername("testAdmin");
+        admin.setPassword("password");
+        admin.setEmail("test@example.com");
+        admin.setRoles(createTestRoles());
+        admin.setEnabled(true);
+        admin.setCreatedAt(new Date());
+        admin.setUpdatedAt(new Date());
+        admin.setPhone("1234567890");
+        admin.setRealName("Test Admin");
+        admin.setLastLoginAt(new Date());
+        return admin;
     }
 
-    protected void initializeTestSuperAdmin() {
-        testSuperAdmin = new Admin();
-        testSuperAdmin.setId(2L);
-        testSuperAdmin.setUsername("superAdmin");
-        testSuperAdmin.setPassword("password");
-        testSuperAdmin.setEmail("super@example.com");
-        Set<String> superAdminRoles = new HashSet<>();
-        superAdminRoles.add("ROLE_SUPER_ADMIN");
-        testSuperAdmin.setRoles(superAdminRoles);
-        testSuperAdmin.setEnabled(true);
-        testSuperAdmin.setCreatedAt(LocalDateTime.now());
+    protected Set<String> createTestRoles() {
+        Set<String> roles = new HashSet<>();
+        roles.add("ROLE_ADMIN");
+        return roles;
     }
 } 

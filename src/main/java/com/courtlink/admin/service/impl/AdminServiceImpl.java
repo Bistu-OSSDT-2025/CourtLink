@@ -2,67 +2,94 @@ package com.courtlink.admin.service.impl;
 
 import com.courtlink.admin.dto.AdminLoginRequest;
 import com.courtlink.admin.entity.Admin;
+import com.courtlink.admin.exception.UnauthorizedException;
+import com.courtlink.admin.exception.UserNotFoundException;
 import com.courtlink.admin.repository.AdminRepository;
 import com.courtlink.admin.service.AdminService;
-import com.courtlink.admin.util.AdminServiceUtils;
 import com.courtlink.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-public class AdminServiceImpl implements AdminService {
+public class AdminServiceImpl implements AdminService, UserDetailsService {
 
     private final AdminRepository adminRepository;
-    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return AdminServiceUtils.findAdminByUsernameOrThrow(adminRepository, username);
-    }
 
     @Override
     public String login(AdminLoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        updateLastLoginTime(request.getUsername());
-        return jwtService.generateToken(authentication);
+
+        Admin admin = (Admin) authentication.getPrincipal();
+        if (!admin.isEnabled()) {
+            throw new UnauthorizedException("Account is disabled");
+        }
+
+        updateLastLoginTime(admin);
+        return jwtService.generateToken(admin);
+    }
+
+    @Override
+    @Transactional
+    public Admin createAdmin(Admin admin) {
+        if (adminRepository.findByUsername(admin.getUsername()).isPresent()) {
+            throw new UnauthorizedException("Username already exists");
+        }
+
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setEnabled(true);
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    @Transactional
+    public Admin updateAdmin(Long id, Admin adminDetails) {
+        Admin admin = findAdminById(id);
+
+        admin.setEmail(adminDetails.getEmail());
+        admin.setRoles(adminDetails.getRoles());
+        admin.setEnabled(adminDetails.isEnabled());
+        admin.setPhone(adminDetails.getPhone());
+        admin.setRealName(adminDetails.getRealName());
+
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAdmin(Long id) {
+        Admin admin = findAdminById(id);
+        adminRepository.delete(admin);
     }
 
     @Override
     public Admin getCurrentAdmin() {
-        return AdminServiceUtils.getCurrentAuthenticatedAdmin();
-    }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new UnauthorizedException("No authenticated user found");
+        }
 
-    @Override
-    public void updateLastLoginTime(String username) {
-        Admin admin = findByUsername(username);
-        admin.setLastLoginAt(LocalDateTime.now());
-        adminRepository.save(admin);
-    }
-
-    @Override
-    public boolean isAdmin() {
-        return AdminServiceUtils.hasRole(getCurrentAdmin(), "ROLE_ADMIN");
-    }
-
-    @Override
-    public boolean isSuperAdmin() {
-        return AdminServiceUtils.hasRole(getCurrentAdmin(), "ROLE_SUPER_ADMIN");
+        String username = authentication.getName();
+        return findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Admin not found"));
     }
 
     @Override
@@ -71,51 +98,59 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Admin findByUsername(String username) {
-        return AdminServiceUtils.findAdminByUsernameOrThrow(adminRepository, username);
-    }
-
-    @Override
-    public Admin findAdminById(long id) {
-        return AdminServiceUtils.findAdminByIdOrThrow(adminRepository, id);
-    }
-
-    @Override
-    public Admin createAdmin(Admin admin) {
-        AdminServiceUtils.validateAdminExists(adminRepository, admin.getUsername());
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-        return adminRepository.save(admin);
-    }
-
-    @Override
-    public Admin updateAdmin(long id, Admin admin) {
-        Admin existingAdmin = findAdminById(id);
-        AdminServiceUtils.updateAdminFields(existingAdmin, admin);
-        return adminRepository.save(existingAdmin);
-    }
-
-    @Override
-    public void deleteAdmin(long id) {
-        Admin admin = findAdminById(id);
-        adminRepository.delete(admin);
-    }
-
-    @Override
     public List<Admin> findAllAdmins() {
         return adminRepository.findAll();
     }
 
     @Override
-    public Admin toggleAdminStatus(long id, boolean enabled) {
-        Admin admin = findAdminById(id);
-        admin.setEnabled(enabled);
-        return adminRepository.save(admin);
+    public Admin findAdminById(Long id) {
+        return adminRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Admin not found"));
     }
 
     @Override
-    public Admin updateLastLoginTime(long id) {
+    public Optional<Admin> findByUsername(String username) {
+        return adminRepository.findByUsername(username);
+    }
+
+    @Override
+    public boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    @Override
+    public boolean isSuperAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+    }
+
+    @Override
+    @Transactional
+    public void toggleAdminStatus(Long id) {
         Admin admin = findAdminById(id);
-        admin.setLastLoginAt(LocalDateTime.now());
-        return adminRepository.save(admin);
+        admin.setEnabled(!admin.isEnabled());
+        adminRepository.save(admin);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Override
+    public void updateLastLoginTime(Admin admin) {
+        admin.setLastLoginAt(new Date());
+        adminRepository.save(admin);
+    }
+
+    @Override
+    public void updateLastLoginTime(String username) {
+        Admin admin = findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Admin not found"));
+        updateLastLoginTime(admin);
     }
 } 

@@ -5,7 +5,6 @@ import com.courtlink.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.courtlink.booking.entity.Payment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -73,9 +72,6 @@ public class Booking {
     @Column(name = "cancel_reason", length = 200)
     private String cancelReason;
 
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Payment payment;
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -108,13 +104,6 @@ public class Booking {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-        if (payment != null && payment.getBooking() != this) {
-            payment.setBooking(this);
-        }
     }
 
     public void setCourt(Court court) {

@@ -1,6 +1,7 @@
 package com.courtlink.admin.controller;
 
 import com.courtlink.admin.dto.AdminLoginRequest;
+import com.courtlink.admin.entity.Admin;
 import com.courtlink.admin.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,25 +14,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Tag(name = "管理员接口", description = "管理员登录和权限管理相关接口")
 public class AdminController {
 
     private final AdminService adminService;
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     @Operation(summary = "管理员登录")
-    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody AdminLoginRequest request) {
-        String token = adminService.login(request);
-        return ResponseEntity.ok(Map.of("token", token));
+    public ResponseEntity<String> login(@RequestBody AdminLoginRequest request) {
+        return ResponseEntity.ok(adminService.login(request));
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/admin/profile")
     @Operation(summary = "获取当前管理员信息")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-    public ResponseEntity<?> getCurrentAdmin() {
+    public ResponseEntity<Admin> getProfile() {
         return ResponseEntity.ok(adminService.getCurrentAdmin());
+    }
+
+    @GetMapping("/super-admin/dashboard")
+    @Operation(summary = "获取超级管理员仪表盘信息")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<String> getDashboard() {
+        return ResponseEntity.ok("Super Admin Dashboard");
+    }
+
+    @GetMapping("/public/info")
+    @Operation(summary = "获取公共信息")
+    public ResponseEntity<String> getPublicInfo() {
+        return ResponseEntity.ok("Public Information");
     }
 
     @GetMapping("/check-auth")

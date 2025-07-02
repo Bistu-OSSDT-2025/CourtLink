@@ -13,15 +13,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.context.annotation.Lazy;
 
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final AdminService adminService;
+
+    public JwtAuthenticationFilter(@Lazy JwtService jwtService, @Lazy AdminService adminService) {
+        this.jwtService = jwtService;
+        this.adminService = adminService;
+    }
 
     @Override
     protected void doFilterInternal(
