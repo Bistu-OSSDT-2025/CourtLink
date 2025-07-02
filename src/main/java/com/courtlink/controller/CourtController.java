@@ -1,96 +1,65 @@
 package com.courtlink.controller;
 
-import com.courtlink.dto.CourtRequest;
-import com.courtlink.dto.CourtResponse;
-import com.courtlink.enums.CourtStatus;
+import com.courtlink.dto.CourtDTO;
 import com.courtlink.service.CourtService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
-@Tag(name = "Court Management", description = "Court management APIs")
 @RestController
 @RequestMapping("/api/courts")
+@RequiredArgsConstructor
+@Tag(name = "Court Management", description = "场地管理接口")
 public class CourtController {
 
     private final CourtService courtService;
 
-    @Autowired
-    public CourtController(CourtService courtService) {
-        this.courtService = courtService;
-    }
-
-    @PostMapping
-    @Operation(summary = "Create new court", description = "Create a new court with provided information")
-    public ResponseEntity<CourtResponse> createCourt(
-            @Parameter(description = "Court information", required = true)
-            @Valid @RequestBody CourtRequest request) {
-        CourtResponse response = courtService.createCourt(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update court information", description = "Update existing court information")
-    public ResponseEntity<CourtResponse> updateCourt(
-            @Parameter(description = "Court ID", required = true, example = "1")
-            @PathVariable Long id,
-            @Parameter(description = "Court information", required = true)
-            @Valid @RequestBody CourtRequest request) {
-        CourtResponse response = courtService.updateCourt(id, request);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete court", description = "Delete a court by ID")
-    public ResponseEntity<Void> deleteCourt(
-            @Parameter(description = "Court ID", required = true, example = "1")
-            @PathVariable Long id) {
-        courtService.deleteCourt(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    @Operation(summary = "获取所有场地", description = "获取系统中所有场地的列表")
+    public ResponseEntity<List<CourtDTO>> getAllCourts() {
+        return ResponseEntity.ok(courtService.getAllCourts());
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get court details", description = "Get detailed information of a specific court")
-    public ResponseEntity<CourtResponse> getCourt(
-            @Parameter(description = "Court ID", required = true, example = "1")
-            @PathVariable Long id) {
-        CourtResponse response = courtService.getCourt(id);
-        return ResponseEntity.ok(response);
+    @Operation(summary = "获取场地详情", description = "根据ID获取场地详细信息")
+    public ResponseEntity<CourtDTO> getCourtById(@PathVariable Long id) {
+        return ResponseEntity.ok(courtService.getCourtById(id));
     }
 
-    @GetMapping
-    @Operation(summary = "Search courts", description = "Search courts by keyword and status")
-    public ResponseEntity<List<CourtResponse>> searchCourts(
-            @Parameter(description = "Search keyword (court name or location)", example = "basketball")
+    @PostMapping
+    @Operation(summary = "创建场地", description = "创建新的场地")
+    public ResponseEntity<CourtDTO> createCourt(@RequestBody CourtDTO courtDTO) {
+        return ResponseEntity.ok(courtService.createCourt(courtDTO));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "更新场地", description = "更新现有场地的信息")
+    public ResponseEntity<CourtDTO> updateCourt(@PathVariable Long id, @RequestBody CourtDTO courtDTO) {
+        return ResponseEntity.ok(courtService.updateCourt(id, courtDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "删除场地", description = "删除指定的场地")
+    public ResponseEntity<Void> deleteCourt(@PathVariable Long id) {
+        courtService.deleteCourt(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/status")
+    @Operation(summary = "更新场地状态", description = "更新场地的状态（可用、维护中等）")
+    public ResponseEntity<CourtDTO> updateCourtStatus(@PathVariable Long id, @RequestParam String status) {
+        return ResponseEntity.ok(courtService.updateCourtStatus(id, status));
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "搜索场地", description = "根据关键词和状态搜索场地")
+    public ResponseEntity<List<CourtDTO>> searchCourts(
             @RequestParam(required = false) String keyword,
-            @Parameter(description = "Court status", example = "AVAILABLE")
-            @RequestParam(required = false) CourtStatus status) {
-        List<CourtResponse> responses = courtService.searchCourts(keyword, status);
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/all")
-    @Operation(summary = "Get all courts", description = "Retrieve all courts in the system")
-    public ResponseEntity<List<CourtResponse>> getAllCourts() {
-        List<CourtResponse> responses = courtService.getAllCourts();
-        return ResponseEntity.ok(responses);
-    }
-
-    @PatchMapping("/{id}/status")
-    @Operation(summary = "Change court status", description = "Update the status of a specific court")
-    public ResponseEntity<CourtResponse> changeStatus(
-            @Parameter(description = "Court ID", required = true, example = "1")
-            @PathVariable Long id,
-            @Parameter(description = "New status", required = true, example = "MAINTENANCE")
-            @RequestParam CourtStatus status) {
-        CourtResponse response = courtService.changeStatus(id, status);
-        return ResponseEntity.ok(response);
+            @RequestParam(required = false) String status) {
+        return ResponseEntity.ok(courtService.searchCourts(keyword, status));
     }
 } 

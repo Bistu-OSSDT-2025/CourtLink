@@ -1,9 +1,7 @@
 package com.courtlink.service.impl;
 
-import com.courtlink.dto.CourtRequest;
-import com.courtlink.dto.CourtResponse;
+import com.courtlink.dto.CourtDTO;
 import com.courtlink.entity.Court;
-import com.courtlink.enums.CourtStatus;
 import com.courtlink.repository.CourtRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +29,7 @@ public class CourtServiceImplTest {
     private CourtServiceImpl courtService;
 
     private Court testCourt;
-    private CourtRequest testRequest;
+    private CourtDTO testDTO;
 
     @BeforeEach
     public void setUp() {
@@ -42,15 +39,23 @@ public class CourtServiceImplTest {
         testCourt.setName("Test Court");
         testCourt.setLocation("Test Location");
         testCourt.setDescription("Test Description");
-        testCourt.setStatus(CourtStatus.AVAILABLE);
-        testCourt.setCreatedAt(LocalDateTime.now());
-        testCourt.setUpdatedAt(LocalDateTime.now());
+        testCourt.setStatus("AVAILABLE");
+        testCourt.setPricePerHour(100.0);
+        testCourt.setFacilities("Lighting, Shower");
+        testCourt.setOpeningHours("09:00-22:00");
+        testCourt.setMaintenanceSchedule("Monday 08:00-09:00");
+        testCourt.setIsActive(true);
 
-        testRequest = new CourtRequest();
-        testRequest.setName("Test Court");
-        testRequest.setLocation("Test Location");
-        testRequest.setDescription("Test Description");
-        testRequest.setStatus(CourtStatus.AVAILABLE);
+        testDTO = new CourtDTO();
+        testDTO.setName("Test Court");
+        testDTO.setLocation("Test Location");
+        testDTO.setDescription("Test Description");
+        testDTO.setStatus("AVAILABLE");
+        testDTO.setPricePerHour(100.0);
+        testDTO.setFacilities("Lighting, Shower");
+        testDTO.setOpeningHours("09:00-22:00");
+        testDTO.setMaintenanceSchedule("Monday 08:00-09:00");
+        testDTO.setIsActive(true);
     }
 
     @Test
@@ -59,7 +64,7 @@ public class CourtServiceImplTest {
         when(courtRepository.save(any(Court.class))).thenReturn(testCourt);
         
         // When
-        CourtResponse response = courtService.createCourt(testRequest);
+        CourtDTO response = courtService.createCourt(testDTO);
         
         // Then
         assertNotNull(response);
@@ -73,12 +78,12 @@ public class CourtServiceImplTest {
     }
 
     @Test
-    public void testGetCourt() {
+    public void testGetCourtById() {
         // Given
         when(courtRepository.findById(1L)).thenReturn(Optional.of(testCourt));
         
         // When
-        CourtResponse response = courtService.getCourt(1L);
+        CourtDTO response = courtService.getCourtById(1L);
         
         // Then
         assertNotNull(response);
@@ -92,13 +97,13 @@ public class CourtServiceImplTest {
     }
 
     @Test
-    public void testGetCourtNotFound() {
+    public void testGetCourtByIdNotFound() {
         // Given
         when(courtRepository.findById(1L)).thenReturn(Optional.empty());
         
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> {
-            courtService.getCourt(1L);
+            courtService.getCourtById(1L);
         });
         
         verify(courtRepository).findById(1L);
@@ -111,12 +116,12 @@ public class CourtServiceImplTest {
         when(courtRepository.findAll()).thenReturn(courts);
         
         // When
-        List<CourtResponse> responses = courtService.getAllCourts();
+        List<CourtDTO> responses = courtService.getAllCourts();
         
         // Then
         assertNotNull(responses);
         assertEquals(1, responses.size());
-        CourtResponse response = responses.get(0);
+        CourtDTO response = responses.get(0);
         assertEquals(testCourt.getId(), response.getId());
         assertEquals(testCourt.getName(), response.getName());
         assertEquals(testCourt.getLocation(), response.getLocation());
@@ -133,7 +138,7 @@ public class CourtServiceImplTest {
         when(courtRepository.save(any(Court.class))).thenReturn(testCourt);
         
         // When
-        CourtResponse response = courtService.updateCourt(1L, testRequest);
+        CourtDTO response = courtService.updateCourt(1L, testDTO);
         
         // Then
         assertNotNull(response);
@@ -154,7 +159,7 @@ public class CourtServiceImplTest {
         
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> {
-            courtService.updateCourt(1L, testRequest);
+            courtService.updateCourt(1L, testDTO);
         });
         
         verify(courtRepository).findById(1L);
@@ -193,46 +198,49 @@ public class CourtServiceImplTest {
     public void testSearchCourts() {
         // Given
         List<Court> courts = Arrays.asList(testCourt);
-        when(courtRepository.searchCourts("Basketball", CourtStatus.AVAILABLE)).thenReturn(courts);
+        when(courtRepository.searchCourts("Basketball", "AVAILABLE")).thenReturn(courts);
         
         // When
-        List<CourtResponse> responses = courtService.searchCourts("Basketball", CourtStatus.AVAILABLE);
+        List<CourtDTO> responses = courtService.searchCourts("Basketball", "AVAILABLE");
         
         // Then
         assertNotNull(responses);
         assertEquals(1, responses.size());
-        CourtResponse response = responses.get(0);
+        CourtDTO response = responses.get(0);
         assertEquals(testCourt.getId(), response.getId());
         assertEquals(testCourt.getName(), response.getName());
+        assertEquals(testCourt.getLocation(), response.getLocation());
+        assertEquals(testCourt.getDescription(), response.getDescription());
+        assertEquals(testCourt.getStatus(), response.getStatus());
         
-        verify(courtRepository).searchCourts("Basketball", CourtStatus.AVAILABLE);
+        verify(courtRepository).searchCourts("Basketball", "AVAILABLE");
     }
 
     @Test
-    public void testChangeStatus() {
+    public void testUpdateCourtStatus() {
         // Given
         when(courtRepository.findById(1L)).thenReturn(Optional.of(testCourt));
         when(courtRepository.save(any(Court.class))).thenReturn(testCourt);
         
         // When
-        CourtResponse response = courtService.changeStatus(1L, CourtStatus.MAINTENANCE);
+        CourtDTO response = courtService.updateCourtStatus(1L, "MAINTENANCE");
         
         // Then
         assertNotNull(response);
-        assertEquals(testCourt.getId(), response.getId());
+        assertEquals("MAINTENANCE", response.getStatus());
         
         verify(courtRepository).findById(1L);
         verify(courtRepository).save(any(Court.class));
     }
 
     @Test
-    public void testChangeStatusNotFound() {
+    public void testUpdateCourtStatusNotFound() {
         // Given
         when(courtRepository.findById(1L)).thenReturn(Optional.empty());
         
         // When & Then
         assertThrows(EntityNotFoundException.class, () -> {
-            courtService.changeStatus(1L, CourtStatus.MAINTENANCE);
+            courtService.updateCourtStatus(1L, "MAINTENANCE");
         });
         
         verify(courtRepository).findById(1L);

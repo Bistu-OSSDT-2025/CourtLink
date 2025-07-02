@@ -1,0 +1,345 @@
+{
+  "SystemGrade": {
+    "Score": 60,
+    "Recommendation": "🔴 Serious Issues: System is unstable, not suitable for deployment",
+    "Grade": "D"
+  },
+  "TestSummary": {
+    "FailedTests": 19,
+    "StartTime": "2025-07-02T10:59:37.6909014+08:00",
+    "Performance": {
+      "SlowestResponse": 0,
+      "AverageResponse": 0.0,
+      "FastestResponse": 2147483647,
+      "TotalResponseTime": 0
+    },
+    "Duration": {
+      "Ticks": 867244844,
+      "Days": 0,
+      "Hours": 0,
+      "Milliseconds": 724,
+      "Microseconds": 484,
+      "Nanoseconds": 400,
+      "Minutes": 1,
+      "Seconds": 26,
+      "TotalDays": 0.0010037556064814814,
+      "TotalHours": 0.024090134555555556,
+      "TotalMilliseconds": 86724.4844,
+      "TotalMicroseconds": 86724484.4,
+      "TotalNanoseconds": 86724484400.0,
+      "TotalMinutes": 1.4454080733333334,
+      "TotalSeconds": 86.7244844
+    },
+    "PassedTests": 0,
+    "TotalTests": 19,
+    "EndTime": "2025-07-02T11:01:04.4153858+08:00",
+    "TestDetails": [
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T10:59:41.8691854+08:00",
+        "TestName": "System Health Check",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4152,
+        "Uri": "http://localhost:8090/api/health",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T10:59:45.9295704+08:00",
+        "TestName": "Simple Health Check",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4058,
+        "Uri": "http://localhost:8090/api/health/simple",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T10:59:49.9688799+08:00",
+        "TestName": "Readiness Check",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4038,
+        "Uri": "http://localhost:8090/api/health/ready",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T10:59:54.0159518+08:00",
+        "TestName": "Liveness Check",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4045,
+        "Uri": "http://localhost:8090/api/health/live",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T10:59:58.0631625+08:00",
+        "TestName": "User Module Health Check",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4046,
+        "Uri": "http://localhost:8090/api/users/health",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:02.1400916+08:00",
+        "TestName": "Register User: comptest_user_1",
+        "Method": "POST",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4073,
+        "Uri": "http://localhost:8090/api/users/register",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:06.1901751+08:00",
+        "TestName": "Register User: comptest_user_2",
+        "Method": "POST",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4048,
+        "Uri": "http://localhost:8090/api/users/register",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:10.2428937+08:00",
+        "TestName": "Register User: comptest_user_3",
+        "Method": "POST",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4051,
+        "Uri": "http://localhost:8090/api/users/register",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:14.3289558+08:00",
+        "TestName": "Create Court: Comprehensive Test Court 1",
+        "Method": "POST",
+        "ExpectedStatusCode": 201,
+        "ResponseTime": 4079,
+        "Uri": "http://localhost:8090/api/courts",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:18.4059794+08:00",
+        "TestName": "Create Court: Comprehensive Test Court 2",
+        "Method": "POST",
+        "ExpectedStatusCode": 201,
+        "ResponseTime": 4075,
+        "Uri": "http://localhost:8090/api/courts",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:22.4472277+08:00",
+        "TestName": "Create Court: Comprehensive Test Court 3",
+        "Method": "POST",
+        "ExpectedStatusCode": 201,
+        "ResponseTime": 4040,
+        "Uri": "http://localhost:8090/api/courts",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:26.4905998+08:00",
+        "TestName": "Query All Courts",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4040,
+        "Uri": "http://localhost:8090/api/courts/all",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:30.549237+08:00",
+        "TestName": "Search Courts by Keyword",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4058,
+        "Uri": "http://localhost:8090/api/courts?keyword=Comprehensive",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:34.6102264+08:00",
+        "TestName": "Search Courts by Status",
+        "Method": "GET",
+        "ExpectedStatusCode": 200,
+        "ResponseTime": 4059,
+        "Uri": "http://localhost:8090/api/courts?status=AVAILABLE",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:38.6649122+08:00",
+        "TestName": "Send Invalid JSON Format",
+        "Method": "POST",
+        "ExpectedStatusCode": 400,
+        "ResponseTime": 4052,
+        "Uri": "http://localhost:8090/api/api/users/register",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:42.7281498+08:00",
+        "TestName": "Register User with Missing Required Fields",
+        "Method": "POST",
+        "ExpectedStatusCode": 400,
+        "ResponseTime": 4061,
+        "Uri": "http://localhost:8090/api/api/users/register",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:46.7790531+08:00",
+        "TestName": "Access Non-existent User",
+        "Method": "GET",
+        "ExpectedStatusCode": 400,
+        "ResponseTime": 4048,
+        "Uri": "http://localhost:8090/api/api/users/999999",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:50.8431599+08:00",
+        "TestName": "Access Non-existent Court",
+        "Method": "GET",
+        "ExpectedStatusCode": 404,
+        "ResponseTime": 4062,
+        "Uri": "http://localhost:8090/api/api/courts/999999",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      },
+      {
+        "Success": false,
+        "Timestamp": "2025-07-02T11:00:54.8870743+08:00",
+        "TestName": "Access Non-existent Endpoint",
+        "Method": "GET",
+        "ExpectedStatusCode": 404,
+        "ResponseTime": 4042,
+        "Uri": "http://localhost:8090/api/api/nonexistent",
+        "ActualStatusCode": null,
+        "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)"
+      }
+    ]
+  },
+  "TestConfiguration": {
+    "VerboseMode": false,
+    "BaseUrl": "http://localhost:8090/api",
+    "TestRounds": 3
+  },
+  "ConcurrentTestResults": [
+    {
+      "Success": false,
+      "Index": 1,
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "PSComputerName": "localhost",
+      "RunspaceId": "4114859d-e8a2-4e4f-9047-c58e632c0c46",
+      "PSShowComputerName": false
+    },
+    {
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "Index": 2,
+      "Success": false,
+      "PSComputerName": "localhost",
+      "RunspaceId": "f7bafcb8-4759-45a4-9e39-2d6a2e1b9cd9",
+      "PSShowComputerName": false
+    },
+    {
+      "Success": false,
+      "Index": 3,
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "PSComputerName": "localhost",
+      "RunspaceId": "159c0ed5-66d2-47cf-9371-ef32b8edc1b5",
+      "PSShowComputerName": false
+    },
+    {
+      "Success": false,
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "Index": 4,
+      "PSComputerName": "localhost",
+      "RunspaceId": "32eea8ca-d7ee-4eee-a372-1d40f95d4923",
+      "PSShowComputerName": false
+    },
+    {
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "Index": 5,
+      "Success": false,
+      "PSComputerName": "localhost",
+      "RunspaceId": "b654cc3d-fdb9-4975-a617-f8c37d4ce859",
+      "PSShowComputerName": false
+    },
+    {
+      "Success": false,
+      "StatusCode": null,
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "Index": 6,
+      "PSComputerName": "localhost",
+      "RunspaceId": "0189eb0b-7cd7-4619-8a03-f3cace50f066",
+      "PSShowComputerName": false
+    },
+    {
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "Index": 7,
+      "Success": false,
+      "PSComputerName": "localhost",
+      "RunspaceId": "958163d2-aef8-424b-a670-e663829730ca",
+      "PSShowComputerName": false
+    },
+    {
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "Index": 8,
+      "Success": false,
+      "StatusCode": null,
+      "PSComputerName": "localhost",
+      "RunspaceId": "b1a7e5a3-9cc7-479a-9d5e-7b2d14b33c10",
+      "PSShowComputerName": false
+    },
+    {
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "Index": 9,
+      "Success": false,
+      "PSComputerName": "localhost",
+      "RunspaceId": "cee8f65e-75f5-4a47-b14f-ed8d86908267",
+      "PSShowComputerName": false
+    },
+    {
+      "Success": false,
+      "Index": 10,
+      "Error": "由于目标计算机积极拒绝，无法连接。 (localhost:8090)",
+      "StatusCode": null,
+      "PSComputerName": "localhost",
+      "RunspaceId": "799f699a-5424-41d5-bed6-8f1b406196e6",
+      "PSShowComputerName": false
+    }
+  ]
+}

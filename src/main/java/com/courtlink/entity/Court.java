@@ -1,44 +1,44 @@
 package com.courtlink.entity;
 
-import com.courtlink.enums.CourtStatus;
-import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "courts")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Court {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String name;        // Court name
-
-    @Column(nullable = false, length = 200)
-    private String location;    // Location
-
-    @Column(length = 500)
-    private String description; // Description
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CourtStatus status; // Status: AVAILABLE / UNAVAILABLE / MAINTENANCE
+    private String name;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column
+    private String location;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column
+    private String description;
 
-    // Manual setter for status (in case Lombok doesn't work)
-    public void setStatus(CourtStatus status) {
-        this.status = status;
-    }
+    @Column(nullable = false)
+    private String status;
+
+    @Column(name = "price_per_hour")
+    private Double pricePerHour;
+
+    @Column
+    private String facilities;
+
+    @Column(name = "opening_hours")
+    private String openingHours;
+
+    @Column(name = "maintenance_schedule")
+    private String maintenanceSchedule;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
 } 

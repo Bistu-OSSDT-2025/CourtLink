@@ -1,19 +1,14 @@
 package com.courtlink.service;
 
-import com.courtlink.dto.CourtRequest;
-import com.courtlink.dto.CourtResponse;
-import com.courtlink.enums.CourtStatus;
-
+import com.courtlink.dto.CourtDTO;
 import java.util.List;
 
 public interface CourtService {
-    CourtResponse createCourt(CourtRequest request);
-    CourtResponse updateCourt(Long id, CourtRequest request);
+    List<CourtDTO> getAllCourts();
+    CourtDTO getCourtById(Long id);
+    CourtDTO createCourt(CourtDTO courtDTO);
+    CourtDTO updateCourt(Long id, CourtDTO courtDTO);
     void deleteCourt(Long id);
-    CourtResponse getCourt(Long id);
-    List<CourtResponse> getAllCourts();
-    
-    // New features
-    List<CourtResponse> searchCourts(String keyword, CourtStatus status);
-    CourtResponse changeStatus(Long id, CourtStatus status);
+    CourtDTO updateCourtStatus(Long id, String status);
+    List<CourtDTO> searchCourts(String keyword, String status);
 } 

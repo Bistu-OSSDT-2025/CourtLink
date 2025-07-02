@@ -1,0 +1,345 @@
+{
+  "SystemGrade": {
+    "Recommendation": "🔴 Serious Issues: System is unstable, not suitable for deployment",
+    "Grade": "D",
+    "Score": 60
+  },
+  "TestSummary": {
+    "TotalTests": 19,
+    "Performance": {
+      "FastestResponse": 2147483647,
+      "TotalResponseTime": 0,
+      "SlowestResponse": 0,
+      "AverageResponse": 0.0
+    },
+    "EndTime": "2025-07-02T11:18:28.9210215+08:00",
+    "FailedTests": 19,
+    "Duration": {
+      "Ticks": 59875485,
+      "Days": 0,
+      "Hours": 0,
+      "Milliseconds": 987,
+      "Microseconds": 548,
+      "Nanoseconds": 500,
+      "Minutes": 0,
+      "Seconds": 5,
+      "TotalDays": 6.930032986111111E-05,
+      "TotalHours": 0.0016632079166666667,
+      "TotalMilliseconds": 5987.5485,
+      "TotalMicroseconds": 5987548.5,
+      "TotalNanoseconds": 5987548500.0,
+      "TotalMinutes": 0.099792475,
+      "TotalSeconds": 5.9875485
+    },
+    "PassedTests": 0,
+    "StartTime": "2025-07-02T11:18:22.933473+08:00",
+    "TestDetails": [
+      {
+        "Timestamp": "2025-07-02T11:18:23.1604421+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "System Health Check",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/health",
+        "ResponseTime": 208
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.1712977+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Simple Health Check",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/health/simple",
+        "ResponseTime": 8
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.1790818+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Readiness Check",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/health/ready",
+        "ResponseTime": 7
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.1869931+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Liveness Check",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/health/live",
+        "ResponseTime": 7
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.1936257+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "User Module Health Check",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/users/health",
+        "ResponseTime": 6
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2122601+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Register User: comptest_user_1",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/users/register",
+        "ResponseTime": 15
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2201846+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Register User: comptest_user_2",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/users/register",
+        "ResponseTime": 6
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2259727+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Register User: comptest_user_3",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/users/register",
+        "ResponseTime": 5
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2379948+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Create Court: Comprehensive Test Court 1",
+        "ExpectedStatusCode": 201,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/courts",
+        "ResponseTime": 5
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.244693+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Create Court: Comprehensive Test Court 2",
+        "ExpectedStatusCode": 201,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/courts",
+        "ResponseTime": 6
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2508404+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Create Court: Comprehensive Test Court 3",
+        "ExpectedStatusCode": 201,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/courts",
+        "ResponseTime": 5
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2584408+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Query All Courts",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/courts/all",
+        "ResponseTime": 6
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2687689+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Search Courts by Keyword",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/courts?keyword=Comprehensive",
+        "ResponseTime": 9
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2756243+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Search Courts by Status",
+        "ExpectedStatusCode": 200,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/courts?status=AVAILABLE",
+        "ResponseTime": 6
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2840443+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Send Invalid JSON Format",
+        "ExpectedStatusCode": 400,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/api/users/register",
+        "ResponseTime": 6
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.2904236+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "POST",
+        "TestName": "Register User with Missing Required Fields",
+        "ExpectedStatusCode": 400,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/api/users/register",
+        "ResponseTime": 5
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.296688+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Access Non-existent User",
+        "ExpectedStatusCode": 400,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/api/users/999999",
+        "ResponseTime": 5
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.3031418+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Access Non-existent Court",
+        "ExpectedStatusCode": 404,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/api/courts/999999",
+        "ResponseTime": 5
+      },
+      {
+        "Timestamp": "2025-07-02T11:18:23.3087713+08:00",
+        "Success": false,
+        "Error": "Response status code does not indicate success: 401 ().",
+        "Method": "GET",
+        "TestName": "Access Non-existent Endpoint",
+        "ExpectedStatusCode": 404,
+        "ActualStatusCode": null,
+        "Uri": "http://localhost:8110/api/api/nonexistent",
+        "ResponseTime": 5
+      }
+    ]
+  },
+  "ConcurrentTestResults": [
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "Index": 1,
+      "PSComputerName": "localhost",
+      "RunspaceId": "a45a3e7d-905c-42dd-a460-c3190d5b405f",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Index": 2,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "PSComputerName": "localhost",
+      "RunspaceId": "d2bccf7a-1157-4444-ba55-81b3b4fbdbcb",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "Index": 3,
+      "PSComputerName": "localhost",
+      "RunspaceId": "c07357dd-a58a-41b8-92eb-beb6717f2bca",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "Index": 4,
+      "PSComputerName": "localhost",
+      "RunspaceId": "94bd1468-4fe6-47d5-b177-9dfac8b55fba",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "Index": 5,
+      "PSComputerName": "localhost",
+      "RunspaceId": "de9977d2-7960-4265-851f-c65898c9454e",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Index": 6,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "PSComputerName": "localhost",
+      "RunspaceId": "fd4d8e24-3c70-4a39-8813-f2e3bf566991",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "Index": 7,
+      "PSComputerName": "localhost",
+      "RunspaceId": "299769c3-81b3-4f86-9fee-e2047a04c4ca",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Index": 8,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "PSComputerName": "localhost",
+      "RunspaceId": "cbdfd895-6290-40ee-974f-b45aa7f7db9b",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "Index": 9,
+      "PSComputerName": "localhost",
+      "RunspaceId": "b8b04eb0-80b4-4241-a206-892acba162cb",
+      "PSShowComputerName": false
+    },
+    {
+      "StatusCode": null,
+      "Success": false,
+      "Index": 10,
+      "Error": "Response status code does not indicate success: 401 ().",
+      "PSComputerName": "localhost",
+      "RunspaceId": "0acfec87-6e11-490f-a1c7-86a803e74761",
+      "PSShowComputerName": false
+    }
+  ],
+  "TestConfiguration": {
+    "VerboseMode": false,
+    "BaseUrl": "http://localhost:8110/api",
+    "TestRounds": 3
+  }
+}

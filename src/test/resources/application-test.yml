@@ -21,6 +21,10 @@ spring:
       
   cache:
     type: simple
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
     
 logging:
   level:
@@ -31,15 +35,26 @@ logging:
     
 server:
   port: 0  # Random port for tests
+  servlet:
+    context-path: /
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
         
 springdoc:
   api-docs:
-    enabled: false
+    enabled: true
+    path: /v3/api-docs
   swagger-ui:
-    enabled: false 
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+  packages-to-scan: com.courtlink
+  paths-to-match: /api/** 

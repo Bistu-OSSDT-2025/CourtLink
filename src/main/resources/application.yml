@@ -1,13 +1,14 @@
-<<<<<<< HEAD
 server:
-  port: 8080
+  port: 8095
+  servlet:
+    context-path: /api
   tomcat:
     threads:
       max: 200
       min-spare: 10
     max-connections: 10000
     accept-count: 100
-    connection-timeout: 20000ms
+    connection-timeout: 20000
 
 spring:
   application:
@@ -36,192 +37,77 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        cache:
-          use_second_level_cache: false
-          use_query_cache: false
-        jdbc:
-          batch_size: 25
-          order_inserts: true
-          order_updates: true
-  
-  cache:
-    type: caffeine
-    caffeine:
-      spec: maximumSize=1000,expireAfterWrite=5m
-  
+    open-in-view: false
+
   h2:
     console:
       enabled: true
       path: /h2-console
-  
-  transaction:
-    default-timeout: 30
+      settings:
+        web-allow-others: false
 
-# 管理端点配置
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-  endpoint:
-    health:
-      show-details: always
-  health:
-    defaults:
-      enabled: true
-
-# OpenAPI/Swagger配置
 springdoc:
   api-docs:
     path: /v3/api-docs
     enabled: true
   swagger-ui:
-    path: /swagger-ui/index.html
+    path: /swagger-ui.html
     enabled: true
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: CourtLink API
+  packages-to-scan: com.courtlink
+  paths-to-match: /api/**
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
 
-# 日志配置
 logging:
   level:
+    root: INFO
     com.courtlink: DEBUG
-    org.springframework: WARN
-    org.hibernate: WARN
-    org.springframework.security: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: INFO
+  file:
+    name: logs/courtlink.log
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/courtlink.log
-    max-size: 10MB
-    max-history: 30
 
 # 应用自定义配置
 courtlink:
+  # 预约配置
+  booking:
+    conflict-check:
+      enabled: true
+      buffer-minutes: 30
+    
+    # 缓存配置
+    cache:
+      enabled: true
+      expire-minutes: 5
+    
+    # 定时任务配置
+    scheduler:
+      cleanup-expired:
+        cron: "0 0 2 * * ?"  # 每天凌晨2点清理过期预约
+      send-reminders:
+        cron: "0 0 9 * * ?"  # 每天上午9点发送提醒
+
+  # 性能配置
+  performance:
+    enable-caching: true
+    cache-expire-minutes: 5
+
+  # 限流配置
   rate-limit:
     enabled: true
     requests-per-minute: 1000
-  performance:
-    enable-caching: true
-    cache-expire-minutes: 5 
-=======
-﻿server:
-  port: 8080
-  tomcat:
-    threads:
-      max: 200
-      min-spare: 10
-    max-connections: 10000
-    accept-count: 100
-    connection-timeout: 20000ms
 
-spring:
-  application:
-    name: CourtLink-Booking
-  
-  datasource:
-    url: jdbc:h2:mem:bookingdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: 
-    driver-class-name: org.h2.Driver
-    hikari:
-      pool-name: BookingHikariCP
-      maximum-pool-size: 20
-      minimum-idle: 5
-      connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      leak-detection-threshold: 60000
-      validation-timeout: 3000
-  
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        cache:
-          use_second_level_cache: false
-          use_query_cache: false
-        jdbc:
-          batch_size: 25
-          order_inserts: true
-          order_updates: true
-  
-  cache:
-    type: caffeine
-    caffeine:
-      spec: maximumSize=1000,expireAfterWrite=5m
-  
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  
-  transaction:
-    default-timeout: 30
-
-# 管理端点配置
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-  endpoint:
-    health:
-      show-details: always
-  health:
-    defaults:
-      enabled: true
-
-# OpenAPI/Swagger配置
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-    enabled: true
-  swagger-ui:
-    path: /swagger-ui/index.html
-    enabled: true
-
-# 日志配置
-logging:
-  level:
-    com.courtlink.booking: DEBUG
-    org.springframework: WARN
-    org.hibernate: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/booking-system.log
-    max-size: 10MB
-    max-history: 30
-
-# 应用自定义配置
-booking:
-  # 预约配置
-  conflict-check:
-    enabled: true
-    buffer-minutes: 30
-  
-  # 缓存配置
-  cache:
-    enabled: true
-    expire-minutes: 5
-  
-  # 定时任务配置
-  scheduler:
-    cleanup-expired:
-      cron: "0 0 2 * * ?"  # 每天凌晨2点清理过期预约
-    send-reminders:
-      cron: "0 0 9 * * ?"  # 每天上午9点发送提醒
-
+# 支付配置
 payment:
-  # 支付配置
   timeout-seconds: 300
   retry-times: 3
-  # 模拟支付配置
   mock:
     success-rate: 0.9
-    processing-delay-ms: 2000 
->>>>>>> feat/booking-management
+    processing-delay-ms: 2000

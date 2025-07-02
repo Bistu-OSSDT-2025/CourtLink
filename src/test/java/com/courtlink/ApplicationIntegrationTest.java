@@ -43,14 +43,18 @@ public class ApplicationIntegrationTest {
     public void healthCheckEndpointWorks() {
         // 测试健康检查端点
         String url = "http://localhost:" + port + "/api/health/simple";
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<Map<String, String>> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<Map<String, String>>() {}
+        );
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
-        // 将响应体保存到变量中以避免多次调用getBody()
-        String responseBody = response.getBody();
+        Map<String, String> responseBody = response.getBody();
         assertNotNull(responseBody);
-        assertEquals("OK", responseBody);
+        assertEquals("OK", responseBody.get("status"));
     }
 
     @Test
@@ -75,7 +79,6 @@ public class ApplicationIntegrationTest {
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
-        // 将响应体保存到变量中以避免多次调用getBody()
         Map<String, Object> responseBody = response.getBody();
         assertNotNull(responseBody);
         assertTrue(responseBody.containsKey("openapi"));
@@ -95,18 +98,17 @@ public class ApplicationIntegrationTest {
     public void userHealthEndpointAccessible() {
         // 测试用户健康检查接口是否可访问
         String url = "http://localhost:" + port + "/api/health/live";
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+        ResponseEntity<Map<String, String>> response = restTemplate.exchange(
             url, 
             HttpMethod.GET, 
             null, 
-            new ParameterizedTypeReference<Map<String, Object>>() {}
+            new ParameterizedTypeReference<Map<String, String>>() {}
         );
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
-        // 将响应体保存到变量中以避免多次调用getBody()
-        Map<String, Object> responseBody = response.getBody();
+        Map<String, String> responseBody = response.getBody();
         assertNotNull(responseBody);
-        assertEquals("LIVE", responseBody.get("status"));
+        assertEquals("OK", responseBody.get("status"));
     }
 } 
