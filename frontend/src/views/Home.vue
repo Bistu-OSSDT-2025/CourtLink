@@ -1,6 +1,14 @@
 <template>
   <div class="home">
-    <h1>场地预订</h1>
+    <div class="header">
+      <h1>场地预订</h1>
+      <div class="navigation">
+        <router-link to="/booking" class="nav-link booking-link">
+          🏸 智能预约系统
+        </router-link>
+        <button @click="logout" class="logout-btn">退出登录</button>
+      </div>
+    </div>
     
     <!-- 场地列表 -->
     <div class="courts-container" v-if="courts.length">
@@ -54,11 +62,13 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { courtAPI, appointmentAPI } from '../services/api';
 
 export default {
   name: 'Home',
   setup() {
+    const router = useRouter();
     const courts = ref([]);
     const selectedCourt = ref(null);
     const bookingDate = ref('');
@@ -162,6 +172,11 @@ export default {
       }
     };
 
+    const logout = () => {
+      localStorage.removeItem('token')
+      router.push('/login')
+    }
+
     onMounted(fetchCourts);
 
     return {
@@ -175,7 +190,8 @@ export default {
       availableStartTimes,
       totalPrice,
       selectCourt,
-      submitBooking
+      submitBooking,
+      logout
     };
   }
 };
@@ -186,6 +202,63 @@ export default {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+  border-bottom: 2px solid #f0f2f5;
+}
+
+.header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 2.5rem;
+}
+
+.navigation {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-link {
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.booking-link {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.booking-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.logout-btn {
+  padding: 10px 20px;
+  background-color: #f56c6c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #f78989;
+  transform: translateY(-1px);
 }
 
 .courts-container {
