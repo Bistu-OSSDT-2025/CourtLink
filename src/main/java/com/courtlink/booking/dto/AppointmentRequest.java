@@ -1,49 +1,53 @@
 package com.courtlink.booking.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
 import jakarta.validation.constraints.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-/**
- * Appointment Request DTO
- * 
- * @author CourtLink Team
- * @version 1.0.0
- */
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 @Data
-@Schema(description = "Appointment request data")
 public class AppointmentRequest {
 
-    @NotBlank(message = "User ID cannot be empty")
-    @Schema(description = "User ID", required = true, example = "user_001")
-    private String userId;
+    @NotNull(message = "场地ID不能为空")
+    private Long courtId;
 
-    @NotBlank(message = "Provider ID cannot be empty")
-    @Schema(description = "Service provider ID", required = true, example = "provider_001")
-    private String providerId;
+    @NotNull(message = "预约日期不能为空")
+    @FutureOrPresent(message = "预约日期不能是过去的日期")
+    private LocalDate appointmentDate;
 
-    @NotBlank(message = "Service type cannot be empty")
-    @Schema(description = "Service type", required = true, example = "BADMINTON")
-    private String serviceType;
+    @NotNull(message = "开始时间不能为空")
+    private LocalTime startTime;
 
-    @NotNull(message = "Appointment start time cannot be empty")
-    @Future(message = "Appointment start time must be in the future")
-    @Schema(description = "Appointment start time", required = true, example = "2024-03-25T10:00:00")
-    private LocalDateTime startTime;
+    @NotNull(message = "结束时间不能为空")
+    private LocalTime endTime;
 
-    @NotNull(message = "Appointment end time cannot be empty")
-    @Future(message = "Appointment end time must be in the future")
-    @Schema(description = "Appointment end time", required = true, example = "2024-03-25T12:00:00")
-    private LocalDateTime endTime;
+    @NotEmpty(message = "时间段列表不能为空")
+    @Size(max = 2, message = "最多只能选择2个时间段")
+    private List<Long> timeSlotIds;
 
-    @DecimalMin(value = "0.0", message = "Amount cannot be negative")
-    @Schema(description = "Appointment amount", example = "100.00")
-    private BigDecimal amount;
+    @Size(max = 200, message = "备注信息不能超过200个字符")
+    private String note;
 
-    @Size(max = 500, message = "Notes cannot exceed 500 characters")
-    @Schema(description = "Appointment notes", example = "Regular booking")
-    private String notes;
+    // 验证时间段是否相邻
+    @AssertTrue(message = "选择的时间段必须相邻")
+    public boolean isValidTimeSlots() {
+        if (timeSlotIds == null || timeSlotIds.size() <= 1) {
+            return true;
+        }
+        
+        // 对于2个时间段，需要在服务层进一步验证是否相邻
+        // 这里只做基本的数量检查
+        return timeSlotIds.size() <= 2;
+    }
+
+    // 验证开始时间和结束时间
+    @AssertTrue(message = "结束时间必须晚于开始时间")
+    public boolean isValidTimeRange() {
+        if (startTime == null || endTime == null) {
+            return true; // 由其他验证注解处理null情况
+        }
+        return endTime.isAfter(startTime);
+    }
 } 
