@@ -103,6 +103,31 @@
       <div v-else class="loading">加载中...</div>
     </div>
 
+    <!-- 预约说明 -->
+    <div class="booking-rules-card">
+      <div class="card-header">
+        <h3>预约须知</h3>
+      </div>
+      <div class="booking-rules">
+        <div class="rule-item">
+          <span class="rule-icon">📝</span>
+          <span class="rule-text">每次最多只能预约同一个场地的2个时间段</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">⏰</span>
+          <span class="rule-text">选择2个时间段时，必须是相邻的时间段</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">🏸</span>
+          <span class="rule-text">不同场地的时间段不能同时预约</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">💰</span>
+          <span class="rule-text">预约后请及时完成支付，逾期将自动取消</span>
+        </div>
+      </div>
+    </div>
+
     <!-- 预约确认 -->
     <div class="booking-confirm-card" v-if="selectedSlots.length > 0">
       <div class="card-header">
@@ -261,6 +286,42 @@ export default {
       return '可预约'
     },
     
+    // 检查时间段是否相邻
+    areTimeSlotsAdjacent(slot1, slot2) {
+      const hour1 = parseInt(slot1.startTime.split(':')[0])
+      const hour2 = parseInt(slot2.startTime.split(':')[0])
+      return Math.abs(hour1 - hour2) === 1
+    },
+
+    // 验证选择是否符合限制条件
+    validateSelection(newSlot, court) {
+      // 如果已经选择了时间段
+      if (this.selectedSlots.length > 0) {
+        // 检查是否为同一个场地
+        const firstSlot = this.selectedSlots[0]
+        if (firstSlot.courtId !== court.id) {
+          alert('只能预约同一个场地的时间段')
+          return false
+        }
+
+        // 如果已经选择了2个时间段，不能再选择
+        if (this.selectedSlots.length >= 2) {
+          alert('最多只能选择2个时间段')
+          return false
+        }
+
+        // 如果已经选择了1个时间段，检查新选择的是否与其相邻
+        if (this.selectedSlots.length === 1) {
+          if (!this.areTimeSlotsAdjacent(firstSlot, newSlot)) {
+            alert('选择的两个时间段必须相邻')
+            return false
+          }
+        }
+      }
+
+      return true
+    },
+
     // 选择时间段
     selectSlot(slot, court) {
       if (!slot || !slot.isOpen) return
@@ -286,7 +347,7 @@ export default {
         // 取消选择
         this.selectedSlots = this.selectedSlots.filter(s => s.id !== slot.id)
       } else {
-        // 选择时间段
+        // 准备时间段信息
         const slotInfo = {
           id: slot.id,
           courtId: court.id,
@@ -297,6 +358,13 @@ export default {
           startTime: slot.startTime,
           endTime: slot.endTime
         }
+
+        // 验证选择是否符合限制条件
+        if (!this.validateSelection(slotInfo, court)) {
+          return
+        }
+
+        // 选择时间段
         this.selectedSlots.push(slotInfo)
       }
     },
@@ -351,32 +419,31 @@ export default {
         return
       }
 
-      this.bookingLoading = true
       try {
-        // 创建预约请求
-        const bookingPromises = this.selectedSlots.map(slot => {
-          const startDateTime = `${slot.date}T${slot.startTime}:00`
-          const endDateTime = `${slot.date}T${slot.endTime}:00`
-          
-          return appointmentAPI.createAppointment({
-            courtId: slot.courtId,
-            startTime: startDateTime,
-            endTime: endDateTime,
-            amount: slot.price
-          })
-        })
+        // 准备预约数据
+        const bookingData = this.selectedSlots.map(slot => ({
+          id: slot.id,
+          courtId: slot.courtId,
+          courtName: slot.courtName,
+          date: slot.date,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+          duration: slot.duration,
+          price: slot.price
+        }))
 
-        await Promise.all(bookingPromises)
+        // 将预约数据保存到localStorage，以便支付页面使用
+        localStorage.setItem('pendingBooking', JSON.stringify(bookingData))
         
-        alert('预约成功！')
-        this.selectedSlots = []
-        await this.loadCourtData()
+        // 跳转到支付页面
+        this.$router.push({
+          name: 'Payment',
+          params: { bookingData }
+        })
         
       } catch (error) {
-        console.error('预约失败:', error)
-        alert('预约失败，请重试')
-      } finally {
-        this.bookingLoading = false
+        console.error('准备支付数据失败:', error)
+        alert('准备支付数据失败，请重试')
       }
     }
   },
@@ -650,6 +717,44 @@ export default {
   color: #666;
 }
 
+/* 预约说明样式 */
+.booking-rules-card {
+  background: white;
+  border: 1px solid #e4e7ed;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.booking-rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8f9ff;
+  border-radius: 8px;
+  border-left: 4px solid #4f46e5;
+}
+
+.rule-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.rule-text {
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 .booking-confirm-card {
   background: white;
   border: 1px solid #e4e7ed;
@@ -793,6 +898,10 @@ export default {
   
   .legend {
     justify-content: center;
+  }
+  
+  .booking-rules {
+    grid-template-columns: 1fr;
   }
   
   .booking-summary {
