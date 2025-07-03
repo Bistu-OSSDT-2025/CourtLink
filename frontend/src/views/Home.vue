@@ -64,11 +64,13 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { courtAPI, appointmentAPI } from '../services/api';
+import { useUserStore } from '../store/user';
 
 export default {
   name: 'Home',
   setup() {
     const router = useRouter();
+    const userStore = useUserStore();
     const courts = ref([]);
     const selectedCourt = ref(null);
     const bookingDate = ref('');
@@ -172,9 +174,16 @@ export default {
       }
     };
 
-    const logout = () => {
-      localStorage.removeItem('token')
-      router.push('/login')
+    const logout = async () => {
+      try {
+        await userStore.logout();
+        router.push('/login');
+      } catch (error) {
+        console.error('退出登录失败:', error);
+        // 即使退出失败，也要清除本地状态
+        localStorage.removeItem('token');
+        router.push('/login');
+      }
     }
 
     onMounted(fetchCourts);

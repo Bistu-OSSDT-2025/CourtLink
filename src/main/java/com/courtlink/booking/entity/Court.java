@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "courts")
@@ -24,4 +25,8 @@ public class Court {
     private BigDecimal pricePerHour;
 
     private boolean available = true;
+
+    // 临时字段，用于返回时间段信息（不持久化到数据库）
+    @Transient
+    private List<CourtTimeSlot> timeSlots;
 } 

@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8080
 
 spring:
   main:
@@ -36,4 +36,30 @@ logging:
 
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-  expiration: 86400000 # 24 hours 
+  expiration: 86400000 # 24 hours
+
+# 微信支付配置
+wechat:
+  pay:
+    # 商户信息（生产环境需要配置真实信息）
+    merchant-id: "1234567890"  # 商户号
+    app-id: "wx1234567890abcdef"  # 应用ID
+    api-key: "your_api_key_here_32_characters_long"  # API密钥
+    merchant-serial-number: "your_merchant_serial_number"  # 商户证书序列号
+    
+    # 证书路径（生产环境需要配置真实证书）
+    platform-cert-path: "classpath:wechat/platform_cert.pem"
+    merchant-private-key-path: "classpath:wechat/merchant_private_key.pem"
+    
+    # 回调地址
+    notify-url: "http://localhost:8082/api/payment/wechat/notify"
+    
+    # 业务配置
+    mock-mode: true  # 是否为模拟模式（开发环境设为true，生产环境设为false）
+    order-expire-minutes: 5  # 订单过期时间（分钟）
+    
+    # API配置
+    api-version: "v3"
+    unified-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/native"
+    query-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}"
+    close-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}/close" 

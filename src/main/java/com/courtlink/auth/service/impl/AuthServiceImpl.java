@@ -5,10 +5,13 @@ import com.courtlink.auth.dto.RegisterRequest;
 import com.courtlink.auth.service.AuthService;
 import com.courtlink.user.entity.User;
 import com.courtlink.user.repository.UserRepository;
+import com.courtlink.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +22,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     public ResponseEntity<?> register(RegisterRequest request) {
@@ -51,14 +56,25 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findByUsername(request.getUsername())
             .filter(user -> passwordEncoder.matches(request.getPassword(), user.getPassword()))
             .map(user -> {
-                Map<String, Object> response = new HashMap<>();
-                response.put("token", "dummy-token-" + user.getId()); // 这里应该使用真实的JWT token
-                response.put("user", Map.of(
-                    "id", user.getId(),
-                    "username", user.getUsername(),
-                    "email", user.getEmail()
-                ));
-                return ResponseEntity.ok(response);
+                try {
+                    // 加载用户详情用于JWT生成
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+                    
+                    // 生成真正的JWT token
+                    String token = jwtService.generateToken(userDetails);
+                    
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("token", token);
+                    response.put("user", Map.of(
+                        "id", user.getId(),
+                        "username", user.getUsername(),
+                        "email", user.getEmail()
+                    ));
+                    return ResponseEntity.ok(response);
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("message", "登录过程中发生错误"));
+                }
             })
             .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "用户名或密码错误")));

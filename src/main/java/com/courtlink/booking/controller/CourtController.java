@@ -34,28 +34,20 @@ public class CourtController {
         return ResponseEntity.ok(courtService.getAvailableCourts());
     }
 
-    // 简化版的用户预约信息API
+    // 用户预约信息API - 包含时间段信息
     @GetMapping("/booking")
-    public ResponseEntity<Map<String, Object>> getCourtsForBooking(
+    public ResponseEntity<List<Court>> getCourtsForBooking(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         try {
             LocalDate targetDate = date != null ? date : LocalDate.now();
             
-            // 返回基本的场地信息，用户可以基于此进行预约
-            List<Court> courts = courtService.getAvailableCourts();
+            // 获取包含时间段的场地信息
+            List<Court> courts = courtService.getCourtsWithTimeSlots(targetDate);
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("courts", courts);
-            response.put("date", targetDate.toString());
-            response.put("success", true);
-            response.put("message", "请选择场地后查看具体时间段");
-            
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(courts);
         } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", "获取场地信息失败: " + e.getMessage());
-            return ResponseEntity.ok(errorResponse);
+            // 返回错误响应
+            return ResponseEntity.internalServerError().build();
         }
     }
 } 

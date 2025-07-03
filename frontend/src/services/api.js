@@ -88,8 +88,9 @@ export const appointmentAPI = {
   getMyAppointments: () => api.get("/appointments/my"),
   cancelAppointment: (id) => api.post(`/appointments/${id}/cancel`),
   getAppointmentById: (id) => api.get(`/appointments/${id}`),
-  // 临时使用管理员API获取场地和时间段信息（只读数据）
-  getCourtsForBooking: (date) => api.get("/v1/admin/courts/management", { params: { date } })
+  validateAppointment: (appointmentData) => api.post("/appointments/validate", appointmentData),
+  // 使用普通用户API获取场地和时间段信息
+  getCourtsForBooking: (date) => api.get("/courts/booking", { params: { date } })
 };
 
 export const paymentAPI = {

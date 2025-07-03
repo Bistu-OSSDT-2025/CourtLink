@@ -23,4 +23,7 @@ public interface CourtTimeSlotRepository extends JpaRepository<CourtTimeSlot, Lo
     List<CourtTimeSlot> findByCourtIdsAndDate(@Param("courtIds") List<Long> courtIds, @Param("date") LocalDate date);
     
     boolean existsByCourtIdAndDateAndStartTime(Long courtId, LocalDate date, java.time.LocalTime startTime);
+    
+    // 根据预约ID查找时间段
+    List<CourtTimeSlot> findByAppointmentId(Long appointmentId);
 } 

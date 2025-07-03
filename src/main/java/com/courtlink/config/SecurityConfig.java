@@ -35,11 +35,14 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configure(http))
             .csrf(csrf -> csrf.disable())
+            .httpBasic(httpBasic -> httpBasic.disable())
+            .formLogin(form -> form.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/auth/**",
                     "/api/v1/admin/login",
+                    "/api/courts/**",
                     "/h2-console/**",
                     "/error",
                     "/actuator/**"
@@ -47,7 +50,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .headers(headers -> headers.frameOptions(frame -> frame.disable())); // 为了H2控制台访问
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
     }
