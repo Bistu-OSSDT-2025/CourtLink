@@ -1,120 +1,101 @@
 package com.courtlink.booking.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.courtlink.user.entity.User;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
-/**
- * Appointment Entity
- * 
- * @author CourtLink Team
- * @version 1.0.0
- */
-@Data
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "appointments")
-@Schema(description = "Appointment Information")
+@Data
+@EqualsAndHashCode(callSuper = false)
+@EntityListeners(AuditingEntityListener.class)
 public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Appointment ID")
     private Long id;
 
-    @NotBlank(message = "User ID cannot be empty")
-    @Column(name = "user_id", nullable = false)
-    @Schema(description = "User ID")
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @NotBlank(message = "Provider ID cannot be empty")
-    @Column(name = "provider_id", nullable = false)
-    @Schema(description = "Service Provider ID")
-    private String providerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "court_id", nullable = false)
+    private Court court;
 
-    @Column(name = "court_id")
-    @Schema(description = "Court ID")
-    private Long courtId;
+    @Column(name = "appointment_date", nullable = false)
+    private LocalDate appointmentDate;
 
-    @NotBlank(message = "Service type cannot be empty")
-    @Column(name = "service_type", nullable = false)
-    @Schema(description = "Service Type")
-    private String serviceType;
-
-    @NotNull(message = "Appointment start time cannot be empty")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "start_time", nullable = false)
-    @Schema(description = "Appointment Start Time")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
-    @NotNull(message = "Appointment end time cannot be empty")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "end_time", nullable = false)
-    @Schema(description = "Appointment End Time")
-    private LocalDateTime endTime;
+    private LocalTime endTime;
+
+    @Column(name = "total_price", nullable = false)
+    private Double totalPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @Schema(description = "Appointment Status")
     private AppointmentStatus status = AppointmentStatus.PENDING;
 
-    @DecimalMin(value = "0.0", message = "Amount cannot be negative")
-    @Column(name = "amount", precision = 10, scale = 2)
-    @Schema(description = "Appointment Amount")
-    private BigDecimal amount;
+    @Column(name = "note")
+    private String note;
 
-    @Size(max = 500, message = "Notes cannot exceed 500 characters")
-    @Column(name = "notes", length = 500)
-    @Schema(description = "Notes")
-    private String notes;
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CourtTimeSlot> timeSlots;
 
-    @Column(name = "payment_id")
-    @Schema(description = "Payment ID")
-    private String paymentId;
-
-    @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Schema(description = "Created At")
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
-    @Schema(description = "Updated At")
     private LocalDateTime updatedAt;
 
-    @Version
-    @Column(name = "version")
-    @Schema(description = "Version")
-    private Long version;
-
-    /**
-     * Appointment Status Enumeration
-     */
     public enum AppointmentStatus {
-        PENDING("Pending"),
-        CONFIRMED("Confirmed"),
-        CANCELLED("Cancelled"),
-        COMPLETED("Completed"),
-        EXPIRED("Expired");
+        PENDING,    // 待支付
+        PAID,       // 已支付
+        CONFIRMED,  // 已确认
+        CANCELLED,  // 已取消
+        COMPLETED   // 已完成
+    }
 
-        private final String description;
+    // 计算预约时长（小时）
+    public int getDurationHours() {
+        return endTime.getHour() - startTime.getHour();
+    }
 
-        AppointmentStatus(String description) {
-            this.description = description;
+    // 检查是否为连续时间段
+    public boolean isContinuousTimeSlots() {
+        if (timeSlots == null || timeSlots.size() <= 1) {
+            return true;
         }
-
-        public String getDescription() {
-            return description;
+        
+        // 按开始时间排序
+        List<CourtTimeSlot> sortedSlots = timeSlots.stream()
+            .sorted((s1, s2) -> s1.getStartTime().compareTo(s2.getStartTime()))
+            .toList();
+        
+        for (int i = 1; i < sortedSlots.size(); i++) {
+            LocalTime prevEnd = sortedSlots.get(i - 1).getEndTime();
+            LocalTime currentStart = sortedSlots.get(i).getStartTime();
+            
+            // 检查时间段是否相邻
+            if (!prevEnd.equals(currentStart)) {
+                return false;
+            }
         }
+        
+        return true;
     }
 } 
