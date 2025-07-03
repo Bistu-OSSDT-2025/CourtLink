@@ -5,7 +5,7 @@ import router from "../router";
 
 // 创建axios实例
 const api = axios.create({
-  baseURL: "http://localhost:8082/api",
+  baseURL: "/api",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -15,7 +15,14 @@ const api = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    // 根据请求路径选择合适的token
+    let token;
+    if (config.url.includes('/v1/admin/')) {
+      token = localStorage.getItem("adminToken");
+    } else {
+      token = localStorage.getItem("token");
+    }
+    
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -87,6 +94,29 @@ export const paymentAPI = {
   createPayment: (paymentData) => api.post("/payments", paymentData),
   getPaymentStatus: (id) => api.get(`/payments/${id}/status`),
   processPayment: (id, paymentMethod) => api.post(`/payments/${id}/process`, { paymentMethod })
+};
+
+// 管理员API
+export const adminAPI = {
+  login: (credentials) => api.post("/v1/admin/login", credentials),
+  getProfile: () => api.get("/v1/admin/profile"),
+  updateProfile: (adminData) => api.put("/v1/admin/profile", adminData),
+  getAllAdmins: () => api.get("/v1/admin/list"),
+  createAdmin: (adminData) => api.post("/v1/admin", adminData),
+  updateAdmin: (id, adminData) => api.put(`/v1/admin/${id}`, adminData),
+  deleteAdmin: (id) => api.delete(`/v1/admin/${id}`),
+  activateAdmin: (id) => api.put(`/v1/admin/${id}/activate`),
+  deactivateAdmin: (id) => api.put(`/v1/admin/${id}/deactivate`),
+  
+  // 场地管理API
+  getCourtsForManagement: (date) => api.get("/v1/admin/courts/management", { params: { date } }),
+  createCourt: (courtData) => api.post("/v1/admin/courts", courtData),
+  updateCourt: (id, courtData) => api.put(`/v1/admin/courts/${id}`, courtData),
+  deleteCourt: (id) => api.delete(`/v1/admin/courts/${id}`),
+  batchUpdateTimeSlots: (updates) => api.put("/v1/admin/courts/time-slots/batch-update", updates),
+  generateTimeSlots: (courtId, date) => api.post(`/v1/admin/courts/${courtId}/generate-time-slots`, null, { params: { date } }),
+  getCourtStatistics: () => api.get("/v1/admin/courts/statistics"),
+  setCourtAvailability: (courtId, available) => api.put(`/v1/admin/courts/${courtId}/availability`, null, { params: { available } })
 };
 
 export default api;

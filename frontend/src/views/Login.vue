@@ -28,6 +28,9 @@
           <router-link to="/register">注册新账号</router-link>
           <router-link to="/forgot-password">忘记密码？</router-link>
         </div>
+        <div class="admin-link">
+          <router-link to="/admin/login" class="admin-login-link">管理员登录</router-link>
+        </div>
       </el-form>
     </el-card>
   </div>
@@ -120,5 +123,23 @@ const handleLogin = async () => {
 
 .login-links a:hover {
   color: #66b1ff;
+}
+
+.admin-link {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e4e7ed;
+}
+
+.admin-login-link {
+  color: #67c23a;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.admin-login-link:hover {
+  color: #85ce61;
 }
 </style>

@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CourtRepository extends JpaRepository<Court, Long> {
     List<Court> findByAvailableTrue();
+    long countByAvailable(boolean available);
 } 
