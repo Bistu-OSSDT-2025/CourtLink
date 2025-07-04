@@ -1,5 +1,8 @@
 package com.courtlink.config;
 
+import com.courtlink.security.JwtAuthenticationFilter;
+import com.courtlink.security.CompositeUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,9 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.courtlink.security.JwtAuthenticationFilter;
-import com.courtlink.security.CompositeUserDetailsService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -39,18 +40,18 @@ public class SecurityConfig {
             .formLogin(form -> form.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/auth/**",
-                    "/api/v1/admin/login",
-                    "/api/courts/**",
-                    "/h2-console/**",
-                    "/error",
-                    "/actuator/**"
-                ).permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/admin/login").permitAll()
+                .requestMatchers("/api/v1/courts", "/api/v1/courts/available", "/api/v1/courts/{id}", "/api/v1/courts/booking").permitAll()
+                .requestMatchers("/api/v1/appointments").hasAnyRole("USER", "ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/api/v1/appointments/**").hasAnyRole("USER", "ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/api/v1/payments/**").hasAnyRole("USER", "ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "MODERATOR")
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

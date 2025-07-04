@@ -1,4 +1,46 @@
-﻿node_modules/
+﻿# Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.logs
 *.log
+*.gz
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Vue.js
 .DS_Store
-.env
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.trace.db
+
+# Log files
+logs/
+*.log

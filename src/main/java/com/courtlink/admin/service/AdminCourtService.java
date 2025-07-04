@@ -125,23 +125,36 @@ public class AdminCourtService {
     @Transactional
     public void batchUpdateTimeSlots(List<TimeSlotUpdateRequest> requests) {
         if (requests == null || requests.isEmpty()) {
+            System.out.println("批量更新请求为空");
             return;
         }
 
+        System.out.println("批量更新时间段，请求数量: " + requests.size());
+        
         // 直接更新每个时间段
         for (TimeSlotUpdateRequest request : requests) {
+            System.out.println("处理请求: timeSlotId=" + request.getTimeSlotId() + ", open=" + request.isOpen() + ", note=" + request.getNote());
+            
             if (request.getTimeSlotId() != null) {
                 CourtTimeSlot slot = courtTimeSlotRepository.findById(request.getTimeSlotId())
                     .orElse(null);
                 if (slot != null) {
+                    System.out.println("更新前: timeSlotId=" + slot.getId() + ", open=" + slot.isOpen());
                     slot.setOpen(request.isOpen());
                     if (request.getNote() != null) {
                         slot.setNote(request.getNote());
                     }
                     courtTimeSlotRepository.save(slot);
+                    System.out.println("更新后: timeSlotId=" + slot.getId() + ", open=" + slot.isOpen());
+                } else {
+                    System.out.println("未找到时间段: " + request.getTimeSlotId());
                 }
             }
         }
+        
+        // 强制刷新到数据库
+        entityManager.flush();
+        System.out.println("批量更新完成，已刷新到数据库");
     }
 
     // 为指定日期生成时间段

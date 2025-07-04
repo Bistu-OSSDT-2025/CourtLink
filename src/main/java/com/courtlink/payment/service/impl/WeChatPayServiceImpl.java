@@ -5,7 +5,6 @@ import com.courtlink.payment.entity.Payment;
 import com.courtlink.payment.entity.WeChatPayOrder;
 import com.courtlink.payment.repository.PaymentRepository;
 import com.courtlink.payment.repository.WeChatPayOrderRepository;
-import com.courtlink.payment.util.QrCodeUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -82,9 +81,10 @@ public class WeChatPayServiceImpl {
             String mockPayUrl = String.format("weixin://wxpay/bizpayurl?pr=%s", UUID.randomUUID().toString());
             order.setCodeUrl(mockPayUrl);
             
-            // 生成二维码图片
-            String qrCodeImage = QrCodeUtil.generateQrCodeBase64(mockPayUrl);
-            order.setQrCodeImage(qrCodeImage);
+            // 生成二维码图片 - 暂时禁用
+            // String qrCodeImage = QrCodeUtil.generateQrCodeBase64(mockPayUrl);
+            // order.setQrCodeImage(qrCodeImage);
+            order.setQrCodeImage("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=");
             
             // 设置模拟的prepay_id
             order.setPrepayId("wx" + System.currentTimeMillis());

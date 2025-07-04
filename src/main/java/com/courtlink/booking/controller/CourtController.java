@@ -3,6 +3,7 @@ package com.courtlink.booking.controller;
 import com.courtlink.booking.entity.Court;
 import com.courtlink.booking.service.CourtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api/courts")
+@RequestMapping("/api/v1/courts")
 @RequiredArgsConstructor
+@Slf4j
 public class CourtController {
 
     private final CourtService courtService;
@@ -34,20 +36,36 @@ public class CourtController {
         return ResponseEntity.ok(courtService.getAvailableCourts());
     }
 
+    // 测试端点
+    @GetMapping("/test")
+    public ResponseEntity<String> testEndpoint() {
+        return ResponseEntity.ok("Test endpoint works!");
+    }
+
     // 用户预约信息API - 包含时间段信息
     @GetMapping("/booking")
-    public ResponseEntity<List<Court>> getCourtsForBooking(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<?> getCourtsForBooking(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
         try {
             LocalDate targetDate = date != null ? date : LocalDate.now();
-            
+            log.info("获取预约场地信息，日期: {}", targetDate);
+
             // 获取包含时间段的场地信息
             List<Court> courts = courtService.getCourtsWithTimeSlots(targetDate);
-            
+            log.info("成功获取场地信息，数量: {}", courts.size());
+
             return ResponseEntity.ok(courts);
         } catch (Exception e) {
-            // 返回错误响应
-            return ResponseEntity.internalServerError().build();
+            log.error("获取预约场地信息失败", e);
+            
+            // 返回详细的错误信息
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "获取场地信息失败: " + e.getMessage());
+            errorResponse.put("error", e.getClass().getSimpleName());
+            
+            return ResponseEntity.internalServerError().body(errorResponse);
         }
     }
 } 

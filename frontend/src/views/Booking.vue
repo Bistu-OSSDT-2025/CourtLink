@@ -1,48 +1,73 @@
 <template>
   <div class="booking-page">
+    <!-- 美化头部 -->
     <div class="header">
-      <h2>球场预约</h2>
+      <div class="header-title">
+        <div class="title-icon">🏟️</div>
+        <h2>球场预约</h2>
+      </div>
       <div class="controls">
-        <select v-model="selectedSport" @change="loadSportData" class="sport-selector">
-          <option v-for="sport in sportTypes" :key="sport.value" :value="sport.value">
-            {{ sport.label }}
-          </option>
-        </select>
-        <input 
-          type="date" 
-          v-model="selectedDate" 
-          @change="loadCourtData"
-          :min="today"
-          class="date-selector"
-        />
-        <button @click="refreshData" class="refresh-btn">刷新</button>
+        <div class="control-group">
+          <label>运动类型</label>
+          <select v-model="selectedSport" @change="loadSportData" class="sport-selector">
+            <option v-for="sport in sportTypes" :key="sport.value" :value="sport.value">
+              {{ sport.label }}
+            </option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>预约日期</label>
+          <input 
+            type="date" 
+            v-model="selectedDate" 
+            @change="loadCourtData"
+            :min="today"
+            class="date-selector"
+          />
+        </div>
+        <button @click="refreshData" class="refresh-btn">
+          <span class="refresh-icon">🔄</span>
+          刷新
+        </button>
       </div>
     </div>
 
-    <!-- 统计卡片 -->
+    <!-- 美化统计卡片 -->
     <div class="stats-cards">
-      <div class="stat-card">
-        <div class="stat-value">{{ statistics.totalCourts }}</div>
-        <div class="stat-label">总场地数</div>
+      <div class="stat-card total-courts">
+        <div class="stat-icon">🏟️</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.totalCourts }}</div>
+          <div class="stat-label">总场地数</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ statistics.availableCourts }}</div>
-        <div class="stat-label">可用场地</div>
+      <div class="stat-card available-courts">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.availableCourts }}</div>
+          <div class="stat-label">可用场地</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ statistics.availableSlots }}</div>
-        <div class="stat-label">可预约时段</div>
+      <div class="stat-card available-slots">
+        <div class="stat-icon">⏰</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.availableSlots }}</div>
+          <div class="stat-label">可预约时段</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ Math.round(100 - statistics.occupancyRate) }}%</div>
-        <div class="stat-label">空闲率</div>
+      <div class="stat-card free-rate">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ Math.round(100 - statistics.occupancyRate) }}%</div>
+          <div class="stat-label">空闲率</div>
+        </div>
       </div>
     </div>
 
-    <!-- 预约规则说明 -->
+    <!-- 美化预约规则说明 -->
     <div class="booking-rules-card">
       <div class="rules-header">
-        <h4>预约说明</h4>
+        <h4>📋 预约说明</h4>
       </div>
       <div class="rules-content">
         <div class="rule-item">
@@ -60,98 +85,117 @@
       </div>
     </div>
 
-    <!-- 场地列表展示 -->
-    <div class="courts-list-container" v-if="!loading">
-      <div class="date-header">
-        <h3>{{ selectedSport === 'badminton' ? '羽毛球' : '球场' }}预约 - {{ selectedDate }}</h3>
-        <div class="legend">
-          <span class="legend-item">
-            <span class="legend-color available"></span>可预约
-          </span>
-          <span class="legend-item">
-            <span class="legend-color occupied"></span>已预约
-          </span>
-          <span class="legend-item">
-            <span class="legend-color closed"></span>不可用
-          </span>
-          <span class="legend-item">
-            <span class="legend-color selected"></span>已选择
-          </span>
-        </div>
-      </div>
-
-      <!-- 场地卡片列表 -->
-      <div class="courts-grid">
-        <div v-for="court in courtsData" :key="court.id" class="court-card">
-          <div class="court-header">
-            <div class="court-info">
-              <h4 class="court-name">{{ court.name }}</h4>
-              <p class="court-description">{{ court.description || '标准场地' }}</p>
-              <div class="court-details">
-                <span class="price">¥{{ court.pricePerHour }}/小时</span>
-                <span class="status" :class="{ 'available': court.available, 'unavailable': !court.available }">
-                  {{ court.available ? '可用' : '停用' }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 时间段网格 -->
-          <div class="time-slots-grid" v-if="court.available">
-            <div class="time-slots-header">
-              <h5>可选时间段</h5>
-            </div>
-            <div class="time-slots-container">
-              <div 
-                v-for="slot in getCourtTimeSlots(court)" 
-                :key="slot.id || `${court.id}-${slot.hour}`"
-                :class="getSlotClass(slot)"
-                @click="selectSlot(slot, court)"
-                class="time-slot-item"
-              >
-                <div class="slot-time">{{ slot.hour }}:00-{{ slot.hour + 1 }}:00</div>
-                <div class="slot-status">{{ getSlotStatusText(slot) }}</div>
-                <div v-if="slot.note" class="slot-note">{{ slot.note }}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 场地不可用提示 -->
-          <div v-else class="court-unavailable">
-            <p>该场地暂时停用</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div v-else class="loading">加载中...</div>
-
-    <!-- 预约确认 -->
-    <div class="booking-confirm-card" v-if="selectedSlots.length > 0">
+    <!-- 美化场地列表 -->
+    <div class="court-list-card">
       <div class="card-header">
-        <h3>预约确认</h3>
-      </div>
-      <div class="selected-slots">
-        <div v-for="slot in selectedSlots" :key="slot.id" class="selected-slot">
-          <div class="slot-info">
-            <span class="court-name">{{ slot.courtName }}</span>
-            <span class="time-range">{{ slot.timeRange }}</span>
-            <span class="price">¥{{ slot.price }}</span>
+        <h3>🎯 可用场地</h3>
+        <div class="status-legend">
+          <div class="legend-item">
+            <div class="legend-dot available"></div>
+            <span>可预约</span>
           </div>
-          <button @click="removeSelectedSlot(slot)" class="remove-btn">×</button>
+          <div class="legend-item">
+            <div class="legend-dot selected"></div>
+            <span>已选择</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot occupied"></div>
+            <span>已占用</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot unavailable"></div>
+            <span>不可用</span>
+          </div>
         </div>
       </div>
-      <div class="booking-summary">
-        <div class="total-info">
-          <span class="total-label">总计：</span>
-          <span class="total-price">¥{{ totalPrice }}</span>
-          <span class="total-duration">（{{ selectedSlots.length }}小时）</span>
+      
+      <div class="courts-container">
+        <div v-for="court in courtsData" :key="court.id" class="court-card">
+          <div class="court-info">
+            <div class="court-header">
+              <h4 class="court-name">{{ court.name }}</h4>
+              <div class="court-status">
+                <el-tag :type="court.available ? 'success' : 'info'" size="small">
+                  {{ court.available ? '✅ 可用' : '❌ 停用' }}
+                </el-tag>
+              </div>
+            </div>
+            <div class="court-details">
+              <p class="court-description">{{ court.description }}</p>
+              <div class="court-price">
+                <span class="price-label">价格：</span>
+                <span class="price-value">¥{{ court.pricePerHour }}/小时</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="time-slots-section">
+            <h5 class="slots-title">可预约时段</h5>
+            <div class="time-slots-grid">
+              <div
+                v-for="hour in timeSlots"
+                :key="hour"
+                :class="getSlotClass(getSlotForCourtAndTime(court, hour))"
+                class="time-slot-button"
+                @click="selectSlot(getSlotForCourtAndTime(court, hour), court)"
+              >
+                <div class="slot-time">{{ hour }}:00</div>
+                <div class="slot-status-text">{{ getSlotStatusText(getSlotForCourtAndTime(court, hour)) }}</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <button @click="confirmBooking" :disabled="bookingLoading" class="confirm-btn">
-          {{ bookingLoading ? '预约中...' : '确认预约' }}
-        </button>
       </div>
     </div>
+
+    <!-- 美化预约确认 -->
+    <transition name="slide-up">
+      <div class="booking-confirm-card" v-if="selectedSlots.length > 0">
+        <div class="confirm-header">
+          <h3>🎯 预约确认</h3>
+          <div class="selected-count">已选择 {{ selectedSlots.length }} 个时段</div>
+        </div>
+        
+        <div class="selected-slots">
+          <transition-group name="list" tag="div">
+            <div v-for="slot in selectedSlots" :key="slot.id" class="selected-slot">
+              <div class="slot-info">
+                <div class="slot-court">
+                  <span class="court-icon">🏟️</span>
+                  <span class="court-name">{{ slot.courtName }}</span>
+                </div>
+                <div class="slot-time">
+                  <span class="time-icon">⏰</span>
+                  <span class="time-range">{{ slot.timeRange }}</span>
+                </div>
+                <div class="slot-price">
+                  <span class="price-icon">💰</span>
+                  <span class="price">¥{{ slot.price }}</span>
+                </div>
+              </div>
+              <button @click="removeSelectedSlot(slot)" class="remove-btn">
+                <span>×</span>
+              </button>
+            </div>
+          </transition-group>
+        </div>
+        
+        <div class="booking-summary">
+          <div class="total-info">
+            <div class="total-label">总计费用</div>
+            <div class="total-details">
+              <span class="total-price">¥{{ totalPrice }}</span>
+              <span class="total-duration">（{{ selectedSlots.length }}小时）</span>
+            </div>
+          </div>
+          <button @click="confirmBooking" :disabled="bookingLoading" class="confirm-btn">
+            <span v-if="bookingLoading" class="loading-spinner">⏳</span>
+            <span v-else class="confirm-icon">🚀</span>
+            {{ bookingLoading ? '预约中...' : '确认预约' }}
+          </button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -164,10 +208,10 @@ export default {
     return {
       // 运动类型选项
       sportTypes: [
-        { value: 'badminton', label: '羽毛球' },
-        { value: 'tennis', label: '网球' },
-        { value: 'basketball', label: '篮球' },
-        { value: 'table-tennis', label: '乒乓球' }
+        { value: 'badminton', label: '🏸 羽毛球' },
+        { value: 'tennis', label: '🎾 网球' },
+        { value: 'basketball', label: '🏀 篮球' },
+        { value: 'table-tennis', label: '🏓 乒乓球' }
       ],
       
       // 响应式数据
@@ -193,16 +237,10 @@ export default {
       const totalSlots = this.courtsData.reduce((total, court) => {
         return total + (court.timeSlots ? court.timeSlots.length : 0)
       }, 0)
-      // 临时修复：重新计算可预约时段数量
-      const allOpenSlots = []
-      this.courtsData.forEach(court => {
-        if (court.timeSlots) {
-          court.timeSlots.forEach(slot => {
-            if (slot.isOpen) allOpenSlots.push(slot.id)
-          })
-        }
-      })
-      const availableSlots = Math.floor(allOpenSlots.length * 0.6)
+      // 计算可预约时段数量
+      const availableSlots = this.courtsData.reduce((total, court) => {
+        return total + (court.timeSlots ? court.timeSlots.filter(slot => slot.available).length : 0)
+      }, 0)
       const occupancyRate = totalSlots > 0 ? ((totalSlots - availableSlots) / totalSlots) * 100 : 0
 
       return {
@@ -220,36 +258,6 @@ export default {
     }
   },
   methods: {
-    // 获取场地的时间段数据（列表展示用）
-    getCourtTimeSlots(court) {
-      const slots = []
-      
-      for (const hour of this.timeSlots) {
-        const existingSlot = court.timeSlots ? court.timeSlots.find(slot => {
-          const slotHour = parseInt(slot.startTime.split(':')[0])
-          return slotHour === hour
-        }) : null
-        
-        if (existingSlot) {
-          slots.push({
-            ...existingSlot,
-            hour: hour
-          })
-        } else {
-          // 创建虚拟时间段显示为不可用
-          slots.push({
-            id: null,
-            hour: hour,
-            isOpen: false,
-            available: false,
-            note: '不可用'
-          })
-        }
-      }
-      
-      return slots
-    },
-
     // 获取指定场地和时间的时间段
     getSlotForCourtAndTime(court, hour) {
       if (!court.timeSlots) return null
@@ -261,78 +269,59 @@ export default {
     
     // 获取时间段样式类
     getSlotClass(slot) {
-      if (!slot || !slot.id) return 'slot-empty'
+      if (!slot) return 'slot-empty'
       
-      const isSelected = this.selectedSlots.some(s => s.id === slot.id)
+      const isSelected = this.isSlotSelected(slot)
       if (isSelected) return 'slot-selected'
       
-      if (!slot.isOpen) return 'slot-closed'
+      if (!slot.available) return 'slot-unavailable'
+      if (!this.canSelectSlot(slot)) return 'slot-disabled'
       
-      // 临时修复：由于数据库中所有开放时间段都标记为available=true
-      // 我们需要通过其他方式判断是否可预约
-      // 这里假设前10个开放时间段为可预约状态，其余为已预约
-      const allOpenSlots = []
-      this.courtsData.forEach(court => {
-        if (court.timeSlots) {
-          court.timeSlots.forEach(s => {
-            if (s.isOpen) allOpenSlots.push(s.id)
-          })
-        }
-      })
-      
-      // 让前60%的开放时间段显示为可预约
-      const availableCount = Math.floor(allOpenSlots.length * 0.6)
-      const isAvailableSlot = allOpenSlots.indexOf(slot.id) < availableCount
-      
-      if (slot.available && !isAvailableSlot) return 'slot-occupied'
       return 'slot-available'
     },
-    
+
     // 获取时间段状态文本
     getSlotStatusText(slot) {
-      if (!slot || !slot.id) return '不可用'
+      if (!slot) return '暂无'
       
-      const isSelected = this.selectedSlots.some(s => s.id === slot.id)
+      const isSelected = this.isSlotSelected(slot)
       if (isSelected) return '已选择'
       
-      if (!slot.isOpen) return '关闭'
+      if (!slot.available) return '已占用'
+      if (!this.canSelectSlot(slot)) return '不可选'
       
-      // 临时修复：与样式类逻辑保持一致
-      const allOpenSlots = []
-      this.courtsData.forEach(court => {
-        if (court.timeSlots) {
-          court.timeSlots.forEach(s => {
-            if (s.isOpen) allOpenSlots.push(s.id)
-          })
-        }
-      })
-      
-      const availableCount = Math.floor(allOpenSlots.length * 0.6)
-      const isAvailableSlot = allOpenSlots.indexOf(slot.id) < availableCount
-      
-      if (slot.available && !isAvailableSlot) return '已预约'
       return '可预约'
+    },
+
+    // 检查时间段是否被选中
+    isSlotSelected(slot) {
+      if (!slot) return false
+      return this.selectedSlots.some(s => s.id === slot.id)
+    },
+
+    // 检查时间段是否可选
+    canSelectSlot(slot) {
+      if (!slot || !slot.available) return false
+      
+      // 如果已经选择了2个时间段，且当前时间段未被选中，则不可再选
+      if (this.selectedSlots.length >= 2 && !this.isSlotSelected(slot)) {
+        return false
+      }
+      
+      // 如果已选择了1个时间段，检查是否相邻
+      if (this.selectedSlots.length === 1) {
+        const selectedSlot = this.selectedSlots[0]
+        const selectedHour = parseInt(selectedSlot.startTime.split(':')[0])
+        const currentHour = parseInt(slot.startTime.split(':')[0])
+        return Math.abs(selectedHour - currentHour) === 1
+      }
+      
+      return true
     },
     
     // 选择时间段
     selectSlot(slot, court) {
-      if (!slot || !slot.id || !slot.isOpen) return
-      
-      // 临时修复：检查是否为可预约时间段
-      const allOpenSlots = []
-      this.courtsData.forEach(c => {
-        if (c.timeSlots) {
-          c.timeSlots.forEach(s => {
-            if (s.isOpen) allOpenSlots.push(s.id)
-          })
-        }
-      })
-      
-      const availableCount = Math.floor(allOpenSlots.length * 0.6)
-      const isAvailableSlot = allOpenSlots.indexOf(slot.id) < availableCount
-      
-      // 如果是已预约状态（不可选择），则返回
-      if (slot.available && !isAvailableSlot) return
+      if (!slot || !slot.available) return
       
       const isSelected = this.selectedSlots.some(s => s.id === slot.id)
       if (isSelected) {
@@ -358,58 +347,6 @@ export default {
         this.selectedSlots.push(slotInfo)
       }
     },
-
-    // 检查是否可以选择该时间段
-    canSelectSlot(slot, court) {
-      // 如果当前没有选择任何时间段，可以选择
-      if (this.selectedSlots.length === 0) {
-        return true
-      }
-      
-      // 限制1：用户一次性最多选择一块场地的两个时间段
-      if (this.selectedSlots.length >= 2) {
-        this.showLimitMessage('最多只能选择2个时间段')
-        return false
-      }
-      
-      // 限制2：只能选择同一块场地的时间段
-      const existingCourtId = this.selectedSlots[0].courtId
-      if (court.id !== existingCourtId) {
-        this.showLimitMessage('只能选择同一块场地的时间段')
-        return false
-      }
-      
-      // 限制3：如果选择两个时间段，必须相邻
-      if (this.selectedSlots.length === 1) {
-        const existingSlot = this.selectedSlots[0]
-        const existingHour = parseInt(existingSlot.startTime.split(':')[0])
-        const currentHour = parseInt(slot.startTime.split(':')[0])
-        
-        // 检查是否相邻（相差1小时）
-        if (Math.abs(existingHour - currentHour) !== 1) {
-          this.showLimitMessage('选择的两个时间段必须相邻')
-          return false
-        }
-      }
-      
-      return true
-    },
-
-    // 显示限制提示消息
-    showLimitMessage(message) {
-      // 创建临时提示框
-      const toast = document.createElement('div')
-      toast.className = 'booking-limit-toast'
-      toast.textContent = message
-      document.body.appendChild(toast)
-      
-      // 3秒后自动消失
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast)
-        }
-      }, 3000)
-    },
     
     // 移除选择的时间段
     removeSelectedSlot(slot) {
@@ -430,11 +367,15 @@ export default {
       try {
         const response = await appointmentAPI.getCourtsForBooking(this.selectedDate)
         // 管理员API直接返回数组，不是包装在data字段中
-        this.courtsData = response || []
-        console.log('加载场地数据成功:', this.courtsData.length, '个场地')
+        this.courtsData = Array.isArray(response) ? response : response.data || []
       } catch (error) {
         console.error('加载场地数据失败:', error)
-        this.courtsData = []
+        alert('加载场地数据失败，请检查登录状态')
+        
+        // 如果是认证错误，跳转到登录页
+        if (error.response?.status === 401) {
+          this.$router.push('/login')
+        }
       } finally {
         this.loading = false
       }
@@ -452,32 +393,68 @@ export default {
         alert('请选择要预约的时间段')
         return
       }
-      
+
+      if (!confirm(`确认预约 ${this.selectedSlots.length} 个时间段，总计 ¥${this.totalPrice}？`)) {
+        return
+      }
+
       this.bookingLoading = true
+
       try {
-        const appointmentData = {
+        // 获取第一个和最后一个时间段的时间
+        const sortedSlots = [...this.selectedSlots].sort((a, b) => 
+          a.startTime.localeCompare(b.startTime)
+        )
+        
+        const startTime = sortedSlots[0].startTime
+        const endTime = sortedSlots[sortedSlots.length - 1].endTime
+
+        // 准备预约请求数据
+        const appointmentRequest = {
           courtId: this.selectedSlots[0].courtId,
-          startTime: this.selectedSlots[0].date + 'T' + this.selectedSlots[0].startTime,
-          endTime: this.selectedSlots[this.selectedSlots.length - 1].date + 'T' + this.selectedSlots[this.selectedSlots.length - 1].endTime,
-          amount: this.totalPrice
+          appointmentDate: this.selectedDate,
+          startTime: startTime,
+          endTime: endTime,
+          timeSlotIds: this.selectedSlots.map(slot => slot.id),
+          note: ''
         }
 
-        await appointmentAPI.createAppointment(appointmentData)
-        alert('预约成功！')
+        // 调用后端API创建预约
+        const response = await appointmentAPI.createAppointment(appointmentRequest)
         
-        // 重置表单
-        this.selectedSlots = []
+        if (response.success) {
+          // 预约创建成功，获取预约和支付数据
+          const appointmentData = response.appointment
+          const paymentData = response.payment
+          
+          // 将数据存储到sessionStorage，这样更可靠
+          sessionStorage.setItem('appointmentData', JSON.stringify(appointmentData))
+          sessionStorage.setItem('paymentData', JSON.stringify(paymentData))
+          
+          // 跳转到支付页面
+          this.$router.push({ name: 'Payment' })
+        } else {
+          alert(response.message || '创建预约失败')
+        }
         
-        // 刷新场地列表
-        await this.loadCourtData()
       } catch (error) {
-        alert(error.response?.data?.message || '预约失败，请重试')
+        console.error('创建预约失败:', error)
+        let errorMessage = '创建预约失败，请重试'
+        
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message
+        } else if (error.message) {
+          errorMessage = error.message
+        }
+        
+        alert(errorMessage)
       } finally {
         this.bookingLoading = false
       }
     }
   },
   
+  // 组件挂载时加载数据
   mounted() {
     this.loadCourtData()
   }
@@ -486,480 +463,673 @@ export default {
 
 <style scoped>
 .booking-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-attachment: fixed;
   padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
+  animation: backgroundShift 30s ease-in-out infinite;
 }
 
+@keyframes backgroundShift {
+  0%, 100% { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); 
+  }
+  33% { 
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%); 
+  }
+  66% { 
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 50%, #667eea 100%); 
+  }
+}
+
+/* 美化头部 */
 .header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding: 20px 0;
-  border-bottom: 2px solid #f0f2f5;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.title-icon {
+  font-size: 32px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 .header h2 {
   margin: 0;
-  color: #333;
-  font-size: 2.5rem;
+  color: #2c3e50;
+  font-size: 28px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .controls {
   display: flex;
-  gap: 15px;
-  align-items: center;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
 }
 
 .sport-selector, .date-selector {
   padding: 12px 16px;
-  border: 2px solid #d9d9d9;
-  border-radius: 8px;
-  font-size: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 14px;
   background: white;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sport-selector:focus, .date-selector:focus {
   border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .refresh-btn {
-  padding: 12px 24px;
+  padding: 12px 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .refresh-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
+.refresh-icon {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 美化统计卡片 */
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
 }
 
 .stat-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
   padding: 25px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.stat-card.total-courts::before {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.stat-card.available-courts::before {
+  background: linear-gradient(90deg, #43e97b, #38f9d7);
+}
+
+.stat-card.available-slots::before {
+  background: linear-gradient(90deg, #fa709a, #fee140);
+}
+
+.stat-card.free-rate::before {
+  background: linear-gradient(90deg, #a8edea, #fed6e3);
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  font-size: 48px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.stat-content {
+  flex: 1;
 }
 
 .stat-value {
-  font-size: 2.5rem;
+  font-size: 36px;
   font-weight: bold;
-  color: #667eea;
-  margin-bottom: 10px;
+  color: #2c3e50;
+  margin-bottom: 5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .stat-label {
+  font-size: 14px;
   color: #666;
-  font-size: 16px;
+  font-weight: 500;
 }
 
+/* 美化预约规则说明 */
 .booking-rules-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
   padding: 25px;
-  border-radius: 12px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
 .rules-header h4 {
   margin: 0 0 20px 0;
-  color: #333;
-  font-size: 1.5rem;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .rules-content {
   display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .rule-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.rule-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
 .rule-icon {
-  font-size: 1.2rem;
+  font-size: 20px;
+  min-width: 24px;
+  text-align: center;
 }
 
 .rule-text {
-  color: #666;
+  color: #424242;
   font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
-.courts-list-container {
-  background: white;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
+/* 美化场地列表 */
+.court-list-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  margin: 30px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.date-header {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #f0f2f5;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-.date-header h3 {
+.card-header h3 {
   margin: 0;
-  color: #333;
-  font-size: 1.5rem;
+  color: #2c3e50;
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.legend {
+.status-legend {
   display: flex;
   gap: 20px;
-  align-items: center;
+  flex-wrap: wrap;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
 }
 
-.legend-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.legend-color.available {
-  background-color: #52c41a;
+.legend-dot.available {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
 }
 
-.legend-color.occupied {
-  background-color: #ff4d4f;
+.legend-dot.selected {
+  background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
-.legend-color.closed {
-  background-color: #d9d9d9;
+.legend-dot.occupied {
+  background: linear-gradient(135deg, #fa709a, #fee140);
 }
 
-.legend-color.selected {
-  background-color: #1890ff;
+.legend-dot.unavailable {
+  background: linear-gradient(135deg, #c0c4cc, #909399);
 }
 
-.courts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+.courts-container {
+  display: flex;
+  flex-direction: column;
   gap: 25px;
 }
 
 .court-card {
-  border: 2px solid #f0f2f5;
-  border-radius: 12px;
-  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  background: white;
+  border: 1px solid rgba(102, 126, 234, 0.1);
 }
 
 .court-card:hover {
-  border-color: #667eea;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.court-info {
+  margin-bottom: 20px;
 }
 
 .court-header {
-  padding: 20px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-bottom: 1px solid #f0f2f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .court-name {
-  margin: 0 0 8px 0;
-  color: #333;
-  font-size: 1.4rem;
+  margin: 0;
+  color: #2c3e50;
+  font-size: 18px;
   font-weight: 600;
-}
-
-.court-description {
-  margin: 0 0 12px 0;
-  color: #666;
-  font-size: 14px;
 }
 
 .court-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-.price {
-  font-size: 1.2rem;
+.court-description {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  flex: 1;
+}
+
+.court-price {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.price-label {
+  color: #666;
+  font-size: 14px;
+}
+
+.price-value {
+  color: #e6a23c;
+  font-size: 16px;
   font-weight: 600;
-  color: #667eea;
 }
 
-.status {
-  padding: 4px 12px;
+.time-slots-section {
+  border-top: 1px solid rgba(102, 126, 234, 0.1);
+  padding-top: 20px;
+}
+
+.slots-title {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.time-slot-button {
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.slot-time {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.slot-status-text {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.slot-available {
+  background: linear-gradient(135deg, rgba(67, 233, 123, 0.2), rgba(56, 249, 215, 0.2));
+  color: #00b894;
+  border-color: rgba(67, 233, 123, 0.3);
+}
+
+.slot-available:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
+  border-color: #43e97b;
+}
+
+.slot-selected {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.slot-unavailable {
+  background: linear-gradient(135deg, rgba(250, 112, 154, 0.2), rgba(254, 225, 64, 0.2));
+  color: #e17055;
+  cursor: not-allowed;
+  border-color: rgba(250, 112, 154, 0.3);
+}
+
+.slot-disabled {
+  background: rgba(192, 196, 204, 0.3);
+  color: #909399;
+  cursor: not-allowed;
+  border-color: rgba(192, 196, 204, 0.3);
+}
+
+.slot-empty {
+  background: rgba(245, 245, 245, 0.8);
+  color: #c0c4cc;
+  cursor: not-allowed;
+  border-color: rgba(192, 196, 204, 0.2);
+}
+
+/* 美化预约确认 */
+.booking-confirm-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  margin-top: 30px;
+  border: 2px solid rgba(102, 126, 234, 0.2);
+}
+
+.confirm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.confirm-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.selected-count {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
 }
 
-.status.available {
-  background-color: #f6ffed;
-  color: #52c41a;
-  border: 1px solid #b7eb8f;
-}
-
-.status.unavailable {
-  background-color: #fff2f0;
-  color: #ff4d4f;
-  border: 1px solid #ffb3b3;
-}
-
-.time-slots-grid {
-  padding: 20px;
-}
-
-.time-slots-header {
-  margin-bottom: 15px;
-}
-
-.time-slots-header h5 {
-  margin: 0;
-  color: #333;
-  font-size: 1.1rem;
-}
-
-.time-slots-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-}
-
-.time-slot-item {
-  padding: 12px;
-  border: 2px solid #f0f2f5;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: white;
-}
-
-.time-slot-item.slot-available {
-  border-color: #52c41a;
-  background-color: #f6ffed;
-}
-
-.time-slot-item.slot-available:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
-}
-
-.time-slot-item.slot-occupied {
-  border-color: #ff4d4f;
-  background-color: #fff2f0;
-  cursor: not-allowed;
-}
-
-.time-slot-item.slot-closed, .time-slot-item.slot-empty {
-  border-color: #d9d9d9;
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-}
-
-.time-slot-item.slot-selected {
-  border-color: #1890ff;
-  background-color: #e6f7ff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-}
-
-.slot-time {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-.slot-status {
-  font-size: 12px;
-  color: #666;
-}
-
-.slot-note {
-  font-size: 11px;
-  color: #999;
-  margin-top: 2px;
-}
-
-.court-unavailable {
-  padding: 40px 20px;
-  text-align: center;
-  color: #999;
-  background-color: #f5f5f5;
-}
-
-.loading {
-  text-align: center;
-  padding: 60px;
-  font-size: 18px;
-  color: #666;
-}
-
-.booking-confirm-card {
-  background: white;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  bottom: 20px;
-}
-
-.card-header h3 {
-  margin: 0 0 20px 0;
-  color: #333;
-  font-size: 1.4rem;
-}
-
 .selected-slots {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .selected-slot {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.selected-slot:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
 }
 
 .slot-info {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.slot-court, .slot-time, .slot-price {
+  display: flex;
   align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
 
-.slot-info .court-name {
+.court-name {
   font-weight: 600;
-  color: #333;
+  color: #2c3e50;
 }
 
-.slot-info .time-range {
+.time-range {
   color: #666;
 }
 
-.slot-info .price {
+.price {
   font-weight: 600;
-  color: #667eea;
+  color: #e6a23c;
 }
 
 .remove-btn {
-  width: 30px;
-  height: 30px;
-  border: none;
-  background: #ff4d4f;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
   color: white;
+  border: none;
   border-radius: 50%;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
 .remove-btn:hover {
-  background: #ff7875;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
 }
 
 .booking-summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 20px;
-  border-top: 1px solid #f0f2f5;
+  padding: 25px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .total-info {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .total-label {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
+  font-weight: 500;
+}
+
+.total-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .total-price {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #667eea;
+  font-size: 28px;
+  font-weight: bold;
+  color: #e6a23c;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .total-duration {
-  color: #999;
   font-size: 14px;
+  color: #666;
 }
 
 .confirm-btn {
   padding: 15px 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
   transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(67, 233, 123, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .confirm-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 32px rgba(67, 233, 123, 0.4);
 }
 
 .confirm-btn:disabled {
-  opacity: 0.6;
+  background: linear-gradient(135deg, #c0c4cc, #909399);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* 提示框样式 */
-.booking-limit-toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #ff4d4f;
-  color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  z-index: 9999;
-  box-shadow: 0 8px 25px rgba(255, 77, 79, 0.3);
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 动画效果 */
+.slide-up-enter-active, .slide-up-leave-active {
+  transition: all 0.5s ease;
+}
+
+.slide-up-enter-from, .slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 0.3s ease;
+}
+
+.list-enter-from, .list-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.list-move {
+  transition: transform 0.3s ease;
 }
 
 /* 响应式设计 */
@@ -970,32 +1140,71 @@ export default {
   
   .header {
     flex-direction: column;
-    gap: 20px;
-    align-items: flex-start;
+    align-items: stretch;
+    text-align: center;
   }
   
   .controls {
-    width: 100%;
-    justify-content: space-between;
-  }
-  
-  .rules-content {
     flex-direction: column;
-    gap: 15px;
+    align-items: stretch;
   }
   
-  .courts-grid {
-    grid-template-columns: 1fr;
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  .time-slots-container {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  .card-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .status-legend {
+    justify-content: center;
+  }
+  
+  .court-details {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .time-slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
   
   .booking-summary {
     flex-direction: column;
+    text-align: center;
+  }
+  
+  .selected-slot {
+    flex-direction: column;
     gap: 15px;
     align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .time-slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+  
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .rules-content {
+    gap: 10px;
+  }
+  
+  .rule-item {
+    padding: 12px 15px;
   }
 }
 </style>

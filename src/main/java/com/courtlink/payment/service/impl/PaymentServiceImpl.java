@@ -2,7 +2,6 @@ package com.courtlink.payment.service.impl;
 
 import com.courtlink.payment.entity.Payment;
 import com.courtlink.payment.repository.PaymentRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,21 +31,20 @@ public class PaymentServiceImpl {
                                List<Map<String, Object>> bookingSlots, String description) {
         try {
             Payment payment = new Payment();
-            payment.setPaymentId(generatePaymentId());
             payment.setUserId(userId);
             payment.setAmount(amount);
             payment.setPaymentMethod(paymentMethod);
+            payment.setDescription(description);
             payment.setStatus(Payment.PaymentStatus.PENDING);
-            payment.setDescription(description != null ? description : "场地预约支付");
+            payment.setCreatedAt(LocalDateTime.now());
+            payment.setAppointmentIds(bookingSlots.stream()
+                    .map(item -> item.get("appointmentId").toString())
+                    .collect(Collectors.joining(",")));
             
-            // 将预约信息转换为JSON存储
-            if (bookingSlots != null && !bookingSlots.isEmpty()) {
-                String appointmentJson = objectMapper.writeValueAsString(bookingSlots);
-                payment.setAppointmentIds(appointmentJson);
-            }
+            payment.setPaymentId(generatePaymentId());
             
             return paymentRepository.save(payment);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error("创建支付订单时JSON转换失败", e);
             throw new RuntimeException("创建支付订单失败", e);
         }

@@ -5,6 +5,9 @@ import com.courtlink.booking.dto.AppointmentResponse;
 import com.courtlink.booking.service.AppointmentService;
 import com.courtlink.user.entity.User;
 import com.courtlink.user.repository.UserRepository;
+import com.courtlink.security.JwtService;
+import com.courtlink.payment.service.impl.PaymentServiceImpl;
+import com.courtlink.payment.entity.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,52 +16,74 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/appointments")
+@RequestMapping("/api/v1/appointments")
 @RequiredArgsConstructor
 @Slf4j
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final PaymentServiceImpl paymentService;
 
     /**
      * 创建预约
      */
     @PostMapping
     public ResponseEntity<Map<String, Object>> createAppointment(
-            @Valid @RequestBody AppointmentRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        
-        Map<String, Object> response = new HashMap<>();
-        
+            @RequestBody AppointmentRequest request,
+            @RequestHeader("Authorization") String token) {
         try {
-            // 从UserDetails获取用户信息（需要适配你的用户认证系统）
-            User user = getCurrentUser(userDetails);
+            // 1. 验证用户身份
+            String jwt = token.substring(7);
+            String username = jwtService.extractUsername(jwt);
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("用户不存在"));
             
+            // 2. 创建预定
             AppointmentResponse appointmentResponse = appointmentService.createAppointment(request, user);
             
+            // 3. 创建支付记录
+            Payment payment = paymentService.createPayment(
+                    user.getId(),
+                    BigDecimal.valueOf(appointmentResponse.getTotalPrice()),
+                    Payment.PaymentMethod.WECHAT,
+                    List.of(Map.of(
+                            "appointmentId", appointmentResponse.getId(),
+                            "courtName", appointmentResponse.getCourtName(),
+                            "date", appointmentResponse.getAppointmentDate(),
+                            "startTime", appointmentResponse.getStartTime(),
+                            "endTime", appointmentResponse.getEndTime()
+                    )),
+                    "法院预定费用"
+            );
+            
+            // 4. 返回预定信息和支付信息
+            Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "预约创建成功");
-            response.put("data", appointmentResponse);
+            response.put("message", "预定成功，请在10分钟内完成支付");
+            response.put("appointment", appointmentResponse);
+            response.put("payment", Map.of(
+                "paymentId", payment.getPaymentId(),
+                "amount", payment.getAmount(),
+                "status", payment.getStatus(),
+                "expireTime", payment.getCreatedAt().plusMinutes(10)
+            ));
             
             return ResponseEntity.ok(response);
-            
-        } catch (IllegalArgumentException e) {
-            log.warn("预约创建失败：{}", e.getMessage());
-            response.put("success", false);
-            response.put("message", e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-            
         } catch (Exception e) {
-            log.error("预约创建出现错误", e);
+            log.error("创建预定失败", e);
+            Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "系统错误，请稍后再试");
-            return ResponseEntity.internalServerError().body(response);
+            response.put("message", "预定失败：" + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 

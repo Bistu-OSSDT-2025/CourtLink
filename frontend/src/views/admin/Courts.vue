@@ -21,6 +21,10 @@
           <el-icon><Refresh /></el-icon>
           刷新
         </el-button>
+        <el-button @click="testAuth" type="info">
+          <el-icon><Key /></el-icon>
+          测试权限
+        </el-button>
       </div>
     </div>
 
@@ -208,10 +212,13 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Refresh } from '@element-plus/icons-vue'
+import { Plus, Refresh, Key } from '@element-plus/icons-vue'
 import { adminAPI } from '../../services/api'
 import { useAdminStore } from '../../store/admin'
+
+const router = useRouter()
 
 // 响应式数据
 const courtsData = ref([])
@@ -254,6 +261,14 @@ const courtRules = {
 const loadCourtData = async () => {
   loading.value = true
   try {
+    // 确保token存在后再发送请求
+    const adminToken = localStorage.getItem("adminToken");
+    if (!adminToken) {
+      throw new Error("未找到管理员token，请重新登录");
+    }
+    
+    console.log("发送场地数据请求前的token检查:", adminToken.substring(0, 20) + "...");
+    
     const [courtsResponse, statsResponse] = await Promise.all([
       adminAPI.getCourtsForManagement(selectedDate.value),
       adminAPI.getCourtStatistics()
@@ -263,7 +278,7 @@ const loadCourtData = async () => {
     statistics.value = statsResponse
   } catch (error) {
     ElMessage.error('加载数据失败: ' + (error.message || '未知错误'))
-    console.error(error)
+    console.error("loadCourtData错误详情:", error)
   } finally {
     loading.value = false
   }
@@ -272,6 +287,22 @@ const loadCourtData = async () => {
 const refreshData = () => {
   loadCourtData()
   ElMessage.success('数据已刷新')
+}
+
+const testAuth = async () => {
+  try {
+    const response = await adminAPI.testAuth()
+    console.log('权限测试响应:', response)
+    ElMessage.success('权限测试成功！认证状态: ' + (response.authenticated ? '已认证' : '未认证'))
+    
+    // 显示详细的认证信息
+    if (response.authenticated) {
+      ElMessage.info(`用户: ${response.username}, 权限: ${response.authorities.map(a => a.authority).join(', ')}`)
+    }
+  } catch (error) {
+    console.error('权限测试失败:', error)
+    ElMessage.error('权限测试失败: ' + (error.message || '未知错误'))
+  }
 }
 
 const getSlotClass = (slot) => {
@@ -314,7 +345,7 @@ const updateSlotStatus = async (slot, isOpen, note) => {
   try {
     await adminAPI.batchUpdateTimeSlots([{
       timeSlotId: slot.id,
-      isOpen: isOpen,
+      open: isOpen,
       note: note || ''
     }])
     
@@ -384,7 +415,7 @@ const batchOpenSlots = async () => {
         if (slot.id && slot.isOpen !== true) {
           updates.push({
             timeSlotId: slot.id,
-            isOpen: true,
+            open: true,
             note: slot.note || ''
           })
         }
@@ -414,7 +445,7 @@ const batchCloseSlots = async () => {
         if (slot.id && slot.isOpen && slot.available) {
           updates.push({
             timeSlotId: slot.id,
-            isOpen: false,
+            open: false,
             note: slot.note || ''
           })
         }
@@ -462,8 +493,25 @@ const resetForm = () => {
 }
 
 // 生命周期
-onMounted(() => {
-  loadCourtData()
+onMounted(async () => {
+  // 检查token状态
+  const adminToken = localStorage.getItem("adminToken");
+  console.log("=== Courts组件挂载时的token状态 ===");
+  console.log("Admin Token存在:", !!adminToken);
+  
+  if (!adminToken) {
+    console.error("❌ 未找到adminToken，重定向到登录页面");
+    ElMessage.error("未找到管理员token，请重新登录");
+    await router.push("/admin/login");
+    return;
+  }
+  
+  console.log("Token前缀:", adminToken.substring(0, 20) + "...");
+  
+  // 等待一小段时间确保所有初始化完成
+  setTimeout(() => {
+    loadCourtData();
+  }, 100);
 })
 </script>
 

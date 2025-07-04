@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Token调试页面</title>
+</head>
+<body>
+    <h1>CourtLink Token调试</h1>
+    <div id="debug-info"></div>
+    
+    <script>
+        function debugTokens() {
+            const debugDiv = document.getElementById('debug-info');
+            const adminToken = localStorage.getItem("adminToken");
+            const userToken = localStorage.getItem("token");
+            
+            let html = '<h2>Token状态检查</h2>';
+            html += `<p><strong>Admin Token:</strong> ${adminToken ? '存在 ✅' : '不存在 ❌'}</p>`;
+            html += `<p><strong>User Token:</strong> ${userToken ? '存在 ✅' : '不存在 ❌'}</p>`;
+            
+            if (adminToken) {
+                html += `<p><strong>Admin Token前缀:</strong> ${adminToken.substring(0, 30)}...</p>`;
+                
+                // 解析JWT
+                try {
+                    const parts = adminToken.split('.');
+                    if (parts.length === 3) {
+                        const payload = JSON.parse(atob(parts[1]));
+                        html += '<h3>JWT Payload:</h3>';
+                        html += `<pre>${JSON.stringify(payload, null, 2)}</pre>`;
+                        
+                        // 检查过期时间
+                        if (payload.exp) {
+                            const expDate = new Date(payload.exp * 1000);
+                            const now = new Date();
+                            html += `<p><strong>过期时间:</strong> ${expDate.toLocaleString()}</p>`;
+                            html += `<p><strong>是否过期:</strong> ${now > expDate ? '是 ❌' : '否 ✅'}</p>`;
+                        }
+                    }
+                } catch (e) {
+                    html += `<p><strong>JWT解析错误:</strong> ${e.message}</p>`;
+                }
+            }
+            
+            debugDiv.innerHTML = html;
+        }
+        
+        // 页面加载时执行
+        debugTokens();
+        
+        // 每5秒更新一次
+        setInterval(debugTokens, 5000);
+        
+        // 测试API请求
+        function testAdminAPI() {
+            const adminToken = localStorage.getItem("adminToken");
+            if (!adminToken) {
+                alert("没有找到adminToken！");
+                return;
+            }
+            
+            fetch('/api/v1/admin/courts/test-auth', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${adminToken}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('API响应状态:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('API响应数据:', data);
+                alert('API测试成功: ' + JSON.stringify(data));
+            })
+            .catch(error => {
+                console.error('API测试失败:', error);
+                alert('API测试失败: ' + error.message);
+            });
+        }
+        
+        // 添加测试按钮
+        setTimeout(() => {
+            const button = document.createElement('button');
+            button.textContent = '测试Admin API';
+            button.onclick = testAdminAPI;
+            button.style.marginTop = '20px';
+            button.style.padding = '10px 20px';
+            document.body.appendChild(button);
+        }, 1000);
+    </script>
+</body>
+</html> 

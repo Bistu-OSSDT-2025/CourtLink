@@ -42,4 +42,16 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
      */
     @Query("SELECT COUNT(p) > 0 FROM Payment p WHERE p.userId = :userId AND p.status = 'PENDING'")
     boolean existsPendingPaymentByUserId(@Param("userId") Long userId);
+
+    /**
+     * 根据预定ID查找支付记录（使用自定义查询）
+     */
+    @Query("SELECT p FROM Payment p WHERE p.appointmentIds LIKE CONCAT('%', :appointmentId, '%')")
+    List<Payment> findByAppointmentIdContaining(@Param("appointmentId") String appointmentId);
+
+    /**
+     * 根据预定ID和支付状态查找支付记录（使用自定义查询）
+     */
+    @Query("SELECT p FROM Payment p WHERE p.appointmentIds LIKE CONCAT('%', :appointmentId, '%') AND p.status = :status")
+    List<Payment> findByAppointmentIdContainingAndStatus(@Param("appointmentId") String appointmentId, @Param("status") Payment.PaymentStatus status);
 } 

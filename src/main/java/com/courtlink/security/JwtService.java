@@ -34,7 +34,12 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        // 添加角色信息到JWT claims中
+        claims.put("roles", userDetails.getAuthorities().stream()
+            .map(authority -> authority.getAuthority())
+            .collect(java.util.stream.Collectors.toList()));
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(

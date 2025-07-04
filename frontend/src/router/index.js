@@ -16,6 +16,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: "/smart-booking",
+    name: "SmartBooking",
+    component: () => import("../views/SmartBooking.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
     path: "/payment",
     name: "Payment",
     component: () => import("../views/Payment.vue"),

@@ -9,7 +9,7 @@ import lombok.Setter;
 public class TimeSlotUpdateRequest {
     private Long timeSlotId;
     
-    @JsonProperty("isOpen")
+    @JsonProperty("open")
     private boolean open;
     
     private String note;
