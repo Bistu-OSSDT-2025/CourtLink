@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   server: {
+<<<<<<< HEAD
     port: 3007,
     proxy: {
       "/api": {
@@ -17,6 +18,13 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         ws: true
+=======
+    port: 3000,
+    proxy: {
+      "/api": {
+        target: "http://localhost:8082",
+        changeOrigin: true,
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
       },
     },
   },

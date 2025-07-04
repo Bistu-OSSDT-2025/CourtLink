@@ -1,0 +1,24 @@
+﻿{
+    "Results":  {
+                    "Recommendation":  "Very Good - Recommended for production deployment",
+                    "FailureDetails":  [
+                                           "404 Error Test failed: 远程服务器返回错误: (404) 未找到。",
+                                           "Invalid Data Test failed: 远程服务器返回错误: (400) 错误的请求。"
+                                       ],
+                    "BasicTestsPassed":  37,
+                    "TotalRounds":  10,
+                    "SystemGrade":  "A",
+                    "RoundSuccessRate":  100,
+                    "BasicTestsFailed":  2,
+                    "OverallSuccessRate":  95.9,
+                    "RoundsSuccessful":  10
+                },
+    "TestMetadata":  {
+                         "Duration":  2.52987,
+                         "TestRounds":  10,
+                         "TestName":  "CourtLink Quick Stability Test",
+                         "BaseUrl":  "http://localhost:8080",
+                         "Date":  "2025-07-01",
+                         "Time":  "09:42:58"
+                     }
+}

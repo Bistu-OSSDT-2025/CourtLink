@@ -3,7 +3,10 @@ package com.courtlink.booking.controller;
 import com.courtlink.booking.entity.Court;
 import com.courtlink.booking.service.CourtService;
 import lombok.RequiredArgsConstructor;
+<<<<<<< HEAD
 import lombok.extern.slf4j.Slf4j;
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +17,14 @@ import java.util.Map;
 import java.util.HashMap;
 
 @RestController
+<<<<<<< HEAD
 @RequestMapping("/api/v1/courts")
 @RequiredArgsConstructor
 @Slf4j
+=======
+@RequestMapping("/api/courts")
+@RequiredArgsConstructor
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 public class CourtController {
 
     private final CourtService courtService;
@@ -36,6 +44,7 @@ public class CourtController {
         return ResponseEntity.ok(courtService.getAvailableCourts());
     }
 
+<<<<<<< HEAD
     // 测试端点
     @GetMapping("/test")
     public ResponseEntity<String> testEndpoint() {
@@ -66,6 +75,22 @@ public class CourtController {
             errorResponse.put("error", e.getClass().getSimpleName());
             
             return ResponseEntity.internalServerError().body(errorResponse);
+=======
+    // 用户预约信息API - 包含时间段信息
+    @GetMapping("/booking")
+    public ResponseEntity<List<Court>> getCourtsForBooking(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        try {
+            LocalDate targetDate = date != null ? date : LocalDate.now();
+            
+            // 获取包含时间段的场地信息
+            List<Court> courts = courtService.getCourtsWithTimeSlots(targetDate);
+            
+            return ResponseEntity.ok(courts);
+        } catch (Exception e) {
+            // 返回错误响应
+            return ResponseEntity.internalServerError().build();
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
         }
     }
 } 

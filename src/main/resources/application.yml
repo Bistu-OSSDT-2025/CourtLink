@@ -1,5 +1,6 @@
 server:
   port: 8080
+<<<<<<< HEAD
 
 spring:
   main:
@@ -22,10 +23,53 @@ spring:
           batch_size: 20
         order_inserts: true
         order_updates: true
+=======
+  servlet:
+    context-path: /api
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    max-connections: 10000
+    accept-count: 100
+    connection-timeout: 20000
+
+spring:
+  application:
+    name: CourtLink
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/courtlink?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: CourtLinkHikariCP
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+      validation-timeout: 3000
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
   h2:
     console:
       enabled: true
       path: /h2-console
+<<<<<<< HEAD
 
 logging:
   level:
@@ -33,11 +77,85 @@ logging:
     com.courtlink: DEBUG
   file:
     name: logs/courtlink.log
+=======
+      settings:
+        web-allow-others: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: CourtLink API
+  packages-to-scan: com.courtlink
+  paths-to-match: /api/**
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+
+logging:
+  level:
+    root: INFO
+    com.courtlink: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    org.springframework.security: DEBUG
+  file:
+    name: logs/courtlink.log
+    max-size: 10MB
+    max-history: 7
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 应用自定义配置
+courtlink:
+  # 预约配置
+  booking:
+    conflict-check:
+      enabled: true
+      buffer-minutes: 30
+    
+    # 缓存配置
+    cache:
+      enabled: true
+      expire-minutes: 5
+    
+    # 定时任务配置
+    scheduler:
+      cleanup-expired:
+        cron: "0 0 2 * * ?"  # 每天凌晨2点清理过期预约
+      send-reminders:
+        cron: "0 0 9 * * ?"  # 每天上午9点发送提醒
+
+  # 性能配置
+  performance:
+    enable-caching: true
+    cache-expire-minutes: 5
+
+  # 限流配置
+  rate-limit:
+    enabled: true
+    requests-per-minute: 1000
+
+# 支付配置
+payment:
+  timeout-seconds: 300
+  retry-times: 3
+  mock:
+    success-rate: 0.9
+    processing-delay-ms: 2000
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 86400000 # 24 hours
 
+<<<<<<< HEAD
 # 微信支付配置
 wechat:
   pay:
@@ -63,3 +181,24 @@ wechat:
     unified-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/native"
     query-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}"
     close-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}/close" 
+=======
+admin:
+  super:
+    username: superadmin
+    password: SuperAdmin@2024
+  default:
+    username: admin
+    password: Admin@2024
+
+court:
+  types:
+    - 标准羽毛球场
+    - 多功能羽毛球场
+    - 初学者羽毛球场
+  price:
+    min: 50.00
+    max: 200.00
+  operation:
+    start-time: "06:00"
+    end-time: "22:00"
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e

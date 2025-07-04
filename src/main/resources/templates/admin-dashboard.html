@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtLink 管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .stat-card.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .stat-card.info {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .api-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .api-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .api-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .api-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .api-method {
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 10px;
+        }
+        
+        .api-url {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .api-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>? CourtLink 管理后台</h1>
+            <p class="subtitle">羽毛球场预订系统 - 管理员控制面板</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card success">
+                <div class="stat-number" th:text="${stats.totalCount}">0</div>
+                <div class="stat-label">总管理员数</div>
+            </div>
+            
+            <div class="stat-card info">
+                <div class="stat-number" th:text="${stats.activeCount}">0</div>
+                <div class="stat-label">活跃管理员</div>
+            </div>
+            
+            <div class="stat-card warning">
+                <div class="stat-number" th:text="${stats.lockedCount}">0</div>
+                <div class="stat-label">锁定账户</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" th:text="${stats.todayCreatedCount}">0</div>
+                <div class="stat-label">今日新增</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="/swagger-ui.html" class="action-btn" target="_blank">
+                ? API 文档
+            </a>
+            <a href="/api/admin/statistics" class="action-btn" target="_blank">
+                ? 统计数据
+            </a>
+            <a href="/api/admin/system/health" class="action-btn" target="_blank">
+                ?? 系统健康
+            </a>
+            <a href="/h2-console" class="action-btn" target="_blank">
+                ?? 数据库控制台
+            </a>
+        </div>
+        
+        <div class="api-info">
+            <h3>? 核心管理 API</h3>
+            <div class="api-list">
+                <div class="api-item">
+                    <span class="api-method">POST</span>
+                    <span class="api-url">/api/admin/auth/login</span>
+                    <p>管理员登录</p>
+                </div>
+                
+                <div class="api-item">
+                    <span class="api-method">GET</span>
+                    <span class="api-url">/api/admin/admins</span>
+                    <p>获取管理员列表</p>
+                </div>
+                
+                <div class="api-item">
+                    <span class="api-method">POST</span>
+                    <span class="api-url">/api/admin/admins</span>
+                    <p>创建新管理员</p>
+                </div>
+                
+                <div class="api-item">
+                    <span class="api-method">GET</span>
+                    <span class="api-url">/api/admin/statistics</span>
+                    <p>获取统计数据</p>
+                </div>
+                
+                <div class="api-item">
+                    <span class="api-method">PATCH</span>
+                    <span class="api-url">/api/admin/admins/{id}/activate</span>
+                    <p>激活管理员账户</p>
+                </div>
+                
+                <div class="api-item">
+                    <span class="api-method">GET</span>
+                    <span class="api-url">/api/admin/system/health</span>
+                    <p>系统健康检查</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>? CourtLink Admin System v1.0 | 基于Spring Boot 3.1.5 + Java 21构建</p>
+            <p>? 默认登录: admin / admin123</p>
+        </div>
+    </div>
+    
+    <script>
+        // 简单的动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+        
+        // 实时更新时间
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('zh-CN');
+            document.title = `CourtLink 管理后台 - ${timeStr}`;
+        }
+        
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html> 

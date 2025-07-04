@@ -6,6 +6,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+<<<<<<< HEAD
+=======
+import org.springframework.security.core.Authentication;
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,18 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+<<<<<<< HEAD
+=======
+    @Value("${jwt.token.clock-skew:5000}")
+    private long clockSkew;
+
+    @Value("${jwt.token.issuer:CourtLink}")
+    private String issuer;
+
+    @Value("${jwt.token.audience:CourtLink Users}")
+    private String audience;
+
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -34,6 +50,7 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
+<<<<<<< HEAD
         Map<String, Object> claims = new HashMap<>();
         // 添加角色信息到JWT claims中
         claims.put("roles", userDetails.getAuthorities().stream()
@@ -54,12 +71,31 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+=======
+        return generateToken(new HashMap<>(), userDetails);
+    }
+
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return buildToken(extraClaims, userDetails, jwtExpiration);
+    }
+
+    public String generateExpiredToken(UserDetails userDetails) {
+        return buildToken(new HashMap<>(), userDetails, -1000);
+    }
+
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
+<<<<<<< HEAD
+=======
+                .setIssuer(issuer)
+                .setAudience(audience)
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -70,7 +106,11 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
+<<<<<<< HEAD
         return extractExpiration(token).before(new Date());
+=======
+        return extractExpiration(token).before(new Date(System.currentTimeMillis() - clockSkew));
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
     }
 
     private Date extractExpiration(String token) {
@@ -81,6 +121,12 @@ public class JwtService {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
+<<<<<<< HEAD
+=======
+                .setAllowedClockSkewSeconds(clockSkew / 1000)
+                .requireIssuer(issuer)
+                .requireAudience(audience)
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

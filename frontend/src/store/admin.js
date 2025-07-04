@@ -25,6 +25,7 @@ export const useAdminStore = defineStore("admin", {
       try {
         this.loading = true;
         const response = await adminAPI.login(credentials);
+<<<<<<< HEAD
         console.log("管理员登录响应:", response);
         this.token = response.token;
         this.admin = response.admin;
@@ -35,6 +36,11 @@ export const useAdminStore = defineStore("admin", {
         const savedToken = localStorage.getItem("adminToken");
         console.log("验证localStorage中的token:", savedToken ? "存在" : "不存在");
         
+=======
+        this.token = response.token;
+        this.admin = response.admin;
+        localStorage.setItem("adminToken", response.token);
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
         return response;
       } catch (error) {
         console.error("管理员登录失败:", error);

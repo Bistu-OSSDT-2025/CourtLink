@@ -1,65 +1,141 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    max-connections: 10000
+    accept-count: 100
+    connection-timeout: 20000
 
 spring:
-  main:
-    allow-circular-references: true
+  application:
+    name: CourtLink
+  
   datasource:
-    url: jdbc:h2:file:./data/courtlink
-    username: sa
-    password: password
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/courtlink?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: CourtLinkHikariCP
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+      validation-timeout: 3000
+  
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
     show-sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
-        jdbc:
-          batch_size: 20
-        order_inserts: true
-        order_updates: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+
   h2:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: CourtLink API
+  packages-to-scan: com.courtlink
+  paths-to-match: /api/**
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
 
 logging:
   level:
-    org.springframework: INFO
+    root: INFO
     com.courtlink: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    org.springframework.security: DEBUG
   file:
     name: logs/courtlink.log
+    max-size: 10MB
+    max-history: 7
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 应用自定义配置
+courtlink:
+  # 预约配置
+  booking:
+    conflict-check:
+      enabled: true
+      buffer-minutes: 30
+    
+    # 缓存配置
+    cache:
+      enabled: true
+      expire-minutes: 5
+    
+    # 定时任务配置
+    scheduler:
+      cleanup-expired:
+        cron: "0 0 2 * * ?"  # 每天凌晨2点清理过期预约
+      send-reminders:
+        cron: "0 0 9 * * ?"  # 每天上午9点发送提醒
+
+  # 性能配置
+  performance:
+    enable-caching: true
+    cache-expire-minutes: 5
+
+  # 限流配置
+  rate-limit:
+    enabled: true
+    requests-per-minute: 1000
+
+# 支付配置
+payment:
+  timeout-seconds: 300
+  retry-times: 3
+  mock:
+    success-rate: 0.9
+    processing-delay-ms: 2000
 
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 86400000 # 24 hours
 
-# 微信支付配置
-wechat:
-  pay:
-    # 商户信息（生产环境需要配置真实信息）
-    merchant-id: "1234567890"  # 商户号
-    app-id: "wx1234567890abcdef"  # 应用ID
-    api-key: "your_api_key_here_32_characters_long"  # API密钥
-    merchant-serial-number: "your_merchant_serial_number"  # 商户证书序列号
-    
-    # 证书路径（生产环境需要配置真实证书）
-    platform-cert-path: "classpath:wechat/platform_cert.pem"
-    merchant-private-key-path: "classpath:wechat/merchant_private_key.pem"
-    
-    # 回调地址
-    notify-url: "http://localhost:8082/api/payment/wechat/notify"
-    
-    # 业务配置
-    mock-mode: true  # 是否为模拟模式（开发环境设为true，生产环境设为false）
-    order-expire-minutes: 5  # 订单过期时间（分钟）
-    
-    # API配置
-    api-version: "v3"
-    unified-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/native"
-    query-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}"
-    close-order-url: "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}/close" 
+admin:
+  super:
+    username: superadmin
+    password: SuperAdmin@2024
+  default:
+    username: admin
+    password: Admin@2024
+
+court:
+  types:
+    - 标准羽毛球场
+    - 多功能羽毛球场
+    - 初学者羽毛球场
+  price:
+    min: 50.00
+    max: 200.00
+  operation:
+    start-time: "06:00"
+    end-time: "22:00"

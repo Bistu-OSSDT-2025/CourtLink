@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 import java.util.List;
 
 @Repository
@@ -45,6 +48,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE a.user = :user " +
            "AND a.status IN ('PENDING', 'PAID', 'CONFIRMED')")
     long countActiveAppointmentsByUser(@Param("user") User user);
+<<<<<<< HEAD
 
     /**
      * 查找指定用户的预定
@@ -55,4 +59,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      * 查找指定状态和创建时间之前的预定
      */
     List<Appointment> findByStatusAndCreatedAtBefore(Appointment.AppointmentStatus status, LocalDateTime createdAt);
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 } 

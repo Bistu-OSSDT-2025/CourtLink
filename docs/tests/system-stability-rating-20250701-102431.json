@@ -1,0 +1,159 @@
+﻿{
+    "OverallScore":  100,
+    "Grade":  "A+",
+    "DeploymentStatus":  "APPROVED",
+    "PerformanceRating":  "Excellent",
+    "CategoryResults":  {
+                            "ExceptionHandling":  {
+                                                      "Tests":  [
+                                                                    {
+                                                                        "Duration":  23.8194,
+                                                                        "Name":  "Non-existent User (404)",
+                                                                        "Status":  404,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  2.9863,
+                                                                        "Name":  "Non-existent Court (404)",
+                                                                        "Status":  404,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  5.8681,
+                                                                        "Name":  "Invalid JSON (400)",
+                                                                        "Status":  400,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  6.761,
+                                                                        "Name":  "Non-existent Endpoint (404)",
+                                                                        "Status":  404,
+                                                                        "Success":  true
+                                                                    }
+                                                                ],
+                                                      "Total":  4,
+                                                      "Passed":  4
+                                                  },
+                            "Performance":  {
+                                                "Tests":  [
+                                                              {
+                                                                  "Duration":  12.5737,
+                                                                  "Name":  "Response Time - User List",
+                                                                  "Status":  200,
+                                                                  "Success":  true
+                                                              },
+                                                              {
+                                                                  "Duration":  20.3824,
+                                                                  "Name":  "Response Time - Court List",
+                                                                  "Status":  200,
+                                                                  "Success":  true
+                                                              }
+                                                          ],
+                                                "Total":  2,
+                                                "Passed":  2
+                                            },
+                            "DataConsistency":  {
+                                                    "Tests":  [
+                                                                  {
+                                                                      "Duration":  19.663600000000002,
+                                                                      "Name":  "Consistency - Create User",
+                                                                      "Status":  200,
+                                                                      "Success":  true
+                                                                  },
+                                                                  {
+                                                                      "Duration":  18.9827,
+                                                                      "Name":  "Consistency - Immediate Query",
+                                                                      "Status":  200,
+                                                                      "Success":  true
+                                                                  },
+                                                                  {
+                                                                      "Duration":  15.494800000000001,
+                                                                      "Name":  "Consistency - Cleanup",
+                                                                      "Status":  200,
+                                                                      "Success":  true
+                                                                  },
+                                                                  {
+                                                                      "Duration":  5.3793000000000006,
+                                                                      "Name":  "Consistency - Verify Deletion",
+                                                                      "Status":  404,
+                                                                      "Success":  true
+                                                                  }
+                                                              ],
+                                                    "Total":  4,
+                                                    "Passed":  4
+                                                },
+                            "CoreFunctionality":  {
+                                                      "Tests":  [
+                                                                    {
+                                                                        "Duration":  78.3578,
+                                                                        "Name":  "System Health Check",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  17.5276,
+                                                                        "Name":  "User Module Health",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  54.9956,
+                                                                        "Name":  "User Registration",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  14.999500000000001,
+                                                                        "Name":  "User Query by ID",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  38.9992,
+                                                                        "Name":  "User List Query",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  18.8638,
+                                                                        "Name":  "Court Creation",
+                                                                        "Status":  201,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  17.1618,
+                                                                        "Name":  "Court Query by ID",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  15.0549,
+                                                                        "Name":  "Court List Query",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  19.683,
+                                                                        "Name":  "Court Deletion",
+                                                                        "Status":  204,
+                                                                        "Success":  true
+                                                                    },
+                                                                    {
+                                                                        "Duration":  17.4664,
+                                                                        "Name":  "User Deletion",
+                                                                        "Status":  200,
+                                                                        "Success":  true
+                                                                    }
+                                                                ],
+                                                      "Total":  10,
+                                                      "Passed":  10
+                                                  }
+                        },
+    "AverageResponseTime":  0,
+    "Status":  "Excellent - Production Ready",
+    "Timestamp":  {
+                      "value":  "\/Date(1751336671554)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "2025年7月1日 10:24:31"
+                  }
+}

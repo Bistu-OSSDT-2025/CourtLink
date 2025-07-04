@@ -5,7 +5,11 @@ import router from "../router";
 
 // 创建axios实例
 const api = axios.create({
+<<<<<<< HEAD
   baseURL: "/api/v1",
+=======
+  baseURL: "/api",
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -15,6 +19,7 @@ const api = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config) => {
+<<<<<<< HEAD
     // 公共端点列表，这些端点不需要认证
     const publicEndpoints = [
       '/auth/',
@@ -65,6 +70,19 @@ api.interceptors.request.use(
       }
     }
     
+=======
+    // 根据请求路径选择合适的token
+    let token;
+    if (config.url.includes('/v1/admin/')) {
+      token = localStorage.getItem("adminToken");
+    } else {
+      token = localStorage.getItem("token");
+    }
+    
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
     return config;
   },
   (error) => {
@@ -79,6 +97,7 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
+<<<<<<< HEAD
       const config = error.config;
       console.log(`API响应错误: ${error.response.status} ${config?.url}`);
       
@@ -103,6 +122,18 @@ api.interceptors.response.use(
         case 403:
           // 权限不足
           console.log("权限不足:", config?.url);
+=======
+      switch (error.response.status) {
+        case 401:
+          // 未授权，清除token并跳转到登录页面
+          const userStore = useUserStore();
+          userStore.logout();
+          router.push("/login");
+          ElMessage.error("登录已过期，请重新登录");
+          break;
+        case 403:
+          // 权限不足
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
           ElMessage.error("没有权限访问该资源");
           break;
         case 404:
@@ -142,20 +173,29 @@ export const appointmentAPI = {
   cancelAppointment: (id) => api.post(`/appointments/${id}/cancel`),
   getAppointmentById: (id) => api.get(`/appointments/${id}`),
   validateAppointment: (appointmentData) => api.post("/appointments/validate", appointmentData),
+<<<<<<< HEAD
   // 使用新的booking API获取场地和时间段信息
+=======
+  // 使用普通用户API获取场地和时间段信息
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
   getCourtsForBooking: (date) => api.get("/courts/booking", { params: { date } })
 };
 
 export const paymentAPI = {
   createPayment: (paymentData) => api.post("/payments", paymentData),
   getPaymentStatus: (id) => api.get(`/payments/${id}/status`),
+<<<<<<< HEAD
   processPayment: (id, paymentMethod) => api.post(`/payments/${id}/process`, { paymentMethod }),
   cancelPayment: (id) => api.post(`/payments/${id}/cancel`),
   getUserPayments: () => api.get("/payments/my")
+=======
+  processPayment: (id, paymentMethod) => api.post(`/payments/${id}/process`, { paymentMethod })
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 };
 
 // 管理员API
 export const adminAPI = {
+<<<<<<< HEAD
   login: (credentials) => api.post("/admin/login", credentials),
   getProfile: () => api.get("/admin/profile"),
   updateProfile: (adminData) => api.put("/admin/profile", adminData),
@@ -176,6 +216,27 @@ export const adminAPI = {
   getCourtStatistics: () => api.get("/admin/courts/statistics"),
   setCourtAvailability: (courtId, available) => api.put(`/admin/courts/${courtId}/availability`, null, { params: { available } }),
   testAuth: () => api.get("/admin/courts/test-auth")
+=======
+  login: (credentials) => api.post("/v1/admin/login", credentials),
+  getProfile: () => api.get("/v1/admin/profile"),
+  updateProfile: (adminData) => api.put("/v1/admin/profile", adminData),
+  getAllAdmins: () => api.get("/v1/admin/list"),
+  createAdmin: (adminData) => api.post("/v1/admin", adminData),
+  updateAdmin: (id, adminData) => api.put(`/v1/admin/${id}`, adminData),
+  deleteAdmin: (id) => api.delete(`/v1/admin/${id}`),
+  activateAdmin: (id) => api.put(`/v1/admin/${id}/activate`),
+  deactivateAdmin: (id) => api.put(`/v1/admin/${id}/deactivate`),
+  
+  // 场地管理API
+  getCourtsForManagement: (date) => api.get("/v1/admin/courts/management", { params: { date } }),
+  createCourt: (courtData) => api.post("/v1/admin/courts", courtData),
+  updateCourt: (id, courtData) => api.put(`/v1/admin/courts/${id}`, courtData),
+  deleteCourt: (id) => api.delete(`/v1/admin/courts/${id}`),
+  batchUpdateTimeSlots: (updates) => api.put("/v1/admin/courts/time-slots/batch-update", updates),
+  generateTimeSlots: (courtId, date) => api.post(`/v1/admin/courts/${courtId}/generate-time-slots`, null, { params: { date } }),
+  getCourtStatistics: () => api.get("/v1/admin/courts/statistics"),
+  setCourtAvailability: (courtId, available) => api.put(`/v1/admin/courts/${courtId}/availability`, null, { params: { available } })
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 };
 
 export default api;

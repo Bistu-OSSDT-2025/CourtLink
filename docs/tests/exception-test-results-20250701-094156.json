@@ -1,0 +1,43 @@
+﻿{
+    "Failed":  0,
+    "Details":  [
+                    {
+                        "ActualStatus":  404,
+                        "Name":  "Access Non-existent User",
+                        "ExpectedStatus":  404,
+                        "Success":  true
+                    },
+                    {
+                        "ActualStatus":  404,
+                        "Name":  "Access Non-existent Court",
+                        "ExpectedStatus":  404,
+                        "Success":  true
+                    },
+                    {
+                        "ActualStatus":  400,
+                        "Name":  "Send Invalid JSON",
+                        "ExpectedStatus":  400,
+                        "Success":  true
+                    },
+                    {
+                        "ActualStatus":  400,
+                        "Name":  "Register Duplicate Username",
+                        "ExpectedStatus":  400,
+                        "Success":  true
+                    },
+                    {
+                        "ActualStatus":  400,
+                        "Name":  "Missing Required Fields",
+                        "ExpectedStatus":  400,
+                        "Success":  true
+                    },
+                    {
+                        "ActualStatus":  404,
+                        "Name":  "Non-existent Endpoint",
+                        "ExpectedStatus":  404,
+                        "Success":  true
+                    }
+                ],
+    "Total":  6,
+    "Passed":  6
+}

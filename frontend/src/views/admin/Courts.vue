@@ -21,10 +21,13 @@
           <el-icon><Refresh /></el-icon>
           刷新
         </el-button>
+<<<<<<< HEAD
         <el-button @click="testAuth" type="info">
           <el-icon><Key /></el-icon>
           测试权限
         </el-button>
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
       </div>
     </div>
 
@@ -212,6 +215,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+<<<<<<< HEAD
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Refresh, Key } from '@element-plus/icons-vue'
@@ -220,6 +224,13 @@ import { useAdminStore } from '../../store/admin'
 
 const router = useRouter()
 
+=======
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Plus, Refresh } from '@element-plus/icons-vue'
+import { adminAPI } from '../../services/api'
+import { useAdminStore } from '../../store/admin'
+
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 // 响应式数据
 const courtsData = ref([])
 const statistics = ref({
@@ -261,6 +272,7 @@ const courtRules = {
 const loadCourtData = async () => {
   loading.value = true
   try {
+<<<<<<< HEAD
     // 确保token存在后再发送请求
     const adminToken = localStorage.getItem("adminToken");
     if (!adminToken) {
@@ -269,6 +281,8 @@ const loadCourtData = async () => {
     
     console.log("发送场地数据请求前的token检查:", adminToken.substring(0, 20) + "...");
     
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
     const [courtsResponse, statsResponse] = await Promise.all([
       adminAPI.getCourtsForManagement(selectedDate.value),
       adminAPI.getCourtStatistics()
@@ -278,7 +292,11 @@ const loadCourtData = async () => {
     statistics.value = statsResponse
   } catch (error) {
     ElMessage.error('加载数据失败: ' + (error.message || '未知错误'))
+<<<<<<< HEAD
     console.error("loadCourtData错误详情:", error)
+=======
+    console.error(error)
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
   } finally {
     loading.value = false
   }
@@ -289,6 +307,7 @@ const refreshData = () => {
   ElMessage.success('数据已刷新')
 }
 
+<<<<<<< HEAD
 const testAuth = async () => {
   try {
     const response = await adminAPI.testAuth()
@@ -305,6 +324,8 @@ const testAuth = async () => {
   }
 }
 
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 const getSlotClass = (slot) => {
   if (!slot) return 'slot-empty'
   if (!slot.isOpen) return 'slot-closed'
@@ -345,7 +366,11 @@ const updateSlotStatus = async (slot, isOpen, note) => {
   try {
     await adminAPI.batchUpdateTimeSlots([{
       timeSlotId: slot.id,
+<<<<<<< HEAD
       open: isOpen,
+=======
+      isOpen: isOpen,
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
       note: note || ''
     }])
     
@@ -415,7 +440,11 @@ const batchOpenSlots = async () => {
         if (slot.id && slot.isOpen !== true) {
           updates.push({
             timeSlotId: slot.id,
+<<<<<<< HEAD
             open: true,
+=======
+            isOpen: true,
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
             note: slot.note || ''
           })
         }
@@ -445,7 +474,11 @@ const batchCloseSlots = async () => {
         if (slot.id && slot.isOpen && slot.available) {
           updates.push({
             timeSlotId: slot.id,
+<<<<<<< HEAD
             open: false,
+=======
+            isOpen: false,
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
             note: slot.note || ''
           })
         }
@@ -493,6 +526,7 @@ const resetForm = () => {
 }
 
 // 生命周期
+<<<<<<< HEAD
 onMounted(async () => {
   // 检查token状态
   const adminToken = localStorage.getItem("adminToken");
@@ -512,6 +546,10 @@ onMounted(async () => {
   setTimeout(() => {
     loadCourtData();
   }, 100);
+=======
+onMounted(() => {
+  loadCourtData()
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 })
 </script>
 

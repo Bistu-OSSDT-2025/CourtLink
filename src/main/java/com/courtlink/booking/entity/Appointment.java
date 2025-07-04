@@ -64,7 +64,12 @@ public class Appointment {
 
     public enum AppointmentStatus {
         PENDING,    // 待支付
+<<<<<<< HEAD
         CONFIRMED,  // 预定成功，待支付
+=======
+        PAID,       // 已支付
+        CONFIRMED,  // 已确认
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
         CANCELLED,  // 已取消
         COMPLETED   // 已完成
     }

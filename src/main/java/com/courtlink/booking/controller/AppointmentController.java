@@ -5,9 +5,12 @@ import com.courtlink.booking.dto.AppointmentResponse;
 import com.courtlink.booking.service.AppointmentService;
 import com.courtlink.user.entity.User;
 import com.courtlink.user.repository.UserRepository;
+<<<<<<< HEAD
 import com.courtlink.security.JwtService;
 import com.courtlink.payment.service.impl.PaymentServiceImpl;
 import com.courtlink.payment.entity.Payment;
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,28 +19,39 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+<<<<<<< HEAD
 @RequestMapping("/api/v1/appointments")
+=======
+@RequestMapping("/api/appointments")
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 @RequiredArgsConstructor
 @Slf4j
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final UserRepository userRepository;
+<<<<<<< HEAD
     private final JwtService jwtService;
     private final PaymentServiceImpl paymentService;
+=======
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
 
     /**
      * 创建预约
      */
     @PostMapping
     public ResponseEntity<Map<String, Object>> createAppointment(
+<<<<<<< HEAD
             @RequestBody AppointmentRequest request,
             @RequestHeader("Authorization") String token) {
         try {
@@ -84,6 +98,36 @@ public class AppointmentController {
             response.put("success", false);
             response.put("message", "预定失败：" + e.getMessage());
             return ResponseEntity.badRequest().body(response);
+=======
+            @Valid @RequestBody AppointmentRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // 从UserDetails获取用户信息（需要适配你的用户认证系统）
+            User user = getCurrentUser(userDetails);
+            
+            AppointmentResponse appointmentResponse = appointmentService.createAppointment(request, user);
+            
+            response.put("success", true);
+            response.put("message", "预约创建成功");
+            response.put("data", appointmentResponse);
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (IllegalArgumentException e) {
+            log.warn("预约创建失败：{}", e.getMessage());
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+            
+        } catch (Exception e) {
+            log.error("预约创建出现错误", e);
+            response.put("success", false);
+            response.put("message", "系统错误，请稍后再试");
+            return ResponseEntity.internalServerError().body(response);
+>>>>>>> 3c5bc74901f039f3ddd32a6ae44b083d6266322e
         }
     }
 
