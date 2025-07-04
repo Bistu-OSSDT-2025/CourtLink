@@ -2,73 +2,50 @@ package com.courtlink.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * 跨域资源共享 (CORS) 配置
- */
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addCorsMappings(@NonNull CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                .allowedHeaders("*")
-                .exposedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
+public class CorsConfig {
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
         
-        // 允许的源域名
-        configuration.setAllowedOriginPatterns(List.of(
-                "http://localhost:3000",   // React开发服务器
-                "http://localhost:8081",   // Vue开发服务器
-                "http://localhost:4200",   // Angular开发服务器
-                "https://*.courtlink.com", // 生产环境域名
-                "*"                        // 开发环境允许所有
-        ));
-        
-        // 允许的请求方法
-        configuration.setAllowedMethods(Arrays.asList(
-                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
-        ));
-        
-        // 允许的请求头
-        configuration.setAllowedHeaders(Arrays.asList(
-                "Origin", "Content-Type", "Accept", "Authorization", 
-                "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
-                "Access-Control-Allow-Methods", "X-Requested-With"
-        ));
-        
-        // 暴露的响应头
-        configuration.setExposedHeaders(Arrays.asList(
-                "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials",
-                "Authorization", "Content-Disposition"
-        ));
+        // 允许前端域名
+        config.addAllowedOrigin("http://localhost:3000"); // 前端开发端口
+        config.addAllowedOrigin("http://localhost:3001");
+        config.addAllowedOrigin("http://localhost:3002");
+        config.addAllowedOrigin("http://localhost:3003");
+        config.addAllowedOrigin("http://localhost:3004");
+        config.addAllowedOrigin("http://localhost:3005");
+        config.addAllowedOrigin("http://localhost:3006");
+        config.addAllowedOrigin("http://localhost:3007"); // 当前前端端口
+        config.addAllowedOrigin("http://localhost:3008");
+        config.addAllowedOrigin("http://localhost:5173"); // Vite默认端口
         
         // 允许凭证
-        configuration.setAllowCredentials(true);
+        config.setAllowCredentials(true);
         
-        // 预检请求缓存时间
-        configuration.setMaxAge(3600L);
+        // 允许的请求头
+        config.addAllowedHeader("*");
         
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        // 允许的HTTP方法
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("OPTIONS");
         
-        return source;
+        // 允许的请求头
+        config.addExposedHeader("Authorization");
+        
+        // 预检请求的有效期，单位秒
+        config.setMaxAge(3600L);
+        
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 } 

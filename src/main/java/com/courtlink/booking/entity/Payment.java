@@ -30,15 +30,9 @@ public class Payment {
     @Schema(description = "Payment ID")
     private Long id;
 
-    @NotNull(message = "用户ID不能为空")
-    @Column(name = "user_id", nullable = false)
-    @Schema(description = "User ID")
-    private String userId;
-
-    @NotNull(message = "预约ID不能为空")
-    @Column(name = "appointment_id", nullable = false)
-    @Schema(description = "Associated Appointment ID")
-    private String appointmentId;
+    @Column(name = "booking_id", nullable = false)
+    @Schema(description = "Associated Booking ID")
+    private Long bookingId;
 
     @NotNull(message = "支付编号不能为空")
     @Column(name = "payment_no", nullable = false, unique = true)
@@ -105,6 +99,14 @@ public class Payment {
     @Column(name = "version")
     @Schema(description = "Version")
     private Long version;
+
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public Long getBookingId() {
+        return this.bookingId;
+    }
 
     /**
      * Payment Status Enumeration

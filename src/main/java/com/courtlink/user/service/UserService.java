@@ -3,6 +3,7 @@ package com.courtlink.user.service;
 import com.courtlink.user.dto.LoginRequest;
 import com.courtlink.user.dto.LoginResponse;
 import com.courtlink.user.dto.UserDTO;
+import com.courtlink.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -35,4 +36,7 @@ public interface UserService {
     void toggleUserStatus(Long id);
     void activateUser(Long id);
     void deactivateUser(Long id);
+
+    // 获取当前用户
+    User getCurrentUser();
 } 

@@ -1,0 +1,2 @@
+@echo off
+call mvnw.cmd test -Dtest="com.courtlink.admin.service.impl.AdminServiceCoreTest,com.courtlink.admin.service.impl.AdminServiceBusinessTest,com.courtlink.admin.service.impl.AdminServiceBranchTest" 

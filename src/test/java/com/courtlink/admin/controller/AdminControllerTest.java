@@ -1,136 +1,166 @@
 package com.courtlink.admin.controller;
 
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.courtlink.admin.dto.AdminLoginRequest;
+import com.courtlink.admin.entity.Admin;
+import com.courtlink.admin.service.AdminService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 
-import com.courtlink.CourtLinkApplication;
-import com.courtlink.admin.dto.AdminLoginRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashSet;
+import java.util.Set;
 
-@SpringBootTest(
-    classes = CourtLinkApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
-@AutoConfigureWebMvc
-public class AdminControllerTest {
-
-    @LocalServerPort
-    private int port;
+class AdminControllerTest {
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    private MockMvc mockMvc;
+
+    @MockBean
+    private AdminService adminService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    public void testAdminLoginEndpointExists() {
-        // Test that the admin login endpoint is accessible
-        String url = "http://localhost:" + port + "/api/admin/auth/login";
-        
-        AdminLoginRequest loginRequest = new AdminLoginRequest();
-        loginRequest.setUsernameOrEmail("admin");
-        loginRequest.setPassword("admin123");
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<AdminLoginRequest> request = new HttpEntity<>(loginRequest, headers);
-        
-        ResponseEntity<Map> response = restTemplate.exchange(
-            url, 
-            HttpMethod.POST, 
-            request, 
-            Map.class
-        );
-        
-        // Should not return 404 (endpoint should exist)
-        assertNotEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        
-        // Should return either success or authentication error
-        assertTrue(response.getStatusCode() == HttpStatus.OK || 
-                  response.getStatusCode() == HttpStatus.UNAUTHORIZED);
+    private Admin testAdmin;
+    private Admin testSuperAdmin;
+    private AdminLoginRequest loginRequest;
+
+    @BeforeEach
+    void setUp() {
+        testAdmin = new Admin();
+        testAdmin.setId(1L);
+        testAdmin.setUsername("testAdmin");
+        testAdmin.setPassword("password");
+        testAdmin.setEmail("admin@test.com");
+        Set<String> adminRoles = new HashSet<>();
+        adminRoles.add("ROLE_ADMIN");
+        testAdmin.setRoles(adminRoles);
+        testAdmin.setEnabled(true);
+
+        testSuperAdmin = new Admin();
+        testSuperAdmin.setId(2L);
+        testSuperAdmin.setUsername("testSuperAdmin");
+        testSuperAdmin.setPassword("password");
+        testSuperAdmin.setEmail("superadmin@test.com");
+        Set<String> superAdminRoles = new HashSet<>();
+        superAdminRoles.add("ROLE_SUPER_ADMIN");
+        testSuperAdmin.setRoles(superAdminRoles);
+        testSuperAdmin.setEnabled(true);
+
+        loginRequest = new AdminLoginRequest();
+        loginRequest.setUsername("testAdmin");
+        loginRequest.setPassword("password");
     }
 
     @Test
-    public void testAdminDashboardEndpointExists() {
-        // Test that the admin dashboard endpoint is accessible
-        String url = "http://localhost:" + port + "/api/admin/dashboard";
-        
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-        
-        // Should not return 404 (endpoint should exist)
-        assertNotEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        
-        // Should return the dashboard or require authentication
-        assertTrue(response.getStatusCode() == HttpStatus.OK || 
-                  response.getStatusCode() == HttpStatus.FORBIDDEN ||
-                  response.getStatusCode() == HttpStatus.UNAUTHORIZED);
+    void login_Success() throws Exception {
+        when(adminService.login(any(AdminLoginRequest.class))).thenReturn("test.jwt.token");
+
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("test.jwt.token"));
     }
 
     @Test
-    public void testAdminStatisticsEndpointExists() {
-        // Test that the admin statistics endpoint exists
-        String url = "http://localhost:" + port + "/api/admin/statistics";
-        
-        ResponseEntity<Object> response = restTemplate.getForEntity(url, Object.class);
-        
-        // Should not return 404 (endpoint should exist)
-        assertNotEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        
-        // Should require authentication (return 401 or 403)
-        assertTrue(response.getStatusCode() == HttpStatus.UNAUTHORIZED ||
-                  response.getStatusCode() == HttpStatus.FORBIDDEN);
+    void login_InvalidRequest() throws Exception {
+        loginRequest.setPassword("");
+        loginRequest.setUsername("");
+
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testAdminSystemHealthEndpointExists() {
-        // Test that the admin system health endpoint exists
-        String url = "http://localhost:" + port + "/api/admin/system/health";
-        
-        ResponseEntity<Object> response = restTemplate.getForEntity(url, Object.class);
-        
-        // Should not return 404 (endpoint should exist)
-        assertNotEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        
-        // Should return health info or require authentication
-        assertTrue(response.getStatusCode() == HttpStatus.OK ||
-                  response.getStatusCode() == HttpStatus.UNAUTHORIZED ||
-                  response.getStatusCode() == HttpStatus.FORBIDDEN);
+    @WithMockUser(username = "testAdmin", roles = {"ADMIN"})
+    void getCurrentAdmin_Success() throws Exception {
+        when(adminService.getCurrentAdmin()).thenReturn(testAdmin);
+
+        mockMvc.perform(get("/api/v1/admin/profile"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("testAdmin"))
+                .andExpect(jsonPath("$.email").value("admin@test.com"));
     }
 
     @Test
-    public void testUnauthorizedAccessToAdminEndpoints() {
-        // Test that admin endpoints require authentication
-        String[] adminEndpoints = {
-            "/api/admin/admins",
-            "/api/admin/admins/1",
-            "/api/admin/statistics"
-        };
-        
-        for (String endpoint : adminEndpoints) {
-            String url = "http://localhost:" + port + endpoint;
-            ResponseEntity<Object> response = restTemplate.getForEntity(url, Object.class);
-            
-            // Should require authentication
-            assertTrue(response.getStatusCode() == HttpStatus.UNAUTHORIZED ||
-                      response.getStatusCode() == HttpStatus.FORBIDDEN,
-                      "Endpoint " + endpoint + " should require authentication");
-        }
+    void getCurrentAdmin_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/admin/profile"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "testAdmin", roles = {"ADMIN"})
+    void updateAdminProfile_Success() throws Exception {
+        Admin updateRequest = new Admin();
+        updateRequest.setEmail("updated@test.com");
+
+        Admin updatedAdmin = new Admin();
+        updatedAdmin.setId(1L);
+        updatedAdmin.setUsername("testAdmin");
+        updatedAdmin.setEmail("updated@test.com");
+
+        when(adminService.getCurrentAdmin()).thenReturn(testAdmin);
+        when(adminService.updateAdmin(anyLong(), any(Admin.class))).thenReturn(updatedAdmin);
+
+        mockMvc.perform(put("/api/v1/admin/profile")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("updated@test.com"));
+    }
+
+    @Test
+    @WithMockUser(username = "testAdmin", roles = {"ADMIN"})
+    void checkAuth_Success() throws Exception {
+        when(adminService.isAdmin()).thenReturn(true);
+        when(adminService.isSuperAdmin()).thenReturn(false);
+
+        mockMvc.perform(get("/api/v1/check-auth"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isAdmin").value(true))
+                .andExpect(jsonPath("$.isSuperAdmin").value(false));
+    }
+
+    @Test
+    @WithMockUser(username = "testSuperAdmin", roles = {"SUPER_ADMIN"})
+    void checkAuth_SuperAdmin() throws Exception {
+        when(adminService.isAdmin()).thenReturn(false);
+        when(adminService.isSuperAdmin()).thenReturn(true);
+
+        mockMvc.perform(get("/api/v1/check-auth"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isAdmin").value(false))
+                .andExpect(jsonPath("$.isSuperAdmin").value(true));
+    }
+
+    @Test
+    @WithMockUser(username = "testAdmin", roles = {"ADMIN"})
+    void getAdminProfile_Success() throws Exception {
+        when(adminService.getCurrentAdmin()).thenReturn(testAdmin);
+
+        mockMvc.perform(get("/api/v1/admin/profile"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("testAdmin"))
+                .andExpect(jsonPath("$.email").value("admin@test.com"));
     }
 } 

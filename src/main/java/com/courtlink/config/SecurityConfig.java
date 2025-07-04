@@ -1,66 +1,70 @@
 package com.courtlink.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.courtlink.security.JwtAuthenticationFilter;
+import com.courtlink.security.CompositeUserDetailsService;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
-    
-    @Autowired
-    private CorsConfigurationSource corsConfigurationSource;
-    
+
+    private final CompositeUserDetailsService compositeUserDetailsService;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .cors(cors -> cors.configure(http))
+            .csrf(csrf -> csrf.disable())
+            .httpBasic(httpBasic -> httpBasic.disable())
+            .formLogin(form -> form.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/api/auth/**",
+                    "/api/v1/admin/login",
+                    "/api/courts/**",
+                    "/h2-console/**",
+                    "/error",
+                    "/actuator/**"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+
+        return http.build();
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
-        
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Use CorsConfig configuration
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authz -> authz
-                // Public MVC endpoints
-                .requestMatchers(
-                    mvc.pattern("/"),
-                    mvc.pattern("/api/health/**"),
-                    mvc.pattern("/api/debug/**"),
-                    mvc.pattern("/api/users/**"),
-                    mvc.pattern("/api/courts/**"),
-                    mvc.pattern("/api/admin/auth/login"),
-                    mvc.pattern("/api/admin/dashboard"),
-                    mvc.pattern("/api/admin/system/health"),
-                    mvc.pattern("/swagger-ui/**"),
-                    mvc.pattern("/swagger-ui.html"),
-                    mvc.pattern("/v3/api-docs/**"),
-                    mvc.pattern("/webjars/**"),
-                    mvc.pattern("/api/payments/**"),
-                    mvc.pattern("/api/appointments/**")
-                ).permitAll()
-                // H2 Console (non-MVC servlet)
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                // Admin endpoints require authentication
-                .requestMatchers(mvc.pattern("/api/admin/**")).hasRole("ADMIN")
-                // All other requests require authentication
-                .anyRequest().authenticated()
-            )
-            .headers(headers -> headers.frameOptions().disable()); // For H2 console
-        
-        return http.build();
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(compositeUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 } 
