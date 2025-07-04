@@ -1,0 +1,16 @@
+﻿server:
+  port: 8080
+  address: 0.0.0.0
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+
+spring:
+  main:
+    web-application-type: servlet
+
+logging:
+  level:
+    org.springframework.boot: INFO
+    org.apache.catalina: INFO

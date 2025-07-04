@@ -1,0 +1,93 @@
+﻿{
+    "TestSummary":  {
+                        "SuccessRate":  27.27,
+                        "TotalTests":  11,
+                        "PassedTests":  3,
+                        "FailedTests":  8
+                    },
+    "TestConfiguration":  {
+                              "Branch":  "feat/admin-management",
+                              "BaseUrl":  "http://localhost:8080",
+                              "TestRounds":  1,
+                              "TestDate":  "2025-07-01 23:25:23"
+                          },
+    "TestResults":  [
+                        {
+                            "Message":  "应用程序成功启动",
+                            "Timestamp":  "2025-07-01 23:25:20",
+                            "Details":  "健康检查响应正常",
+                            "Success":  true,
+                            "TestName":  "应用启动检查"
+                        },
+                        {
+                            "Message":  "默认管理员账户创建失败",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "远程服务器返回错误: (401) 未经授权。",
+                            "Success":  false,
+                            "TestName":  "默认管理员初始化"
+                        },
+                        {
+                            "Message":  "正确凭据登录失败",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "远程服务器返回错误: (401) 未经授权。",
+                            "Success":  false,
+                            "TestName":  "管理员登录"
+                        },
+                        {
+                            "Message":  "管理员创建失败",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "远程服务器返回错误: (403) 已禁止。",
+                            "Success":  false,
+                            "TestName":  "创建管理员"
+                        },
+                        {
+                            "Message":  "获取管理员列表失败",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "远程服务器返回错误: (403) 已禁止。",
+                            "Success":  false,
+                            "TestName":  "获取管理员列表"
+                        },
+                        {
+                            "Message":  "没有可用的测试管理员ID",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "需要先创建管理员",
+                            "Success":  false,
+                            "TestName":  "管理员状态管理"
+                        },
+                        {
+                            "Message":  "统计数据获取失败",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "远程服务器返回错误: (403) 已禁止。",
+                            "Success":  false,
+                            "TestName":  "获取管理员统计"
+                        },
+                        {
+                            "Message":  "系统健康检查失败",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "远程服务器返回错误: (401) 未经授权。",
+                            "Success":  false,
+                            "TestName":  "系统健康检查"
+                        },
+                        {
+                            "Message":  "仪表板页面访问失败",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "远程服务器返回错误: (403) 已禁止。",
+                            "Success":  false,
+                            "TestName":  "管理员仪表板"
+                        },
+                        {
+                            "Message":  "未授权访问被正确拒绝",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "安全防护正常",
+                            "Success":  true,
+                            "TestName":  "未授权访问保护"
+                        },
+                        {
+                            "Message":  "H2控制台可正常访问",
+                            "Timestamp":  "2025-07-01 23:25:23",
+                            "Details":  "开发环境配置正确",
+                            "Success":  true,
+                            "TestName":  "H2控制台访问"
+                        }
+                    ]
+}

@@ -1,0 +1,23 @@
+﻿{
+    "TestSummary":  {
+                        "SuccessRate":  0,
+                        "TotalTests":  1,
+                        "PassedTests":  0,
+                        "FailedTests":  1
+                    },
+    "TestConfiguration":  {
+                              "Branch":  "feat/admin-management",
+                              "BaseUrl":  "http://localhost:8080",
+                              "TestRounds":  1,
+                              "TestDate":  "2025-07-01 23:19:58"
+                          },
+    "TestResults":  [
+                        {
+                            "Message":  "应用程序启动失败",
+                            "Timestamp":  "2025-07-01 23:19:58",
+                            "Details":  "超时等待健康检查响应",
+                            "Success":  false,
+                            "TestName":  "应用启动检查"
+                        }
+                    ]
+}
